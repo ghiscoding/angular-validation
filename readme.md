@@ -12,17 +12,23 @@ Let's start with a simple example and then let's get down to real business
 ```html
 <!-- example 1 -->
 <label for="input1">Simle Integer</label>
-<input type="text" class="form-control" name="input1" placeholder="validate integer" ng-model="form1.input1" ngx-validation="integer|required" />
+<input type="text" class="form-control" name="input1" placeholder="validate integer" 
+		ng-model="form1.input1" 
+		ngx-validation="integer|required" />
 <span class="validation text-danger">{{ validation_errors["input1"] }}</span>
 
 <!-- example 2 -->
 <label for="input2">Alphanumeric + Exact(3) + required</label>
-<input type="text" class="form-control" name="input2" placeholder="validate alphanumeric(3)" ng-model="form1.input2" ngx-validation="alpha|exact_len:3|required" />
+<input type="text" class="form-control" name="input2" placeholder="validate alphanumeric(3)" 
+		ng-model="form1.input2" 
+		ngx-validation="alpha|exact_len:3|required" />
 <span class="validation text-danger">{{ validation_errors["input2"] }}</span>
 
 <!-- example 3 - with Regular Expression (Date Code of YYWW) -->
 <label for="input3">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
-<input type="text" class="form-control" name="input3" placeholder="validate decimal" ng-model="form1.input3" ngx-validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer" />
+<input type="text" class="form-control" name="input3" placeholder="validate decimal" 
+		ng-model="form1.input3" 
+		ngx-validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer" />
 <span class="validation text-danger">{{ validation_errors["input3"] }}</span>
 ```
 
@@ -82,7 +88,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghisc
 $translateProvider.preferredLanguage('en');
 ```
 
-Dependencies (*optional):
+Dependencies:
 ------------------
 
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
