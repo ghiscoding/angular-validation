@@ -30,20 +30,20 @@ Regular Expressions (Regex)
 --------------------
 From the example displayed, I introduce the custom Regex, there is no limitation on how to write them and you can even use the pipe (|) without any problems BUT you have to follow the exact way of writing them, if you don't it will fail. So the Regex is divided in 4 specific parts. Let's use the previous example and extract the information out of it.
 
-1.0. start and end the filter with the following   
-1.1. regex: :regex
+1. start and end the filter with the following   
+* regex: :regex
 
-2.0. custom error message to be displayed, what error format will you display to the user
-2.1. YYWW
+2. custom error message to be displayed, what error format will you display to the user
+* YYWW
 
-3.0. followed by a separator which basically says, after this will come the regex
-3.1. :=
+3. followed by a separator which basically says, after this will come the regex
+* :=
 
-4.0. finally the custom regex pattern
-4.1. ^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$
+4. finally the custom regex pattern
+* ^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$
 
-5.0. Let's put it all together again:
-5.1. regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex
+5. Let's put it all together again:
+* regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex
 
 Available Validators
 --------------------
