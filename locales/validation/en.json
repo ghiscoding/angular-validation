@@ -1,0 +1,21 @@
+{
+	"INVALID_ALPHA": 						"May only contain letters. ",
+	"INVALID_ALPHA_NUMERIC": 		"May only contain letters and numbers. ",
+	"INVALID_ALPHA_DASH":				"May only contain letters, numbers, and dashes. ",
+	"INVALID_BETWEEN":					"Text must be between :min and :max characters in length. ",
+	"INVALID_BOOLEAN":					"May only contain a true or false value. ",
+	"INVALID_CREDIT_CARD":			"Must be a valid credit card number. ",
+	"INVALID_DATE_EURO_LONG":		"Must be a valid date following the format of: dd-mm-yyyy OR dd/mm/yyyy. ",
+	"INVALID_DATE_EURO_SHORT":	"Must be a valid date following the format of: dd-mm-yy OR dd/mm/yy. ",
+	"INVALID_DATE_ISO":					"Must be a valid date following the format of: yyyy-mm-dd. ",
+	"INVALID_DATE_US_LONG":			"Must be a valid date following the format of: mm/dd/yyyy OR mm-dd-yyyy. ",
+	"INVALID_DATE_US_SHORT":		"Must be a valid date following the format of: mm/dd/yy OR mm-dd-yy. ",
+	"INVALID_EXACT_LEN":				"Must be exactly :param characters in length. ",
+  "INVALID_INTEGER": 					"Must be an integer. ",
+  "INVALID_MAX_CHAR":					"May not be greater than :max characters. ",
+  "INVALID_MIN_CHAR":					"Must be at least :min characters. ",
+  "INVALID_NUMERIC": 					"Must be a number. ",
+  "INVALID_PATTERN":	 				"Must be following this format: :pattern. ",
+  "INVALID_REQUIRED":					"Field is required. ",
+  "INVALID_URL":							"Must be a valid URL. "
+}

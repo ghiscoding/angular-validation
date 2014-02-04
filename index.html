@@ -1,0 +1,34 @@
+<!doctype html>
+<html ng-app="myApp" ng-cloak>
+	<head>
+	  <meta charset="utf-8">
+	  <title>Angular-Validation</title>	  
+	  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	  <link rel="stylesheet" href="style.css">	  
+	</head>
+
+	<body ng-controller="Ctrl">
+		<h1>Angular Validation</h1>
+		<h3 translate>Choose a locale language (English by default) then load the form</h3>
+		<button ng-click="switchLanguage('fr')" translate>Français</button>
+		<button ng-click="switchLanguage('en')" translate>English</button>
+		<br/><br/>
+		<a href="#/validate">Load Testing Form</a>
+		<ng-view></ng-view>
+
+		<!-- external librairies CDN -->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular-route.js"></script>
+
+		<!-- angular-translate -->		
+		<script src="http://rawgithub.com/PascalPrecht/bower-angular-translate/master/angular-translate.min.js"></script>
+		<script src="http://rawgithub.com/PascalPrecht/bower-angular-translate-loader-static-files/master/angular-translate-loader-static-files.min.js"></script>
+
+		<!-- angular-validation -->
+	  	<script type="text/javascript" src="angular-validation.js"></script>
+
+		<!-- my application -->
+	  	<script type="text/javascript" src="app.js"></script>
+
+  	</body>
+</html>

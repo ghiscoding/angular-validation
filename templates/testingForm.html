@@ -1,0 +1,58 @@
+
+
+<form novalidate name="formAdd" method="POST">
+    <fieldset>
+        <div class="modal-body">   
+            <div class="form-group">    
+                <label for="input1">Alphanumeric + Exact(3) + required</label>
+                <input type="text" class="form-control" name="input1" placeholder="validate alphanumeric(3)" ng-model="form1.input1" ngx-validation="alpha|exact_len:3|required" />
+                <span class="validation text-danger">{{ validation_errors["input1"] }}</span>
+            </div>
+            <div class="form-group">    
+                <label for="input2">Numeric</label>
+                <input type="text" class="form-control" name="input2" placeholder="validate decimal" ng-model="form1.input2" ngx-validation="numeric|required" />
+                <span class="validation text-danger">{{ validation_errors["input2"] }}</span>
+            </div>       
+            <div class="form-group">    
+                <label for="input3">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
+                <input type="text" class="form-control" name="input3" placeholder="validate decimal" ng-model="form1.input3" ngx-validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer" />
+                <span class="validation text-danger">{{ validation_errors["input3"] }}</span>
+            </div> 
+            <div class="form-group">    
+                <label for="input4">Email</label>
+                <input type="text" class="form-control" name="input4" placeholder="validate email" ng-model="form1.input4" ngx-validation="email|required" />
+                <span class="validation text-danger">{{ validation_errors["input4"] }}</span>
+            </div>
+            <div class="form-group">    
+                <label for="input5">URL</label>
+                <input type="text" class="form-control" name="input5" placeholder="validate URL" ng-model="form1.input5" ngx-validation="url|required" />
+                <span class="validation text-danger">{{ validation_errors["input5"] }}</span>
+            </div>
+            <div class="form-group">    
+                <label for="input6">Credit Card</label>
+                <input type="text" class="form-control" name="input6" placeholder="validate credit card" ng-model="form1.input6" ngx-validation="credit_card|required" />
+                <span class="validation text-danger">{{ validation_errors["input6"] }}</span>
+            </div> 
+            <div class="form-group">    
+                <label for="input7">Between(2,6) characters</label>
+                <input type="text" class="form-control" name="input7" placeholder="validate between" ng-model="form1.input7" ngx-validation="between:2,6|required" />
+                <span class="validation text-danger">{{ validation_errors["input7"] }}</span>
+            </div>
+            <div class="form-group">    
+                <label for="input8">Date ISO (yyyy-mm-dd)</label>
+                <input type="text" class="form-control" name="input8" placeholder="yyyy-mm-dd" ng-model="form1.input8" ngx-validation="date_iso|required" />
+                <span class="validation text-danger">{{ validation_errors["input8"] }}</span>
+            </div>
+            <div class="form-group">    
+                <label for="input9">Date US (long)</label>
+                <input type="text" class="form-control" name="input9" placeholder="mm-dd-yyyy OR mm/dd/yyyy" ng-model="form1.input9" ngx-validation="date_us_long|required" />
+                <span class="validation text-danger">{{ validation_errors["input9"] }}</span>
+            </div> 
+            <div class="form-group">    
+                <label for="input10">Alpha + Required + Minimum(2) | Maximum(10) characters</label>
+                <input type="text" class="form-control" name="input10" placeholder="between 2 and 10 chars" ng-model="form1.input10" ngx-validation="min_len:2|max_len:10|alpha|required" />
+                <span class="validation text-danger">{{ validation_errors["input10"] }}</span>
+            </div> 
+        </div>
+    </fieldset>
+</form>
