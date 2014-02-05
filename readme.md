@@ -63,7 +63,7 @@ Available Validators
 * `alpha_num` Ensure only alpha-numeric characters are present in the key value (a-z, A-Z, 0-9)
 * `alpha_dash` Ensure only alpha-numeric characters + dashes and underscores are present in the key value (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max string length.
-* `credit_card` Check for a valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
+* `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_us_long` Ensure date follows the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
 * `date_us_short` Ensure date follows the US short format (mm-dd-yy) or (mm/dd/yy)
@@ -95,12 +95,10 @@ myApp.config(function ($translateProvider) {
 
   // load English ('en') table on startup
   $translateProvider.preferredLanguage('en');
-
-  // define a scope variable to hold the error displayed so we can bind them to the form
-  // $scope.validation_errors = [];
-
 });
 
+// inside Controller define a scope variable to hold the error displayed so we can bind them to the form
+// $scope.validation_errors = [];
 myApp.controller('Ctrl', ['$scope', '$translate', function ($scope, $translate) {
   $scope.myForm = {};
   $scope.validation_errors = []; // required scope variable
@@ -122,3 +120,4 @@ Dependencies:
 * Add more validators...
 * Add more locale languages
 * Add option to use it with onblur or onkeyup 
+* Add online demo
