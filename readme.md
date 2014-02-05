@@ -29,7 +29,7 @@ Let's start with a simple example and then let's get down to real business
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe "|" without interfering with the other validation filters BUT you have to follow a specific pattern (a writing patter that is), and if you don't, well it will fail. Let's explain how it works... Regex is divided in 4 specific parts. 
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing patter that is), and if you don't, well it will fail. Let's explain how it works... Regex is divided in 4 specific parts. 
 
 Let's use the previous [Examples](#examples) #3 and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, while step #5 is the full validator and make sure there is no spaces.
