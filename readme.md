@@ -31,7 +31,7 @@ Regular Expressions (Regex)
 --------------------
 From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe "|" without interfering with the other validation filters BUT you have to follow a specific pattern (a writing patter that is), and if you don't, well it will fail. Let's explain how it works... Regex is divided in 4 specific parts. 
 
-Let's use the previous (#examples) #3 and extract the information out of it to see how it works. 
+Let's use the previous [Examples](#examples) #3 and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, while step #5 is the full validator and make sure there is no spaces.
 
 1. Start and End the filter with the following `regex: :regex`
@@ -62,7 +62,7 @@ Available Validators
 * `alpha` Ensure only alpha characters are present in the key value (a-z, A-Z)
 * `alpha_num` Ensure only alpha-numeric characters are present in the key value (a-z, A-Z, 0-9)
 * `alpha_dash` Ensure only alpha-numeric characters + dashes and underscores are present in the key value (a-z, A-Z, 0-9, _-)
-* `between:min,max` Ensures the length of a string is between a min,max string length.
+* `between_len:min,max` Ensures the length of a string is between a min,max string length.
 * `credit_card` Check for a valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_us_long` Ensure date follows the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
@@ -71,12 +71,12 @@ Available Validators
 * `date_euro_short` Ensure date follows the Europe short format (dd-mm-yy) or (dd/mm/yy)
 * `email` Checks for a valid email address
 * `exact_len:n` Ensures that field length precisely matches the specified length. n = length parameter.
-* `integer` Ensure only integer key values
 * `iban` Check for a valid IBAN
+* `integer` Ensure only integer key values
 * `max_len,n` Checks field length, makes sure it's not longer than specified length. n = length parameter.
 * `min_len,n` Checks field length, makes sure it's not shorter than specified length. n = length parameter.
 * `numeric` Ensure only numeric key values
-* `regex` Ensure it follows a regular expression pattern... please see (#regex)
+* `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex)
 * `required` Ensures the specified key value exists and is not empty
 * `url` Check for valid URL or subdomain
 
@@ -114,7 +114,7 @@ Dependencies:
 2. Bootstrap 3 *optional (http://getbootstrap.com/)
 
 # TODO 
-#### Any kind of help is welcome on the TODO list
+#### Any kind of help is welcome from the TODO list
 
 * Add `same` and `different` validators (same password)
 * Add `ipv4` and `ipv6` validators
