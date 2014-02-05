@@ -12,11 +12,25 @@
 	"INVALID_DATE_US_SHORT":		"Must be a valid date following the format of: mm/dd/yy OR mm-dd-yy. ",
 	"INVALID_EMAIL":						"Must be a valid email address. ",
 	"INVALID_EXACT_LEN":				"Must be exactly :param characters in length. ",
+	"INVALID_FLOAT":						"May only contain a float value. ",
+	"INVALID_IBAN":							"Must a valid IBAN. ",
   "INVALID_INTEGER": 					"Must be an integer. ",
   "INVALID_MAX_CHAR":					"May not be greater than :param characters. ",
   "INVALID_MIN_CHAR":					"Must be at least :param characters. ",
   "INVALID_NUMERIC": 					"Must be a number. ",
   "INVALID_PATTERN":	 				"Must be following this format: :param. ",
   "INVALID_REQUIRED":					"Field is required. ",
-  "INVALID_URL":							"Must be a valid URL. "
+  "INVALID_URL":							"Must be a valid URL. ",
+
+  "ALPHANUMERIC":						"Alphanumeric",
+  "BETWEEN":								"Between",
+  "CHARACTERS":							"Characters",
+  "CHOOSE_LANGUAGE": 				"Choose a language.",
+  "CREDIT_CARD":						"Credit Card",
+  "CUSTOM_REGEX_DATECODE":	"Custom Regex of Date Code (YYWW)",
+  "EMAIL":									"Email",
+  "EXACTLY":								"Exactly",
+  "NUMERIC":								"Numerique",
+  "REQUIRED":								"Required",
+  "SAVE":										"Save"
 }
