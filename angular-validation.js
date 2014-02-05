@@ -3,7 +3,7 @@
  * https://github.com/ghiscoding/angular-validation
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('ngxValidation',function($translate){
+  .directive('ngxValidation', function($translate){
     return{
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
@@ -112,7 +112,19 @@
                   message: 'INVALID_EXACT_LEN',
                   params: [params[1]]
                 };
-                break;  
+                break; 
+              case "float" :
+                patterns[i] = "^[-]?\\d+[\\.]?\\d*$";
+                messages[i] = {
+                  message: 'INVALID_FLOAT'
+                };
+                break;
+              case "iban" :
+                patterns[i] = "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}";
+                messages[i] = {
+                  message: 'INVALID_IBAN'
+                };
+                break; 
               case "integer" :
                 patterns[i] = "^[-+]?\\d+$";
                 messages[i] = {
