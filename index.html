@@ -11,11 +11,13 @@
 		<div class="container">
 			<h1>Angular Validation</h1>
 			<hr/>
-			<h3>{{'CHOOSE_LANGUAGE' | translate}}</h3>
-			<button class="btn btn-info" ng-click="switchLanguage('fr')">Français</button>
-			<button class="btn btn-info" ng-click="switchLanguage('en')">English</button>
+			<h3 class="text-info">{{'CHOOSE_LANGUAGE' | translate}}</h3>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default" ng-click="switchLanguage('fr')">Français</button>
+				<button type="button" class="btn btn-default" ng-click="switchLanguage('en')">English</button>
+			</div>
 			
-			<br/><br/>
+			<br/><hr/>
 			
 			<ng-view></ng-view>
 

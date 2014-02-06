@@ -7,7 +7,9 @@ The concept is not new, it comes from the easy form input validation approach of
 
 ##  Some Working Examples
 
-Let's start with a simple example and then let's get down to real business
+Let's start with a simple example and then let's get down to real business.
+
+P.S. For real live example, please download the Github project and run the `index.html` (no server needer) while the actual form with validation is inside `templates/testingForm.html`
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
@@ -29,7 +31,9 @@ Let's start with a simple example and then let's get down to real business
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing patter that is), and if you don't, well it will fail. Let's explain how it works... Regex is divided in 4 specific parts. 
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing patter that is), and if you don't, well it will fail. Let's explain how it works... 
+
+Regex validation filter is divided in 4 specific parts (Step #1-4). 
 
 Let's use the previous [Examples](#examples) #3 and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, while step #5 is the full validator and make sure there is no spaces.
@@ -47,7 +51,7 @@ Step #1-4 are for explanation only, while step #5 is the full validator and make
 
 Locales (languages)
 --------------------
-Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated.
+Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see [Include it in your Project](#project)
 ```javascript
 // define a key, could be on the fly with a button or a menu link
 var key = 'fr'; 
@@ -80,6 +84,7 @@ Available Validators
 * `required` Ensures the specified key value exists and is not empty
 * `url` Check for valid URL or subdomain
 
+<a name="project"></a>
 Include it in your app project:
 --------------------
 ```javascript
@@ -109,7 +114,7 @@ Dependencies:
 ------------------
 
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
-2. Bootstrap 3 *optional (http://getbootstrap.com/)
+2. Bootstrap 3 *optional* (http://getbootstrap.com/)
 
 # TODO 
 #### Any kind of help is welcome from the TODO list

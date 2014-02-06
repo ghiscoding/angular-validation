@@ -11,7 +11,7 @@
 	"INVALID_DATE_US_LONG":			"Must be a valid date following the format of: mm/dd/yyyy OR mm-dd-yyyy. ",
 	"INVALID_DATE_US_SHORT":		"Must be a valid date following the format of: mm/dd/yy OR mm-dd-yy. ",
 	"INVALID_EMAIL":						"Must be a valid email address. ",
-	"INVALID_EXACT_LEN":				"Must be exactly :param characters in length. ",
+	"INVALID_EXACT_LEN":				"Must have a length of exactly :param characters. ",
 	"INVALID_FLOAT":						"May only contain a float value. ",
 	"INVALID_IBAN":							"Must a valid IBAN. ",
   "INVALID_INTEGER": 					"Must be an integer. ",
@@ -22,15 +22,17 @@
   "INVALID_REQUIRED":					"Field is required. ",
   "INVALID_URL":							"Must be a valid URL. ",
 
-  "ALPHANUMERIC":						"Alphanumeric",
-  "BETWEEN":								"Between",
-  "CHARACTERS":							"Characters",
-  "CHOOSE_LANGUAGE": 				"Choose a language.",
-  "CREDIT_CARD":						"Credit Card",
-  "CUSTOM_REGEX_DATECODE":	"Custom Regex of Date Code (YYWW)",
-  "EMAIL":									"Email",
-  "EXACTLY":								"Exactly",
-  "NUMERIC":								"Numerique",
-  "REQUIRED":								"Required",
-  "SAVE":										"Save"
+
+  "INPUT1":         "Alphanumeric + Exactly(3) + Required",
+  "INPUT2":         "Numerique",
+  "INPUT3":         "Multiple Validations + Custom Regex of Date Code (YYWW)",
+  "INPUT4":         "Email",
+  "INPUT5":         "URL",
+  "INPUT6":           "Credit Card",
+  "INPUT7":           "Between(2,6) Characters",
+  "INPUT8":           "Date ISO (yyyy-mm-dd)",
+  "INPUT9":           "Date US (long)",
+  "INPUT10":          "Alpha + Required + Minimum(2) | Maximum(10) Characters",
+  "CHOOSE_LANGUAGE": 	"Choose a language.",
+  "SAVE":							"Save"
 }
