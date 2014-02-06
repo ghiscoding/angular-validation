@@ -1,6 +1,7 @@
 /**
  * angular-validation - v1.0 - 2014-02-02
  * https://github.com/ghiscoding/angular-validation
+ * @author Ghislain B.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
   .directive('ngxValidation', function($translate){
@@ -44,16 +45,34 @@
                   message: 'INVALID_ALPHA'
                 };
                 break;
+              case "alpha_spaces" :
+                patterns[i] = "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
+                messages[i] = {
+                  message: 'INVALID_ALPHA_SPACE'
+                };
+                break;
               case "alpha_num" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$";
                 messages[i] = {
-                  message: 'INVALID_ALPHA_NUMERIC'
+                  message: 'INVALID_ALPHA_NUM'
+                };
+                break;
+              case "alpha_num_spaces" :
+                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
+                messages[i] = {
+                  message: 'INVALID_ALPHA_NUM_SPACE'
                 };
                 break;
               case "alpha_dash" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_DASH'
+                };
+                break;
+              case "alpha_dash_spaces" :
+                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s_-])+$";
+                messages[i] = {
+                  message: 'INVALID_ALPHA_DASH_SPACE'
                 };
                 break;
               case "between_len" :

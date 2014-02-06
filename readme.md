@@ -63,9 +63,12 @@ $scope.switchLanguage = function (key) {
 
 Available Validators
 --------------------
-* `alpha` Ensure only alpha characters are present in the key value (a-z, A-Z)
-* `alpha_num` Ensure only alpha-numeric characters are present in the key value (a-z, A-Z, 0-9)
-* `alpha_dash` Ensure only alpha-numeric characters + dashes and underscores are present in the key value (a-z, A-Z, 0-9, _-)
+* `alpha` Ensure only alpha characters (including latin) are present (a-z, A-Z)
+* `alpha_spaces` Ensure only alpha characters (including latin) and spaces are present (a-z, A-Z)
+* `alpha_num` Ensure only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
+* `alpha_num_spaces` Ensure only alpha-numeric characters (including latin) and spaces are present (a-z, A-Z, 0-9)
+* `alpha_dash` Ensure only alpha-numeric characters + dashes and underscores are present (a-z, A-Z, 0-9, _-)
+* `alpha_dash_spaces` Ensure only alpha-numeric characters + dashes and underscores and spaces are present (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max string length.
 * `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
@@ -116,6 +119,10 @@ Dependencies:
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
 2. Bootstrap 3 *optional* (http://getbootstrap.com/)
 
+License
+-----
+MIT
+
 # TODO 
 #### Any kind of help is welcome from the TODO list
 
@@ -124,5 +131,5 @@ Dependencies:
 * Add `street_address` validator
 * Add more validators...
 * Add more locale languages
-* Add option to use it with onblur or onkeyup 
+* Add option to use it with `onblur` or `onkeyup` 
 * Add online demo

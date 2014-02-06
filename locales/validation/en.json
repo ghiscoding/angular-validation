@@ -1,7 +1,10 @@
 {
 	"INVALID_ALPHA": 						"May only contain letters. ",
-	"INVALID_ALPHA_NUMERIC": 		"May only contain letters and numbers. ",
-	"INVALID_ALPHA_DASH":				"May only contain letters, numbers, and dashes. ",
+	"INVALID_ALPHA_SPACE":			"May only contain letters and spaces. ",
+	"INVALID_ALPHA_NUM":		 		"May only contain letters and numbers. ",
+	"INVALID_ALPHA_NUM_SPACE":	"May only contain letters, numbers and spaces. ",
+	"INVALID_ALPHA_DASH":				"May only contain letters, numbers and dashes. ",
+	"INVALID_ALPHA_DASH_SPACE":	"May only contain letters, numbers, dashes and spaces. ",
 	"INVALID_BETWEEN":					"Text must be between :param and :param characters in length. ",
 	"INVALID_BOOLEAN":					"May only contain a true or false value. ",
 	"INVALID_CREDIT_CARD":			"Must be a valid credit card number. ",
