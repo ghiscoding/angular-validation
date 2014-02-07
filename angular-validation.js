@@ -45,36 +45,42 @@
                   message: 'INVALID_ALPHA'
                 };
                 break;
-              case "alpha_spaces" :
+              case "alphaSpaces" :  
+              case "alpha_spaces" :              
                 patterns[i] = "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_SPACE'
                 };
                 break;
+              case "alphaNum" :  
               case "alpha_num" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_NUM'
                 };
                 break;
+              case "alphaNumSpaces" :
               case "alpha_num_spaces" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_NUM_SPACE'
                 };
                 break;
+              case "alphaDash" :
               case "alpha_dash" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_DASH'
                 };
                 break;
+              case "alphaDashSpaces" :
               case "alpha_dash_spaces" :
                 patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s_-])+$";
                 messages[i] = {
                   message: 'INVALID_ALPHA_DASH_SPACE'
                 };
                 break;
+              case "betweenLen" :
               case "between_len" :
                 var range = params[1].split(',');
                 patterns[i] = "^.{" + range[0] + "," + range[1] + "}$";    
@@ -83,36 +89,42 @@
                   params: [range[0], range[1]]
                 };             
                 break;
+              case "creditCard" :
               case "credit_card" :
                 patterns[i] = "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\\d{3})\\d{11})$";
                 messages[i] = {
                   message: 'INVALID_CREDIT_CARD'
                 };
                 break;
+              case "dateIso" :
               case "date_iso" :
                 patterns[i] = "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$";
                 messages[i] = {
                   message: 'INVALID_DATE_ISO'
                 };
                 break;  
+              case "dateUsLong" :
               case "date_us_long" :
                 patterns[i] = "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$";
                 messages[i] = {
                   message: 'INVALID_DATE_US_LONG'
                 };
                 break;
+              case "dateUsShort" :
               case "date_us_short" :
                 patterns[i] = "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$";
                 messages[i] = {
                   message: 'INVALID_DATE_US_SHORT'
                 };
                 break;  
+              case "dateEuroLong" :
               case "date_euro_long" :
                 patterns[i] = "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$";
                 messages[i] = {
                   message: 'INVALID_DATE_EURO_LONG'
                 };
                 break;  
+              case "dateEuroShort" :
               case "date_euro_short" :
                 patterns[i] = "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$";
                 messages[i] = {
@@ -125,6 +137,7 @@
                   message: 'INVALID_EMAIL'
                 };
                 break;
+              case "exactLen" :
               case "exact_len" :
                 patterns[i] = "^.{" + params[1] + "}$";                
                 messages[i] = {
@@ -150,6 +163,7 @@
                   message: 'INVALID_INTEGER'
                 };
                 break;              
+              case "maxLen" :
               case "max_len" :
                 patterns[i] = "^.{0," + params[1] + "}$";                
                 messages[i] = {
@@ -157,6 +171,7 @@
                   params: [params[1]]
                 };
                 break;
+              case "minLen" :
               case "min_len" :
                 patterns[i] = "^.{" + params[1] + ",}$";                
                 messages[i] = {

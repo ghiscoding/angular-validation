@@ -63,11 +63,12 @@ $scope.switchLanguage = function (key) {
 
 Available Validators
 --------------------
+##### All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
 * `alpha` Ensure only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Ensure only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Ensure only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
-* `alpha_num_spaces` Ensure only alpha-numeric characters (including latin) and spaces are present (a-z, A-Z, 0-9)
-* `alpha_dash` Ensure only alpha-numeric characters + dashes and underscores are present (a-z, A-Z, 0-9, _-)
+* `alpha_num_spaces` Ensure only alpha-numeric characters (with latin) and spaces are present (a-z, A-Z, 0-9)
+* `alpha_dash` Ensure only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Ensure only alpha-numeric characters + dashes and underscores and spaces are present (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max string length.
 * `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
