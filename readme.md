@@ -13,36 +13,36 @@ P.S. For real live example, please download the Github project and run the `inde
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
-<!-- changed the default validation triggering event to (blur), default to (keyup) -->
+<!-- changed the default validation trigger event to (blur), default being (keyup) -->
 <label for="input1">Simple Integer -- EVENT(onblur)</label>
 <input type="text" name="input1" ng-model="form1.input1" 
 	validation="integer|required" 
 	validation-event="blur"
 	validation-display-error="error1" />
-<span id="error1" class="validation text-danger"></span>
+<span class="validation text-danger"></span>
 
 <!-- example 2 -->
 <label for="input2">email + min(3) + max(10) + required</label>
 <input type="text" name="input2" ng-model="form1.input2" 
 	validation="email|min_len:3|max_len:10|required" 
 	validation-display-error="error2" />
-<span id="error2" class="validation text-danger"></span>
+<span class="validation text-danger"></span>
 
 <!-- example 3 - with Regular Expression (Date Code of YYWW) -->
 <label for="input3">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
 <input type="text" name="input3" ng-model="form1.input3" 
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer" 
 		validation-display-error="error3" />
-<span id="error3" class="validation text-danger"></span>
+<span class="validation text-danger"></span>
 
 <!-- EXPLANATIONS -->
 <!-- <input> need the <validation=""> and <validation-display-error=""> -->
 <!-- Validators are separated by pipe | and the display-error is the <span> ID for displaying error -->
 <input validation="theValidators" validation-display-error="spanOrDivErrorID" />
 
-<!-- then we need a <span> or <div> to display the error which you can style yourself -->
-<!-- it needs to have an ID which is referenced by the input from the <vvalidation-display-error=""> -->
-<span id="spanOrDivErrorID"></span>
+<!-- Then we need a <span> or <div> to display the error which you can apply styling -->
+<!-- VERY IMPORTANT: The Error HAS to be the following element after the input -->
+<span class="myStyleCSS"></span>
 ```
 <a name="regex"></a>
 Regular Expressions (Regex)
@@ -75,11 +75,14 @@ Features:
 
 2. Event could be written with/without the `on` as prefix. `onblur` is equivalent to `blur`.
 
-3. Default event `keyup` can be changed in the directive itself via constant `VALIDATION_DEFAULT_EVENT`
+3. Default event `keyup` can be changed in the directive itself via constant `DEFAULT_EVENT`
 
 Locales (languages)
 --------------------
 Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
+
+Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then it would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to fully localize then see the example in [Include it in your Project](#project)
+
 ```javascript
 // define a key, could be on the fly with a button or a menu link
 var key = 'fr'; 
@@ -88,6 +91,8 @@ $scope.switchLanguage = function (key) {
   $translate.uses(key);
 };
 ```	  
+
+P.S. If you define new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.
 
 Available Validators
 --------------------
@@ -126,7 +131,9 @@ Include it in your app project:
 // include it your app module ( we need both Translate & Validation)
 var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghiscoding.validation']);
 
-// include validation locales
+// include validation languages
+// if you want full localization add it in the suffix
+// For example on Canadian French/English, we could replace the code by `suffix: '-CA.json'`
 myApp.config(function ($translateProvider) {
   $translateProvider.useStaticFilesLoader({
     prefix: 'locales/validation/',

@@ -13,7 +13,8 @@
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
         // default validation event that triggers the validation error to be displayed
-        var VALIDATION_DEFAULT_EVENT = "keyup";
+        var DEFAULT_EVENT = "keyup";         // keyup, blur, ...
+        var DEFAULT_ERROR_LOCATION = "next"; // next, prev (or previous)
 
         // get the validation attribute  
         var validationAttr = attrs.validation;
@@ -262,20 +263,12 @@
           
           ctrl.$setValidity('validation', isFieldValid);
 
-          // get the Error field DOM element
-          if(attrs.validationDisplayError) {  
-            var errorElm = document.getElementById(attrs.validationDisplayError);
-          }
-
           // re-render the field error message inside the <span> or <div>          
+          // the error element IS and HAS to be the following element after the validated input
           if(!isFieldValid && ctrl.$dirty) {
-            if(errorElm) {
-              errorElm.innerHTML = message;
-            }              
+            elm.next().text(message);              
           }else {
-            if(errorElm) {
-              errorElm.innerHTML = "";
-            }
+            elm.next().text("");   
           }
 
           return value;
@@ -286,13 +279,18 @@
          *  If no event is specified, it will validate (onkeyup) as a default action.
          * @param string value: value of the input field
          */
-        var validator = function(value) {     
-          var evnt = (typeof attrs.validationEvent === "undefined") ? VALIDATION_DEFAULT_EVENT : attrs.validationEvent;
-          evnt = evnt.replace('on', ''); // remove any 'on' substring, for example 'onblur' => 'blur'
+        var validator = function(value) { 
+          // analyze which event we'll use, if nothing was defined then use default
+          // also remove prefix substring of 'on' since we don't need it on the 'on' method
+          var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
+          evnt = evnt.replace('on', ''); // remove possible 'on' prefix
 
+          // run the validate method on the event
           elm.on(evnt, function(){
               validate(value);
-          });          
+          });  
+
+          return value;        
         };
 
         // attach the Validator object to the element
