@@ -9,7 +9,7 @@ The concept is not new, it comes from the easy form input validation approach of
 
 Let's start with a simple example and then let's get down to real business.
 
-P.S. For real live example, please download the Github project and run the `index.html` (no server needer) while the actual form with validation is inside `templates/testingForm.html`
+P.S. For real live example, please download the Github project and run the `index.html` (no server needer) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
@@ -32,10 +32,10 @@ P.S. For real live example, please download the Github project and run the `inde
 <!-- EXPLANATIONS -->
 <!-- <input> need the <validation=""> and <validation-display-error=""> -->
 <!-- Validators are separated by pipe | and the display-error is the <span> ID for displaying error -->
-<input .... validation="theValidators" validation-display-error="spanOrDivErrorID" />
+<input validation="theValidators" validation-display-error="spanOrDivErrorID" />
 
 <!-- then we need a <span> or <div> to display the error which you can style yourself -->
-<!-- it needs to have an ID which is referenced by the input from the <validation-display=""> -->
+<!-- it needs to have an ID which is referenced by the input from the <vvalidation-display-error=""> -->
 <span id="spanOrDivErrorID"></span>
 ```
 <a name="regex"></a>
@@ -46,7 +46,7 @@ From the example displayed, I introduce the custom regular expression, there is 
 Regex validation is divided in 4 specific parts (Step #1-4). 
 
 Let's use the previous [Examples](#examples) #3 and extract the information out of it to see how it works. 
-Step #1-4 are for explanation only, while step #5 is the full validator (make sure there is no spaces).
+Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
 1. Start and End the filter with the following `regex: :regex` that tells the directive to extract it.
 
@@ -56,12 +56,12 @@ Step #1-4 are for explanation only, while step #5 is the full validator (make su
 
 4. Custom regex pattern `^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$`
 
-5. Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
+Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
 
 
 Locales (languages)
 --------------------
-Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see [Include it in your Project](#project)
+Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
 ```javascript
 // define a key, could be on the fly with a button or a menu link
 var key = 'fr'; 
@@ -133,8 +133,8 @@ License
 * Add `same` and `different` validators (same password)
 * Add `ipv4` and `ipv6` validators
 * Add `street_address` validator
-* Add `time` (12hrs/24hrs) validator
+* Add `time` (12hrs/24hrs) validators
 * Add more validators...
 * Add more locale languages
-* Add option to use it with `onblur` or `onkeyup` 
+* Add option to use it with `onblur` or `onkeyup` event
 * Add online demo
