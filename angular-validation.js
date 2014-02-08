@@ -1,15 +1,19 @@
 /**
- * angular-validation - v1.0 - 2014-02-02
+ * angular-validation - v1.0 - 2014-02-07
  * https://github.com/ghiscoding/angular-validation
- * @author Ghislain B.
+ * @author: Ghislain B.
+ *
+ * @desc: If a field becomes invalid, the text inside the error <span> or <div> will show up because the error string gets filled
+ * Though when the field becomes valid then the error message becomes an empty string, 
+ * it will be transparent to the user even though the <span> still exist but becomes invisible since the text is empty.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('ngxValidation', function($translate){
+  .directive('validation', function($translate){
     return{
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
-        // get the ngx-validation attribute  
-        var validationAttr = attrs.ngxValidation;
+        // get the validation attribute  
+        var validationAttr = attrs.validation;
 
         // define the variables we'll use 
         var messages = [];
@@ -17,8 +21,7 @@
         var regexMessage;    
         var regexPattern;
         var validations;
-        
-        
+                
         // We first need to see if the validation holds a regex, if it does treat it first
         // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
         // Return string will have the complete regex pattern removed but we will keep ':regex' so that we can still loop over it
@@ -28,11 +31,12 @@
           regexMessage = regAttrs[0];    
           regexPattern = regAttrs[1];
 
-          // rewrite the validationAttr so that it doesn't have the regex: ... :regex ending  
+          // rewrite the validationAttr so that it doesn't contain the regex: ... :regex ending  
+          // we simply remove it so that it won't break if there's a pipe | inside the actual regex
           validationAttr = validationAttr.replace(matches[0], 'regex:');
         } 
 
-        // at this point it's safe to split with pipe (regex was previously stripped out)
+        // at this point it's safe to split with pipe (since regex was previously stripped out)
         validations = validationAttr.split('|'); 
 
         if(validations) {
@@ -209,7 +213,7 @@
             } 
           }          
         }
-        
+        //console.debug(attrs.validationError);
         // From angular get the value of the Form and loop through all existing validation defined
         var validator = function(value) {          
           var isValid = true;
@@ -235,12 +239,22 @@
             }
           }
           
-          ctrl.$setValidity('ngxValidation', isFieldValid);
+          ctrl.$setValidity('validation', isFieldValid);
 
+          // get the Error field DOM element
+          if(attrs.validationDisplayError) {  
+            var errorElm = document.getElementById(attrs.validationDisplayError);
+          }
+
+          // re-render the field error message inside the <span> or <div>          
           if(!isFieldValid && ctrl.$dirty) {
-            scope.validation_errors[ctrl.$name] = message;
+            if(errorElm) {
+              errorElm.innerHTML = message;
+            }              
           }else {
-            scope.validation_errors[ctrl.$name] = "";
+            if(errorElm) {
+              errorElm.innerHTML = "";
+            }
           }
 
           return value;

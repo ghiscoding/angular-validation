@@ -23,8 +23,7 @@ myApp.config(function ($routeProvider, $locationProvider) {
 
 myApp.controller('Ctrl', ['$scope', '$translate', function ($scope, $translate) {
   $scope.form1 = {};
-  $scope.validation_errors = [];
-
+  
   $scope.switchLanguage = function (key) {
     $translate.uses(key);
   };
