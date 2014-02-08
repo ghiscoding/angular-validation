@@ -150,9 +150,16 @@
                 };
                 break; 
               case "float" :
-                patterns[i] = "^[-]?\\d+[\\.]?\\d*$";
+                patterns[i] = "^\\d+[\\.]+\\d+$";
                 messages[i] = {
                   message: 'INVALID_FLOAT'
+                };
+                break;
+              case "floatSigned" :
+              case "float_signed" :
+                patterns[i] = "^[+-]?\\d+[\\.]+\\d+$";
+                messages[i] = {
+                  message: 'INVALID_FLOAT_SIGNED'
                 };
                 break;
               case "iban" :
@@ -162,9 +169,16 @@
                 };
                 break; 
               case "integer" :
-                patterns[i] = "^[-+]?\\d+$";
+                patterns[i] = "^\\d+$";
                 messages[i] = {
                   message: 'INVALID_INTEGER'
+                };
+                break;
+              case "integerSigned" :
+              case "integer_signed" :
+                patterns[i] = "^[+-]?\\d+$";
+                messages[i] = {
+                  message: 'INVALID_INTEGER_SIGNED'
                 };
                 break;              
               case "maxLen" :

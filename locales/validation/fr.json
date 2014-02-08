@@ -15,9 +15,11 @@
 	"INVALID_DATE_US_SHORT":		"Doit être une date validate ayant le format: mm/dd/yy OR mm-dd-yy. ",
 	"INVALID_EMAIL":						"Doit être une adresse courriel valide. ",
 	"INVALID_EXACT_LEN":				"Doit être d'une longueur fixe de :param caractères. ",
-	"INVALID_FLOAT":						"Doit contenir seulement que des valeurs flottante. ",
+	"INVALID_FLOAT":						"Doit être obligatoirement un nombre flottant (nombre entier exclu). ",
+	"INVALID_FLOAT_SIGNED":			"Doit être obligatoirement un nombre flottant positif ou négatif (nombre entier exclu). ",	
 	"INVALID_IBAN":							"Doit être un IBAN valide. ",
-	"INVALID_INTEGER": 					"Doit être un nombre entier. ",
+	"INVALID_INTEGER": 					"Doit être un nombre entier positif. ",
+	"INVALID_INTEGER_SIGNED":		"Doit être un nombre entier positif ou négatif. ",
 	"INVALID_MAX_CHAR":					"Doit être plus petit que :param caractères. ",
   "INVALID_MIN_CHAR":					"Doit avoir au moins :param caractères. ",
 	"INVALID_NUMERIC": 					"Doit être un nombre. ",
@@ -36,6 +38,6 @@
 	"INPUT8": 					"Date ISO (yyyy-mm-dd)",
 	"INPUT9": 					"Date US (long)",
 	"INPUT10": 					"Alpha + Requis + Minimum(2) | Maximum(10) Caractères",
-  "CHOOSE_LANGUAGE":	"Choisir une langue.",
+  "CHANGE_LANGUAGE":	"Changer de langue.",
   "SAVE":							"Sauvegarder"
 }

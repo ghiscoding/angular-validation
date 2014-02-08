@@ -15,9 +15,11 @@
 	"INVALID_DATE_US_SHORT":		"Must be a valid date following the format of: mm/dd/yy OR mm-dd-yy. ",
 	"INVALID_EMAIL":						"Must be a valid email address. ",
 	"INVALID_EXACT_LEN":				"Must have a length of exactly :param characters. ",
-	"INVALID_FLOAT":						"May only contain a float value. ",
+	"INVALID_FLOAT":						"May only contain a float value (integer excluded). ",
+	"INVALID_FLOAT_SIGNED":			"May only contain a positive or negative float value (integer excluded). ",
 	"INVALID_IBAN":							"Must a valid IBAN. ",
-  "INVALID_INTEGER": 					"Must be an integer. ",
+  "INVALID_INTEGER": 					"Must be a positive integer. ",
+  "INVALID_INTEGER_SIGNED":		"Must be a positive or negative integer. ",
   "INVALID_MAX_CHAR":					"May not be greater than :param characters. ",
   "INVALID_MIN_CHAR":					"Must be at least :param characters. ",
   "INVALID_NUMERIC": 					"Must be a number. ",
@@ -36,6 +38,6 @@
   "INPUT8":           "Date ISO (yyyy-mm-dd)",
   "INPUT9":           "Date US (long)",
   "INPUT10":          "Alpha + Required + Minimum(2) | Maximum(10) Characters",
-  "CHOOSE_LANGUAGE": 	"Choose a language.",
+  "CHANGE_LANGUAGE": 	"Change language.",
   "SAVE":							"Save"
 }
