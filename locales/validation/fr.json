@@ -28,7 +28,7 @@
 	"INVALID_URL":							"Doit être un URL valide. ",
 
 
-	"INPUT1":						"Alphanumérique + Exactement(3) + Requis",
+	"INPUT1":						"Alphanumérique + Exactement(3) + Requis  -- EVENT (onblur)",
 	"INPUT2": 					"Numérique",
 	"INPUT3": 					"Multiple Validations + Regex Personnalisé d'un Code Date (AASS)",
 	"INPUT4": 					"Courriel",

@@ -13,8 +13,9 @@ P.S. For real live example, please download the Github project and run the `inde
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
-<label for="input1">Simple Integer</label>
-<input type="text" name="input1" ng-model="form1.input1" validation="integer|required" validation-display-error="error1" />
+<!-- changed the default validation triggering event to (blur), default to (keyup) -->
+<label for="input1">Simple Integer -- EVENT(onblur)</label>
+<input type="text" name="input1" ng-model="form1.input1" validation="integer|required" validation-display-error="error1" validation-event="blur" />
 <span id="error1" class="validation text-danger"></span>
 
 <!-- example 2 -->
@@ -58,6 +59,17 @@ Step #1-4 are for explanation only, at the end we show the full regex (make sure
 
 Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
 
+
+Validation Event (default: keyup)
+--------------------
+We could also specify whichever validation event we want to trigger the validation (keyup, blur, etc...).
+Features:
+
+1. All possible events are accepted `keyup`, `blur`, etc...
+
+2. Event could be written with/without the `on` as prefix. `onblur` is equivalent to `blur`.
+
+3. The default event can be changed in the directive itself via constant `VALIDATION_DEFAULT_EVENT`
 
 Locales (languages)
 --------------------
@@ -139,5 +151,4 @@ License
 * Add `time` (12hrs/24hrs) validators
 * Add more validators...
 * Add more locale languages
-* Add option to use it with `onblur` or `onkeyup` event
 * Add online demo

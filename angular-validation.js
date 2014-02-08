@@ -12,6 +12,9 @@
     return{
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
+        // default validation event that triggers the validation error to be displayed
+        var VALIDATION_DEFAULT_EVENT = "keyup";
+
         // get the validation attribute  
         var validationAttr = attrs.validation;
 
@@ -20,7 +23,7 @@
         var patterns = [];
         var regexMessage;    
         var regexPattern;
-        var validations;
+        var validations;        
                 
         // We first need to see if the validation holds a regex, if it does treat it first
         // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
@@ -227,9 +230,13 @@
             } 
           }          
         }
-        //console.debug(attrs.validationError);
-        // From angular get the value of the Form and loop through all existing validation defined
-        var validator = function(value) {          
+        
+        /** Validate function, from the input value it will go through all validators (separated by pipe)
+         *  that were passed to the input element and will validate it. If field is invalid it will update
+         *  the error text of the span/div element dedicated for that error display.
+         * @param string value: value of the input field
+         */
+        var validate = function(value) {
           var isValid = true;
           var isFieldValid = true;
           var message = "";
@@ -272,8 +279,23 @@
           }
 
           return value;
+        }
+
+        /** Validator function to attach to the element, this will get call whenever the input field is updated
+         *  and is also customizable through the (validation-event) which can be (onblur).
+         *  If no event is specified, it will validate (onkeyup) as a default action.
+         * @param string value: value of the input field
+         */
+        var validator = function(value) {     
+          var evnt = (typeof attrs.validationEvent === "undefined") ? VALIDATION_DEFAULT_EVENT : attrs.validationEvent;
+          evnt = evnt.replace('on', ''); // remove any 'on' substring, for example 'onblur' => 'blur'
+
+          elm.on(evnt, function(){
+              validate(value);
+          });          
         };
 
+        // attach the Validator object to the element
         ctrl.$parsers.unshift(validator);
         ctrl.$formatters.unshift(validator);
       }
