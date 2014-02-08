@@ -15,12 +15,17 @@ P.S. For real live example, please download the Github project and run the `inde
 <!-- example 1 -->
 <!-- changed the default validation triggering event to (blur), default to (keyup) -->
 <label for="input1">Simple Integer -- EVENT(onblur)</label>
-<input type="text" name="input1" ng-model="form1.input1" validation="integer|required" validation-display-error="error1" validation-event="blur" />
+<input type="text" name="input1" ng-model="form1.input1" 
+	validation="integer|required" 
+	validation-event="blur"
+	validation-display-error="error1" />
 <span id="error1" class="validation text-danger"></span>
 
 <!-- example 2 -->
 <label for="input2">email + min(3) + max(10) + required</label>
-<input type="text" name="input2" ng-model="form1.input2" validation="email|min_len:3|max_len:10|required" validation-display-error="error2" />
+<input type="text" name="input2" ng-model="form1.input2" 
+	validation="email|min_len:3|max_len:10|required" 
+	validation-display-error="error2" />
 <span id="error2" class="validation text-danger"></span>
 
 <!-- example 3 - with Regular Expression (Date Code of YYWW) -->
