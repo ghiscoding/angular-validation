@@ -63,13 +63,14 @@ Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0
 Validation Event (default: keyup)
 --------------------
 We could also specify whichever validation event we want to trigger the validation (keyup, blur, etc...).
+
 Features:
 
-1. All possible events are accepted `keyup`, `blur`, etc...
+1. All possible events of the element are accepted `keyup`, `blur`, etc...
 
 2. Event could be written with/without the `on` as prefix. `onblur` is equivalent to `blur`.
 
-3. The default event can be changed in the directive itself via constant `VALIDATION_DEFAULT_EVENT`
+3. Default event `keyup` can be changed in the directive itself via constant `VALIDATION_DEFAULT_EVENT`
 
 Locales (languages)
 --------------------
