@@ -17,28 +17,23 @@ P.S. For real live example, please download the Github project and run the `inde
 <label for="input1">Simple Integer -- EVENT(onblur)</label>
 <input type="text" name="input1" ng-model="form1.input1" 
 	validation="integer|required" 
-	validation-event="blur"
-	validation-display-error="error1" />
+	validation-event="blur" />
 <span class="validation text-danger"></span>
 
 <!-- example 2 -->
 <label for="input2">email + min(3) + max(10) + required</label>
-<input type="text" name="input2" ng-model="form1.input2" 
-	validation="email|min_len:3|max_len:10|required" 
-	validation-display-error="error2" />
+<input type="text" name="input2" ng-model="form1.input2" validation="email|min_len:3|max_len:10|required"  />
 <span class="validation text-danger"></span>
 
 <!-- example 3 - with Regular Expression (Date Code of YYWW) -->
 <label for="input3">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
 <input type="text" name="input3" ng-model="form1.input3" 
-		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer" 
-		validation-display-error="error3" />
+		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 <span class="validation text-danger"></span>
 
 <!-- EXPLANATIONS -->
-<!-- <input> need the <validation=""> and <validation-display-error=""> -->
-<!-- Validators are separated by pipe | and the display-error is the <span> ID for displaying error -->
-<input validation="theValidators" validation-display-error="spanOrDivErrorID" />
+<!-- <input> need the <validation=""> each validators are separated by pipe | -->
+<input validation="theValidators" />
 
 <!-- Then we need a <span> or <div> to display the error which you can apply styling -->
 <!-- VERY IMPORTANT: The Error HAS to be the following element after the input -->
@@ -81,7 +76,7 @@ Locales (languages)
 --------------------
 Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
 
-Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then it would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to fully localize then see the example in [Include it in your Project](#project)
+Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then it would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to fully localize, then see the example in [Include it in your Project](#project)
 
 ```javascript
 // define a key, could be on the fly with a button or a menu link
