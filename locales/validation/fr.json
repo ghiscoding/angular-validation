@@ -1,6 +1,6 @@
 {
 	"INVALID_ALPHA": 						"Ne doit contenir que des lettres. ",
-	"INVALID_ALPHA": 						"Ne doit contenir que des lettres et espaces. ",
+	"INVALID_ALPHA_SPACE":	 		"Ne doit contenir que des lettres et espaces. ",
 	"INVALID_ALPHA_NUM": 				"Ne doit contenir que des lettres et nombres. ",
 	"INVALID_ALPHA_NUM_SPACE": 	"Ne doit contenir que des lettres, nombres et espaces. ",
 	"INVALID_ALPHA_DASH":				"Ne doit contenir que des lettres, nombres et des tirets. ",
@@ -29,7 +29,7 @@
 
 
 	"INPUT1":						"Alphanumérique + Exactement(3) + Requis  -- EVENT (onblur)",
-	"INPUT2": 					"Numérique",
+	"INPUT2": 					"Nombre Flottant (entier exclu)",
 	"INPUT3": 					"Multiple Validations + Regex Personnalisé d'un Code Date (AASS)",
 	"INPUT4": 					"Courriel",
 	"INPUT5": 					"URL",

@@ -28,11 +28,11 @@
   "INVALID_URL":							"Must be a valid URL. ",
 
 
-  "INPUT1":         "Alphanumeric + Exactly(3) + Required  -- EVENT (onblur)",
-  "INPUT2":         "Numerique",
-  "INPUT3":         "Multiple Validations + Custom Regex of Date Code (YYWW)",
-  "INPUT4":         "Email",
-  "INPUT5":         "URL",
+  "INPUT1":         	"Alphanumeric + Exactly(3) + Required  -- EVENT (onblur)",
+  "INPUT2":         	"Float (integer excluded)",
+  "INPUT3":         	"Multiple Validations + Custom Regex of Date Code (YYWW)",
+  "INPUT4":         	"Email",
+  "INPUT5":         	"URL",
   "INPUT6":           "Credit Card",
   "INPUT7":           "Between(2,6) Characters",
   "INPUT8":           "Date ISO (yyyy-mm-dd)",

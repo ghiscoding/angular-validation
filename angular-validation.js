@@ -14,8 +14,7 @@
       link: function(scope, elm, attrs, ctrl) {
         // default validation event that triggers the validation error to be displayed
         var DEFAULT_EVENT = "keyup";         // keyup, blur, ...
-        var DEFAULT_ERROR_LOCATION = "next"; // next, prev (or previous)
-
+        
         // get the validation attribute  
         var validationAttr = attrs.validation;
 
@@ -25,7 +24,7 @@
         var regexMessage;    
         var regexPattern;
         var validations;        
-                
+      
         // We first need to see if the validation holds a regex, if it does treat it first
         // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
         // Return string will have the complete regex pattern removed but we will keep ':regex' so that we can still loop over it
@@ -260,8 +259,6 @@
               }
             }
           }
-          
-          ctrl.$setValidity('validation', isFieldValid);
 
           // re-render the field error message inside the <span> or <div>          
           // the error element IS and HAS to be the following element after the validated input
@@ -271,7 +268,7 @@
             elm.next().text("");   
           }
 
-          return value;
+          return isFieldValid;
         }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
@@ -285,9 +282,13 @@
           var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
           evnt = evnt.replace('on', ''); // remove possible 'on' prefix
 
+          // make the field invalid before validation
+          ctrl.$setValidity('validation', false); 
+
           // run the validate method on the event
-          elm.on(evnt, function(){
-              validate(value);
+          elm.on(evnt, function() {
+              var isValid = validate(value);
+              scope.$apply(ctrl.$setValidity('validation', isValid));                       
           });  
 
           return value;        
