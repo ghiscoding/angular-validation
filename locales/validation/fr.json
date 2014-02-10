@@ -38,6 +38,6 @@
     "INPUT8":           "Date ISO (yyyy-mm-dd)",
     "INPUT9":           "Date US (long)",
     "INPUT10":          "Alpha + Requis + Minimum(2) | Maximum(10) Caractères",
-  "CHANGE_LANGUAGE":    "Changer de langue.",
-  "SAVE":               "Sauvegarder"
+    "CHANGE_LANGUAGE":    "Changer de langue.",
+    "SAVE":               "Sauvegarder"
 }
