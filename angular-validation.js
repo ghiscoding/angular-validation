@@ -8,8 +8,8 @@
  * it will be transparent to the user even though the <span> still exist but becomes invisible since the text is empty.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', function($translate){
-    return{
+  .directive('validation', function($translate) {
+    return {
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
         // default validation event that triggers the validation error to be displayed
@@ -257,8 +257,9 @@
                   message = message.replace((':param'), messages[j].params[k]);
                 }                
               }
-            }
-          }
+
+            } // end !isValid
+          } // end for loop
 
           // re-render the field error message inside the <span> or <div>          
           // the error element IS and HAS to be the following element after the validated input
@@ -286,7 +287,7 @@
           ctrl.$setValidity('validation', false); 
 
           // run the validate method on the event
-          elm.on(evnt, function() {
+          elm.unbind(evnt).bind(evnt, function() {
               var isValid = validate(value);
               scope.$apply(ctrl.$setValidity('validation', isValid));                       
           });  
