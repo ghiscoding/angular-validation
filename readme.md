@@ -107,14 +107,15 @@ Available Validators
 * `date_euro_short` Ensure date follows the Europe short format (dd-mm-yy) or (dd/mm/yy)
 * `email` Checks for a valid email address
 * `exact_len:n` Ensures that field length precisely matches the specified length. n = length parameter.
-* `float` Only a floating point value (integer are excluded)
+* `float` Only a positive floating point value (integer are excluded)
 * `float_signed` Only a floating point value (integer excluded), could be signed (-/+) positive/negative.
 * `iban` Check for a valid IBAN.
 * `integer` Only positive integer.
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
-* `numeric` Only numeric values, could be float, integer, can also be signed (-/+).
+* `numeric` Only positive numeric value (float, integer).
+* `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
 * `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
 * `required` Ensures the specified key value exists and is not empty
 * `url` Check for valid URL or subdomain
