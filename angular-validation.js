@@ -317,6 +317,15 @@
           // run the validate method on the event
           // update the validation on both the field & form element
           elm.unbind('keyup').unbind(evnt).bind(evnt, function() {
+            // angular doesn't seem to change the field value when we have an <input type="number">
+            // we will have to treat ourself and display an invalid number type if so
+            if(!value && elm.prop('tagName').toUpperCase() === "INPUT" && elm.prop('type').toUpperCase() === "NUMBER") {
+              elm.next().text($translate('INVALID_TYPE_NUMBER'));  
+              scope.$apply(ctrl.$setValidity('validation', false));               
+              return value;
+            }
+
+            // make the regular validation of the field value
             var isValid = validate(value);            
             scope.$apply(ctrl.$setValidity('validation', isValid));                       
             scope.$apply(ngParentFormElm.$setValidity('validation', isValid)); 
