@@ -236,32 +236,6 @@
           }          
         }
         
-        /** From our Angular input element, find the parent form object and return it
-         * of course we want an Angular Form element not just a regular DOM element
-         * @param string elm: angular field element
-         * @return object: angular form element
-         */
-        findParentFormNgElement = function(fieldElm) {
-          var i = 0;
-          var parentElm = fieldElm.parent();
-          var parentFormElm = null;
-          var ngParentFormElm = null;
-          do {
-            if(parentElm.prop('tagName').toUpperCase() === "FORM") {
-              parentFormElm = parentElm;
-              break;
-            }
-            // go with next parent
-            parentElm = parentElm.parent();
-          }while(parentElm !== "form" && i++ < 100);
-
-          if(parentFormElm) {
-            var ngParentFormElm = scope[parentFormElm.prop('name')];             
-          }          
-
-          return ngParentFormElm;
-        }
-
         /** Validate function, from the input value it will go through all validators (separated by pipe)
          *  that were passed to the input element and will validate it. If field is invalid it will update
          *  the error text of the span/div element dedicated for that error display.
@@ -328,25 +302,20 @@
               }
             });            
           }
-          
+
+          // invalidate field before doing validation 
+          ctrl.$setValidity('validation', false); 
+
           // run the validate method on the event
           // update the validation on both the field & form element            
-          elm.unbind('keyup').unbind(evnt).bind(evnt, function(even) {
+          elm.unbind('keyup').unbind(evnt).bind(evnt, function() {
             // make the regular validation of the field value
             var isValid = validate(value);            
-            scope.$apply(ctrl.$setValidity('validation', isValid));                       
-            scope.$apply(ngParentFormElm.$setValidity('validation', isValid)); 
+            scope.$apply(ctrl.$setValidity('validation', isValid));            
           });  
           
           return value;        
         };
-
-        // make the complete form invalid before we start field validation
-        // the global variable will be use also inside the validator() method
-        var ngParentFormElm = findParentFormNgElement(elm);
-        if(ngParentFormElm) {
-          ngParentFormElm.$setValidity('validation', false);
-        }
 
         // attach the Validator object to the element
         ctrl.$parsers.unshift(validator);

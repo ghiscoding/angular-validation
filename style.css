@@ -7,18 +7,22 @@
     color: #E07676;
     font-style: italic;
 }
-input.ng-invalid.ng-dirty, 
-select.ng-invalid.ng-dirty, 
-textarea.ng-invalid.ng-dirty {
+
+/* invalid & dirty => red */
+input.ng-invalid.ng-dirty:not(:focus), 
+select.ng-invalid.ng-dirty:not(:focus), 
+textarea.ng-invalid.ng-dirty:not(:focus) {
     border-color: #e74c3c;
 }
 
+/* valid & dirty => green */
 input.ng-valid.ng-dirty,
 select.ng-valid.ng-dirty,
 textarea.ng-valid.ng-dirty {
     border-color: #2ecc71;
 }
 
+/* error display font italic, text-danger is red in BS */
 .validation.text-danger {
     font-style: italic;
 }
