@@ -314,23 +314,30 @@
           var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
           evnt = evnt.replace('on', ''); // remove possible 'on' prefix
 
+          // We seem to have little problems validating a field of <input type="number"> 
+          // as angular reports undefined value even though user types chars
+          // so we'll simply block chars completely except numbers and decimal
+          if(elm.prop('tagName').toUpperCase() === "INPUT" && elm.prop('type').toUpperCase() === "NUMBER") {
+            elm.bind('keydown', function(evt) {
+              var charCode = (evt.which) ? evt.which : event.keyCode;
+              if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57)) && charCode != 190) {
+                evt.preventDefault();
+                return false;
+              }else {
+                return true;
+              }
+            });            
+          }
+          
           // run the validate method on the event
-          // update the validation on both the field & form element
-          elm.unbind('keyup').unbind(evnt).bind(evnt, function() {
-            // angular doesn't seem to change the field value when we have an <input type="number">
-            // we will have to treat ourself and display an invalid number type if so
-            if(!value && elm.prop('tagName').toUpperCase() === "INPUT" && elm.prop('type').toUpperCase() === "NUMBER") {
-              elm.next().text($translate('INVALID_TYPE_NUMBER'));  
-              scope.$apply(ctrl.$setValidity('validation', false));               
-              return value;
-            }
-
+          // update the validation on both the field & form element            
+          elm.unbind('keyup').unbind(evnt).bind(evnt, function(even) {
             // make the regular validation of the field value
             var isValid = validate(value);            
             scope.$apply(ctrl.$setValidity('validation', isValid));                       
             scope.$apply(ngParentFormElm.$setValidity('validation', isValid)); 
           });  
-
+          
           return value;        
         };
 
