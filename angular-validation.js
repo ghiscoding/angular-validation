@@ -302,14 +302,19 @@
           // get some properties of the inspected element
           var elmTagName = elm.prop('tagName').toUpperCase();
           var elmType = elm.prop('type').toUpperCase();
-
+          
           // We seem to have little problems validating a field of <input type="number"> 
           // as angular reports undefined value even though user types chars
           // so we'll simply block chars completely except numbers and decimal
           if(elmTagName === "INPUT" && elmType === "NUMBER") {
-            elm.bind('keydown', function(evt) {
-              var charCode = (evt.which) ? evt.which : event.keyCode;
-              if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57)) && charCode != 190) {
+            elm.bind('keydown', function(evt) {              
+              var charCode = (evt.which) ? evt.which : ((typeof event !== "undefined") ? event.keyCode : undefined);
+              if(typeof charCode === "undefined") {
+                evt.preventDefault();
+                return false;
+              }
+              
+              if (charCode > 31 && (charCode != 46 && ((charCode < 48 || charCode > 57) && charCode < 96 || charCode > 105)) && (charCode != 190 && charCode != 110 && charCode != 109 && charCode != 173)) {
                 evt.preventDefault();
                 return false;
               }else {

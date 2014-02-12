@@ -8,7 +8,7 @@
     font-style: italic;
 }
 
-/* invalid & dirty => red */
+/* invalid & dirty => red -- CSS3 only */
 input.ng-invalid.ng-dirty:not(:focus), 
 select.ng-invalid.ng-dirty:not(:focus), 
 textarea.ng-invalid.ng-dirty:not(:focus) {
