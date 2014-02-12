@@ -49,9 +49,36 @@
         </div> 
         <div class="form-group">    
             <label for="input10">{{ 'INPUT10' | translate }}</label>
-            <input type="text" class="form-control" name="input10" placeholder="min_len:2|max_len:10|alpha_dash_spaces|required" ng-model="form1.input10" validation="min_len:2|max_len:10|alpha_dash_spaces|required" />
+            <input type="text" class="form-control" name="input10" placeholder="min_len:2|max_len:10|alpha_num|required" ng-model="form1.input10" validation="min_len:2|max_len:10|alpha_num|required" />
             <span class="validation text-danger"></span>
         </div> 
+        <div class="form-group" ng-hide="trsn.isDividend">
+            <label for="input11">{{ 'INPUT11' | translate }}</label>
+            <div class="input-group">
+                <span class="input-group-addon">@</span>
+                <input type="text" class="form-control" name="input11" placeholder="min_len:2|max_len:10|alpha_dash_spaces|required" ng-model="form1.input11" validation="min_len:2|max_len:10|alpha_dash_spaces|required" validation-error-to="error11" />
+                <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+            </div>
+            <span id="error11" class="validation text-danger"></span>            
+        </div> 
+        <div class="form-group">
+            <label for="select1">{{ 'SELECT1' | translate }}</label>           
+            <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
+                <option value="">...</option>   
+                <option value="1">Option #1</option>
+                <option value="2">Option #2</option>
+            </select>
+            <span class="validation text-danger"></span>            
+        </div>
+        <div class="form-group">
+            <label for="select2">{{ 'SELECT2' | translate }}</label>                       
+            <select id="select2" name="select2" class="form-control" ng-model="form1.select2" validation="required" validation-event="blur">
+                <option value="">...</option>   
+                <option value="1">Option #1</option>
+                <option value="2">Option #2</option>
+            </select>
+            <span class="validation text-danger"></span>            
+        </div>
     </fieldset>
 
     <div class="form-actions">

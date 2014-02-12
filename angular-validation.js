@@ -266,12 +266,23 @@
             } // end !isValid
           } // end for loop
 
-          // re-render the field error message inside the <span> or <div>          
-          // the error element IS and HAS to be the following element after the validated input
-          if(!isFieldValid && ctrl.$dirty) {
-            elm.next().text(message);              
-          }else {
-            elm.next().text("");   
+          // -- Error Display --//
+          
+          // in general it will be the next element after our input
+          // but in some cases user want to define which DOM id to display error (as validation attribute)
+          var errorElm = (typeof attrs.validationErrorTo !== "undefined")
+            ? angular.element(document.querySelector('#'+attrs.validationErrorTo))
+            : elm.next();
+
+          // Re-Render Error display element inside the <span> or <div>
+          if(typeof errorElm !== "undefined") {
+            if(!isFieldValid && ctrl.$dirty) {
+              // Not valid & dirty, display the message
+              errorElm.text(message);              
+            }else {
+              // element is prestine, error message has to be blank
+              errorElm.text("");   
+            }
           }
 
           return isFieldValid;
@@ -288,10 +299,14 @@
           var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
           evnt = evnt.replace('on', ''); // remove possible 'on' prefix
 
+          // get some properties of the inspected element
+          var elmTagName = elm.prop('tagName').toUpperCase();
+          var elmType = elm.prop('type').toUpperCase();
+
           // We seem to have little problems validating a field of <input type="number"> 
           // as angular reports undefined value even though user types chars
           // so we'll simply block chars completely except numbers and decimal
-          if(elm.prop('tagName').toUpperCase() === "INPUT" && elm.prop('type').toUpperCase() === "NUMBER") {
+          if(elmTagName === "INPUT" && elmType === "NUMBER") {
             elm.bind('keydown', function(evt) {
               var charCode = (evt.which) ? evt.which : event.keyCode;
               if (charCode > 31 && (charCode != 46 &&(charCode < 48 || charCode > 57)) && charCode != 190) {
@@ -301,6 +316,13 @@
                 return true;
               }
             });            
+          }
+
+          // Also make sure that if user has a select dropdown
+          // then we'll validate it has if it was a onBlur event
+          // since onKeyUp would fail has there would never be any keyup
+          if(elmTagName === "SELECT") {
+            evnt = "blur";
           }
 
           // invalidate field before doing validation 

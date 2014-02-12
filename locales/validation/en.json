@@ -30,16 +30,19 @@
     "INVALID_URL":              "Must be a valid URL. ",
 
 
-    "INPUT1":             "Alphanumeric + Exactly(3) + Required  -- EVENT (onblur)",
-    "INPUT2":             "Float (integer excluded)",
-    "INPUT3":             "Multiple Validations + Custom Regex of Date Code (YYWW)",
-    "INPUT4":             "Email",
-    "INPUT5":             "URL",
-    "INPUT6":             "Credit Card",
-    "INPUT7":             "Between(2,6) Characters",
-    "INPUT8":             "Date ISO (yyyy-mm-dd)",
-    "INPUT9":             "Date US (long)",
-    "INPUT10":            "Alpha + Required + Minimum(2) | Maximum(10) Characters",
-    "CHANGE_LANGUAGE":    "Change language.",
-    "SAVE":               "Save"
+    "INPUT1":           "Alphanumeric + Exactly(3) + Required  -- EVENT (onblur)",
+    "INPUT2":           "Float (integer excluded) -- input type=\"number\" -- BLOCK non-numeric characters ",
+    "INPUT3":           "Multiple Validations + Custom Regex of Date Code (YYWW)",
+    "INPUT4":           "Email",
+    "INPUT5":           "URL",
+    "INPUT6":           "Credit Card",
+    "INPUT7":           "Between(2,6) Characters",
+    "INPUT8":           "Date ISO (yyyy-mm-dd)",
+    "INPUT9":           "Date US (long)",
+    "INPUT10":          "AlphaNum + Required + Minimum(2) | Maximum(10) characters",
+    "INPUT11":          "AlphaDashSpaces + Required + Minimum(5) Characters -- MUST USE: validation-error-to=\" \"",
+    "CHANGE_LANGUAGE":  "Change language.",
+    "SAVE":             "Save",
+    "SELECT1":          "Required (select) -- NoEVENT default(keyup) -- Directive will validate has EVENT (blur)",
+    "SELECT2":          "Required (select) -- EVENT (blur)"
 }

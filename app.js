@@ -6,7 +6,7 @@ myApp.config(function ($routeProvider, $locationProvider) {
     $routeProvider.when('/validate', {
           templateUrl: 'templates/testingForm.html',
           controller: 'Ctrl'
-      });
+    });
     $routeProvider.otherwise({
           redirectTo: 'validate',
     });

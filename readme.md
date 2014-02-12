@@ -25,11 +25,30 @@ P.S. For real live example, please download the Github project and run the `inde
 <input type="text" name="input2" ng-model="form1.input2" validation="email|min_len:3|max_len:10|required"  />
 <span class="validation text-danger"></span>
 
-<!-- example 3 - with Regular Expression (Date Code of YYWW) -->
-<label for="input3">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
-<input type="text" name="input3" ng-model="form1.input3" 
+<!-- example 3 -->
+<!-- input type="number", it is easier for the directive to block all non-numeric chars -->
+<label for="input3">numeric + required</label>
+<input type="number" name="input3" ng-model="form1.input3" validation="numeric|min_len:3|max_len:4|required"  />
+<span class="validation text-danger"></span>
+
+<!-- example 4 - with Regular Expression (Date Code of YYWW) -->
+<label for="input4">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
+<input type="text" name="input4" ng-model="form1.input4" 
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 <span class="validation text-danger"></span>
+
+<!-- example 4 - required select option (dropdown) -->
+<!-- Select Option if required, it has to be validated as an onBlur event -->
+<!-- even if event is "keyup", the directive will use onBlur anyway for validation -->
+<div class="form-group">
+    <label for="select1">Select Option Required</label>           
+    <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required" validation-event="blur">
+        <option value="">...</option>   
+        <option value="1">Option #1</option>
+        <option value="2">Option #2</option>
+    </select>
+    <span class="validation text-danger"></span>            
+</div>
 
 <!-- EXPLANATIONS -->
 <!-- <input> need the <validation=""> each validators are separated by pipe | -->
@@ -38,7 +57,24 @@ P.S. For real live example, please download the Github project and run the `inde
 <!-- Then we need a <span> or <div> to display the error which you can apply styling -->
 <!-- VERY IMPORTANT: The Error HAS to be the following element after the input -->
 <span class="myStyleCSS"></span>
+<!-- but in some cases we cannot, then see Example Exceptions -->
+
 ```
+Example Exceptions
+--------------------
+Well let's face it, having the <span> for error display right after the <input> is not always ideal and I encounter the problem myself when I use Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasion, we'll do something that is a little less "Angular way", we will add an `id` to our error element and then reference it inside our input. You could actually move the error element anywhere you want with this method, just don't forget to name it with an `id` and call the `validation-error-to` attribute.
+```html
+<div class="form-group" ng-hide="trsn.isDividend">
+    <label for="input1">Search Input with BS input-groups</label>
+    <div class="input-group">
+        <span class="input-group-addon">@</span>
+        <input type="text" class="form-control" name="input1" ng-model="form1.input1" validation="min_len:2|max_len:10|alpha_dash_spaces|required" validation-error-to="myErrorId" />
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+    </div>
+    <span id="myErrorId" class="validation text-danger"></span>            
+</div>
+```
+
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------

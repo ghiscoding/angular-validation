@@ -31,7 +31,7 @@
 
 
 	"INPUT1":           "Alphanumérique + Exactement(3) + Requis  -- EVENT (onblur)",
-	"INPUT2":           "Nombre Flottant (entier exclu)",
+	"INPUT2":           "Nombre Flottant (entier exclu) -- input type=\"number\" -- BLOQUER caractères non-numerique",
 	"INPUT3":           "Multiple Validations + Regex Personnalisé d'un Code Date (AASS)",
 	"INPUT4":           "Courriel",
 	"INPUT5":           "URL",
@@ -39,7 +39,10 @@
 	"INPUT7":           "Entre(2,6) Caractères",
 	"INPUT8":           "Date ISO (yyyy-mm-dd)",
 	"INPUT9":           "Date US (long)",
-	"INPUT10":          "Alpha + Requis + Minimum(2) | Maximum(10) Caractères",
-	"CHANGE_LANGUAGE":    "Changer de langue.",
-	"SAVE":               "Sauvegarder"
+	"INPUT10":          "AlphaNum + Requis + Minimum(2) | Maximum(10) caractères",
+	"INPUT11":          "AlphaDashSpaces + Requis + Minimum(5) Caractères -- DOIT UTILISER: validation-error-to=\" \"",
+	"CHANGE_LANGUAGE":	"Changer de langue.",
+	"SAVE":             "Sauvegarder",
+	"SELECT1":          "Requis (select) -- Aucun EVENT défaut(keyup) -- Directive va valider avec EVENT (blur)",
+    "SELECT2":          "Requis (select) -- EVENT (blur)"
 }
