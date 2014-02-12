@@ -9,7 +9,7 @@ The concept is not new, it comes from the easy form input validation approach of
 
 Let's start with a simple example and then let's get down to real business.
 
-P.S. For real live example, please download the Github project and run the `index.html` (no server needer) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
+P.S. For real live example, please download the Github project and run the `index.html` (no server required, except Chrome which doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
@@ -37,7 +37,7 @@ P.S. For real live example, please download the Github project and run the `inde
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 <span class="validation text-danger"></span>
 
-<!-- example 4 - required select option (dropdown) -->
+<!-- example 5 - required select option (dropdown) -->
 <!-- Select Option if required, it has to be validated as an onBlur event -->
 <!-- even if event is "keyup", the directive will use onBlur anyway for validation -->
 <div class="form-group">
@@ -57,12 +57,12 @@ P.S. For real live example, please download the Github project and run the `inde
 <!-- Then we need a <span> or <div> to display the error which you can apply styling -->
 <!-- VERY IMPORTANT: The Error HAS to be the following element after the input -->
 <span class="myStyleCSS"></span>
-<!-- but in some cases we cannot, then see Example Exceptions -->
+<!-- but in some cases we cannot, then see below Example Exceptions -->
 
 ```
 Example Exceptions
 --------------------
-Well let's face it, having the <span> for error display right after the <input> is not always ideal and I encounter the problem myself when I use Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasion, we'll do something that is a little less "Angular way", we will add an `id` to our error element and then reference it inside our input. You could actually move the error element anywhere you want with this method, just don't forget to name it with an `id` and call the `validation-error-to` attribute.
+Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasion, we'll do something that is a little less "Angular way", we will add an `id` to our error display element and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` and call the `validation-error-to` attribute. We could even do validation summary with this...just saying hehe.
 ```html
 <div class="form-group" ng-hide="trsn.isDividend">
     <label for="input1">Search Input with BS input-groups</label>

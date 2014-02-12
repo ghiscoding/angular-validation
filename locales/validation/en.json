@@ -26,7 +26,6 @@
     "INVALID_NUMERIC_SIGNED":   "Must be a positive or negative number. ",
     "INVALID_PATTERN":          "Must be following this format: :param. ",
     "INVALID_REQUIRED":         "Field is required. ",
-    "INVALID_TYPE_NUMBER":      "Field type only accept numeric values. ",
     "INVALID_URL":              "Must be a valid URL. ",
 
 
