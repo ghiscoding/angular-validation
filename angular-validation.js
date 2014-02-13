@@ -23,7 +23,11 @@
         var patterns = [];
         var regexMessage;    
         var regexPattern;
-        var validations;        
+        var validations;       
+
+        // by default we'll consider field not required if not required then no need to validate empty value..right
+        // if validation attribute calls it then we'll validate
+        var isFieldRequired = false; 
                 
         // We first need to see if the validation holds a regex, if it does treat it first
         // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
@@ -221,6 +225,7 @@
                 };
                 break;
               case "required" :
+                isFieldRequired = true;
                 patterns[i] = "\\S+";
                 messages[i] = {
                   message: 'INVALID_REQUIRED'
@@ -267,9 +272,18 @@
           } // end for loop
 
           // -- Error Display --//
+          updateErrorMsg(isFieldValid, message);
           
-          // in general it will be the next element after our input
-          // but in some cases user want to define which DOM id to display error (as validation attribute)
+
+          return isFieldValid;
+        }
+
+        /** in general we will display error message at the next element after our input
+          * but in some cases user want to define which DOM id to display error (as validation attribute)
+          * @param bool isFieldValid: is the field valid?
+          * @param string message: error message to display
+          */
+        var updateErrorMsg = function(isFieldValid, message) {
           var errorElm = (typeof attrs.validationErrorTo !== "undefined")
             ? angular.element(document.querySelector('#'+attrs.validationErrorTo))
             : elm.next();
@@ -278,14 +292,12 @@
           if(typeof errorElm !== "undefined") {
             if(!isFieldValid && ctrl.$dirty) {
               // Not valid & dirty, display the message
-              errorElm.text(message);              
+              errorElm.text(message);
             }else {
               // element is prestine, error message has to be blank
               errorElm.text("");   
             }
           }
-
-          return isFieldValid;
         }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
@@ -294,6 +306,15 @@
          * @param string value: value of the input field
          */
         var validator = function(value) { 
+          // if field is not required and his value is empty 
+          // then no need to validate & return it valid
+          if(!isFieldRequired && (value === "" || typeof value === "undefined")) {
+            var isFieldValid = true;
+            ctrl.$setValidity('validation', isFieldValid); 
+            updateErrorMsg(isFieldValid, "");
+            elm.unbind('keyup').unbind('keydown');
+            return value;
+          }
           // analyze which event we'll use, if nothing was defined then use default
           // also remove prefix substring of 'on' since we don't need it on the 'on' method
           var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
@@ -327,11 +348,24 @@
           // then we'll validate it has if it was a onBlur event
           // since onKeyUp would fail has there would never be any keyup
           if(elmTagName === "SELECT") {
+            if(isFieldRequired && (value === "" || typeof value === "undefined")) {
+              // if select option is null or empty string we already know it's invalid
+              ctrl.$setValidity('validation', false); 
+              return value;
+            }
+            // else we'll make sure we use an onBlur event to check validation
             evnt = "blur";
           }
 
           // invalidate field before doing validation 
           ctrl.$setValidity('validation', false); 
+
+          // in case the field is already pre-filled
+          // we need to validate it without looking at the event binding
+          if(ctrl.$pristine && value !== "" && typeof value !== "undefined") {
+            var isValid = validate(value);            
+            ctrl.$setValidity('validation', isValid);
+          }
 
           // run the validate method on the event
           // update the validation on both the field & form element            
@@ -340,7 +374,16 @@
             var isValid = validate(value);            
             scope.$apply(ctrl.$setValidity('validation', isValid));            
           });  
-          
+
+          // for the case of field that might be ng-disabled, we should skip validation
+          // so putting them all to true is acceptable
+          // ng-disabled might be delayed on form loading, so we need to use timeout method
+          setTimeout(function() {
+              if(elm.attr('disabled')) {
+                ctrl.$setValidity('validation', true); 
+              }
+          }, 0);
+
           return value;        
         };
 
