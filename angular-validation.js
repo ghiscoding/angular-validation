@@ -315,6 +315,7 @@
             elm.unbind('keyup').unbind('keydown');
             return value;
           }
+
           // analyze which event we'll use, if nothing was defined then use default
           // also remove prefix substring of 'on' since we don't need it on the 'on' method
           var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
@@ -375,21 +376,24 @@
             scope.$apply(ctrl.$setValidity('validation', isValid));            
           });  
 
-          // for the case of field that might be ng-disabled, we should skip validation
-          // so putting them all to true is acceptable
-          // ng-disabled might be delayed on form loading, so we need to use timeout method
-          setTimeout(function() {
-              if(elm.attr('disabled')) {
-                ctrl.$setValidity('validation', true); 
-              }
-          }, 0);
-
           return value;        
         };
 
         // attach the Validator object to the element
         ctrl.$parsers.unshift(validator);
         ctrl.$formatters.unshift(validator);
+
+        // for the case of field that might be ng-disabled, we should skip validation
+        // Observe the angular disabled attribute
+        attrs.$observe("disabled",function(disabled) {
+            if(disabled){
+                // Turn off validation when disabled
+                ctrl.$setValidity('validation', true);
+            } else {
+                // Re-Validate the input when enabled
+                ctrl.$setValidity('validation', validate(ctrl.$viewValue));
+            }
+        });
       }
     };
   });

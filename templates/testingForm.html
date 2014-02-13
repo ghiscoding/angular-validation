@@ -51,20 +51,6 @@
             <label for="input10">{{ 'INPUT10' | translate }}</label>
             <input type="text" class="form-control" name="input10" placeholder="min_len:2|max_len:10|alpha_num" ng-model="form1.input10" validation="min_len:2|max_len:10|alpha_num" />
             <span class="validation text-danger"></span>
-        </div> 
-        <div class="form-group">
-            <label for="input11">{{ 'INPUT11' | translate }}</label>
-            <div class="input-group">
-                <span class="input-group-addon">@</span>
-                <input type="text" class="form-control" name="input11" placeholder="min_len:2|max_len:10|alpha_dash_spaces|required" ng-model="form1.input11" validation="min_len:2|max_len:10|alpha_dash_spaces|required" validation-error-to="error11" />
-                <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-            </div>
-            <span id="error11" class="validation text-danger"></span>            
-        </div> 
-        <div class="form-group">    
-            <label for="input12">{{ 'INPUT12' | translate }}</label>
-            <input type="text" class="form-control" name="input12" placeholder="alpha|required" ng-model="form1.input12" validation="alpha|required" ng-disabled="true" />
-            <span class="validation text-danger"></span>
         </div>
         <div class="form-group">
             <label for="select1">{{ 'SELECT1' | translate }}</label>           
@@ -83,8 +69,21 @@
                 <option value="2">Option #2</option>
             </select>
             <span class="validation text-danger"></span>            
+        </div> 
+        <div class="form-group">
+            <label for="input11">{{ 'INPUT11' | translate }}</label>
+            <div class="input-group">
+                <span class="input-group-addon">@</span>
+                <input type="text" class="form-control" name="input11" placeholder="min_len:2|max_len:10|alpha_dash_spaces|required" ng-model="form1.input11" validation="min_len:2|max_len:10|alpha_dash_spaces|required" validation-error-to="error11" />
+                <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+            </div>
+            <span id="error11" class="validation text-danger"></span>            
+        </div> 
+        <div class="form-group">    
+            <label for="input12">{{ 'INPUT12' | translate }}</label>
+            <input type="text" class="form-control" name="input12" placeholder="alpha|required" ng-model="form1.input12" validation="alpha|required" ng-disabled="true" />
+            <span class="validation text-danger"></span>
         </div>
-       
     </fieldset>
 
     <div class="form-actions">
