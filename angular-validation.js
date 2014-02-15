@@ -351,20 +351,21 @@
           if(elmTagName === "SELECT") {
             if(isFieldRequired && (value === "" || typeof value === "undefined")) {
               // if select option is null or empty string we already know it's invalid
-              ctrl.$setValidity('validation', false); 
+              ctrl.$setValidity('validation', validate(value)); 
+              elm.unbind('blur');
               return value;
             }
             // else we'll make sure we use an onBlur event to check validation
             evnt = "blur";
           }
-
+          
           // invalidate field before doing validation 
           ctrl.$setValidity('validation', false); 
 
           // in case the field is already pre-filled
           // we need to validate it without looking at the event binding
           if(ctrl.$pristine && value !== "" && typeof value !== "undefined") {
-            var isValid = validate(value);            
+            var isValid = validate(value);     
             ctrl.$setValidity('validation', isValid);
           }
 
@@ -372,7 +373,7 @@
           // update the validation on both the field & form element            
           elm.unbind('keyup').unbind(evnt).bind(evnt, function() {
             // make the regular validation of the field value
-            var isValid = validate(value);            
+            var isValid = validate(value);
             scope.$apply(ctrl.$setValidity('validation', isValid));            
           });  
 
