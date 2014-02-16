@@ -351,6 +351,7 @@
           if(elmTagName === "SELECT") {
             if(isFieldRequired && (value === "" || typeof value === "undefined")) {
               // if select option is null or empty string we already know it's invalid
+              // but we'll still run validation() to display proper error message
               ctrl.$setValidity('validation', validate(value)); 
               elm.unbind('blur');
               return value;
@@ -364,7 +365,7 @@
 
           // in case the field is already pre-filled
           // we need to validate it without looking at the event binding
-          if(ctrl.$pristine && value !== "" && typeof value !== "undefined") {
+          if(value !== "" && typeof value !== "undefined") {
             var isValid = validate(value);     
             ctrl.$setValidity('validation', isValid);
           }
