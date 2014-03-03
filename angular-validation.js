@@ -256,7 +256,7 @@
           // run the Regex test through each iteration
           for(var j = 0, jln = patterns.length; j < jln; j++) {
             regex = new RegExp(patterns[j], 'i');
-            isValid = regex.test(value);
+            isValid = (patterns[j] === "required" && typeof value === "undefined") ? false : regex.test(value);
             if(!isValid) {
               isFieldValid = false;              
               message += $translate(messages[j].message);              
