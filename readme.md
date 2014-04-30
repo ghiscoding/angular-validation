@@ -27,8 +27,9 @@ P.S. For real live example, please download the Github project and run the `inde
 
 <!-- example 3 -->
 <!-- input type="number", it is easier for the directive to block all non-numeric chars -->
-<label for="input3">numeric + required</label>
-<input type="number" name="input3" ng-model="form1.input3" validation="numeric|min_len:3|max_len:4|required"  />
+<!-- between_num could also be written with 2 conditions of min_num:n|max_num:n ... same goes to between_len -->
+<label for="input3">Float only + between(min,max) + required</label>
+<input type="number" name="input3" ng-model="form1.input3" validation="numeric|between_num:6,99.9|required"  />
 <span class="validation text-danger"></span>
 
 <!-- example 4 - with Regular Expression (Date Code of YYWW) -->
@@ -135,6 +136,7 @@ Available Validators
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max string length.
+* `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_us_long` Ensure date follows the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
@@ -149,7 +151,9 @@ Available Validators
 * `integer` Only positive integer.
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
+* `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
+* `min_num:n` Checks numeric value to be higher or equal than the number (n).
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
 * `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section

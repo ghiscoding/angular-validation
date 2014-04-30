@@ -19,8 +19,7 @@
         var validationAttr = attrs.validation;
 
         // define the variables we'll use 
-        var messages = [];
-        var patterns = [];
+        var validators = [];
         var regexMessage;    
         var regexPattern;
         var validations;       
@@ -51,190 +50,243 @@
             var params = validations[i].split(':');
             switch(params[0]) {
               case "alpha" :
-                patterns[i] = "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA'
+                validators[i] = {
+                  pattern: "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$",
+                  message: "INVALID_ALPHA",
+                  type: "regex"
                 };
                 break;
               case "alphaSpaces" :  
-              case "alpha_spaces" :              
-                patterns[i] = "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA_SPACE'
+              case "alpha_spaces" :   
+                validators[i] = {
+                  pattern: "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$",
+                  message: "INVALID_ALPHA_SPACE",
+                  type: "regex"
                 };
                 break;
               case "alphaNum" :  
               case "alpha_num" :
-                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA_NUM'
+                validators[i] = {
+                  pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$",
+                  message: "INVALID_ALPHA_NUM",
+                  type: "regex"
                 };
                 break;
               case "alphaNumSpaces" :
               case "alpha_num_spaces" :
-                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA_NUM_SPACE'
+                validators[i] = {
+                  pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$",
+                  message: "INVALID_ALPHA_NUM_SPACE",
+                  type: "regex"
                 };
                 break;
               case "alphaDash" :
               case "alpha_dash" :
-                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA_DASH'
+                validators[i] = {
+                  pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$",
+                  message: "INVALID_ALPHA_DASH",
+                  type: "regex"
                 };
                 break;
               case "alphaDashSpaces" :
               case "alpha_dash_spaces" :
-                patterns[i] = "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s_-])+$";
-                messages[i] = {
-                  message: 'INVALID_ALPHA_DASH_SPACE'
+                validators[i] = {
+                  pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s_-])+$",
+                  message: "INVALID_ALPHA_DASH_SPACE",
+                  type: "regex"
                 };
                 break;
               case "betweenLen" :
               case "between_len" :
                 var range = params[1].split(',');
-                patterns[i] = "^.{" + range[0] + "," + range[1] + "}$";    
-                messages[i] = {
-                  message: 'INVALID_BETWEEN',
-                  params: [range[0], range[1]]
-                };             
+                validators[i] = {
+                  pattern: "^.{" + range[0] + "," + range[1] + "}$",
+                  message: "INVALID_BETWEEN_CHAR",
+                  params: [range[0], range[1]],
+                  type: "regex"
+                };        
+                break;
+              case "betweenNum" :
+              case "between_num" :
+                var range = params[1].split(',');
+                validators[i] = {
+                  condition: [">=","<="],
+                  message: "INVALID_BETWEEN_NUM",
+                  params: [range[0], range[1]],
+                  type: "condition"
+                };
                 break;
               case "creditCard" :
               case "credit_card" :
-                patterns[i] = "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\\d{3})\\d{11})$";
-                messages[i] = {
-                  message: 'INVALID_CREDIT_CARD'
+                validators[i] = {
+                  pattern: "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\\d{3})\\d{11})$",
+                  message: "INVALID_CREDIT_CARD",
+                  type: "regex"
                 };
                 break;
               case "dateIso" :
               case "date_iso" :
-                patterns[i] = "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$";
-                messages[i] = {
-                  message: 'INVALID_DATE_ISO'
+                validators[i] = {
+                  pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+                  message: "INVALID_DATE_ISO",
+                  type: "regex"
                 };
                 break;  
               case "dateUsLong" :
               case "date_us_long" :
-                patterns[i] = "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$";
-                messages[i] = {
-                  message: 'INVALID_DATE_US_LONG'
+                validators[i] = {
+                  pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$",
+                  message: "INVALID_DATE_US_LONG",
+                  type: "regex"
                 };
                 break;
               case "dateUsShort" :
               case "date_us_short" :
-                patterns[i] = "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$";
-                messages[i] = {
-                  message: 'INVALID_DATE_US_SHORT'
+                validators[i] = {
+                  pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$",
+                  message: "INVALID_DATE_US_SHORT",
+                  type: "regex"
                 };
                 break;  
               case "dateEuroLong" :
               case "date_euro_long" :
-                patterns[i] = "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$";
-                messages[i] = {
-                  message: 'INVALID_DATE_EURO_LONG'
+                validators[i] = {
+                  pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+                  message: "INVALID_DATE_EURO_LONG",
+                  type: "regex"
                 };
                 break;  
               case "dateEuroShort" :
               case "date_euro_short" :
-                patterns[i] = "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$";
-                messages[i] = {
-                  message: 'INVALID_DATE_EURO_SHORT'
+                validators[i] = {
+                  pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+                  message: "INVALID_DATE_EURO_SHORT",
+                  type: "regex"
                 };
                 break;  
               case "email" :
-                patterns[i] = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
-                messages[i] = {
-                  message: 'INVALID_EMAIL'
+                validators[i] = {
+                  pattern: "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",
+                  message: "INVALID_EMAIL",
+                  type: "regex"
                 };
                 break;
               case "exactLen" :
               case "exact_len" :
-                patterns[i] = "^.{" + params[1] + "}$";                
-                messages[i] = {
-                  message: 'INVALID_EXACT_LEN',
-                  params: [params[1]]
+                validators[i] = {
+                  pattern: "^.{" + params[1] + "}$",
+                  message: "INVALID_EXACT_LEN",
+                  params: [params[1]],
+                  type: "regex"                  
                 };
                 break; 
               case "float" :
-                patterns[i] = "^\\d+[\\.]+\\d+$";
-                messages[i] = {
-                  message: 'INVALID_FLOAT'
+                validators[i] = {
+                  pattern: "^\\d+[\\.]+\\d+$",
+                  message: "INVALID_FLOAT",
+                  type: "regex"
                 };
                 break;
               case "floatSigned" :
               case "float_signed" :
-                patterns[i] = "^[+-]?\\d+[\\.]+\\d+$";
-                messages[i] = {
-                  message: 'INVALID_FLOAT_SIGNED'
+                validators[i] = {
+                  pattern: "^[+-]?\\d+[\\.]+\\d+$",
+                  message: "INVALID_FLOAT_SIGNED",
+                  type: "regex"
                 };
                 break;
               case "iban" :
-                patterns[i] = "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}";
-                messages[i] = {
-                  message: 'INVALID_IBAN'
+                validators[i] = {
+                  pattern: "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}",
+                  message: "INVALID_IBAN",
+                  type: "regex"
                 };
                 break; 
               case "integer" :
-                patterns[i] = "^\\d+$";
-                messages[i] = {
-                  message: 'INVALID_INTEGER'
+                validators[i] = {
+                  pattern: "^\\d+$",
+                  message: "INVALID_INTEGER",
+                  type: "regex"
                 };
                 break;
               case "integerSigned" :
               case "integer_signed" :
-                patterns[i] = "^[+-]?\\d+$";
-                messages[i] = {
-                  message: 'INVALID_INTEGER_SIGNED'
+                validators[i] = {
+                  pattern: "^[+-]?\\d+$",
+                  message: "INVALID_INTEGER_SIGNED",
+                  type: "regex"
                 };
-                break;              
+                break; 
               case "maxLen" :
               case "max_len" :
-                patterns[i] = "^.{0," + params[1] + "}$";                
-                messages[i] = {
-                  message: 'INVALID_MAX_CHAR',
-                  params: [params[1]]
+                validators[i] = {
+                  pattern: "^.{0," + params[1] + "}$",
+                  message: "INVALID_MAX_CHAR",
+                  params: [params[1]],
+                  type: "regex"
+                };
+                break;
+              case "max_num" :
+                validators[i] = {
+                  condition: "<=",
+                  message: "INVALID_MAX_NUM",
+                  params: [params[1]],
+                  type: "condition"
                 };
                 break;
               case "minLen" :
               case "min_len" :
-                patterns[i] = "^.{" + params[1] + ",}$";                
-                messages[i] = {
-                  message: 'INVALID_MIN_CHAR',
-                  params: [params[1]]
+                validators[i] = {
+                  pattern: "^.{" + params[1] + ",}$",
+                  message: "INVALID_MIN_CHAR",
+                  params: [params[1]],
+                  type: "regex"
                 };
                 break;
+              case "min_num" :
+                validators[i] = {
+                  condition: ">=",
+                  message: "INVALID_MIN_NUM",
+                  params: [params[1]],
+                  type: "condition"
+                };
+                break; 
               case "numeric" :
-                patterns[i] = "^\\d+[\\.]?\\d*$";
-                messages[i] = {
-                  message: 'INVALID_NUMERIC'
+                validators[i] = {
+                  pattern: "^\\d+[\\.]?\\d*$",
+                  message: "INVALID_NUMERIC",
+                  type: "regex"
                 };
               case "numeric_signed" :
-                patterns[i] = "^[-+]?\\d+[\\.]?\\d*$";
-                messages[i] = {
-                  message: 'INVALID_NUMERIC_SIGNED'
+                validators[i] = {
+                  pattern: "^[-+]?\\d+[\\.]?\\d*$",
+                  message: "INVALID_NUMERIC_SIGNED",
+                  type: "regex"
                 };
                 break;
               case "regex" :
                 // Regex is a special case, the regexMessage & regexPattern variables
                 // were created and dealt separately prior to the for loop
-                patterns[i] = regexPattern;    
-                messages[i] = {
-                  message: 'INVALID_PATTERN',
-                  params: [regexMessage]
+                validators[i] = {
+                  pattern: regexPattern,
+                  message: "INVALID_PATTERN",
+                  params: [regexMessage],
+                  type: "regex"
                 };
                 break;
               case "required" :
                 isFieldRequired = true;
-                patterns[i] = "\\S+";
-                messages[i] = {
-                  message: 'INVALID_REQUIRED'
+                validators[i] = {
+                  pattern: "\\S+",
+                  message: "INVALID_REQUIRED",
+                  type: "regex"
                 };
                 break;
               case "url" :
-                patterns[i] = "(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";
-                messages[i] = {
-                  message: 'INVALID_URL'
+                validators[i] = {
+                  pattern: "(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?",
+                  message: "INVALID_URL",
+                  type: "regex"
                 };
                 break;
             } 
@@ -246,25 +298,37 @@
          *  the error text of the span/div element dedicated for that error display.
          * @param string value: value of the input field
          */
-        var validate = function(value) {
+        var validate = function(strValue) {
           var isValid = true;
           var isFieldValid = true;
           var message = "";
           var regex;          
 
           // loop through all validations (could be multiple)
-          // run the Regex test through each iteration
-          for(var j = 0, jln = patterns.length; j < jln; j++) {
-            regex = new RegExp(patterns[j], 'i');
-            isValid = (patterns[j] === "required" && typeof value === "undefined") ? false : regex.test(value);
+          for(var j = 0, jln = validators.length; j < jln; j++) {
+            if(validators[j].type === "condition") { 
+              // a condition type
+              if(validators[j].params.length == 2) {
+                // typically a between condition, a range of number >= and <= 
+                var isValid1 = testCondition(validators[j].condition[0], parseFloat(strValue), parseFloat(validators[j].params[0]));
+                var isValid2 = testCondition(validators[j].condition[1], parseFloat(strValue), parseFloat(validators[j].params[1]));
+                isValid = (isValid1 && isValid2) ? true : false;
+              }else {
+                isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
+              }
+            }else {
+              // run the Regex test through each iteration
+              regex = new RegExp(validators[j].pattern, 'i');
+              isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
+            }
             if(!isValid) {
               isFieldValid = false;              
-              message += $translate(messages[j].message);              
+              message += $translate(validators[j].message);              
 
               // replace any error message params that were passed              
-              if(typeof messages[j].params !== "undefined") {
-                for(var k = 0, kln = messages[j].params.length; k < kln; k++) { 
-                  message = message.replace((':param'), messages[j].params[k]);
+              if(typeof validators[j].params !== "undefined") {
+                for(var k = 0, kln = validators[j].params.length; k < kln; k++) { 
+                  message = message.replace((':param'), validators[j].params[k]);
                 }                
               }
 
@@ -276,6 +340,34 @@
           
 
           return isFieldValid;
+        }
+
+        /** Test values with condition, I have created a switch case for all possible conditions.
+         * @var String condition: condition to filter with
+         * @var any value1: 1st value to compare, the type could be anything (number, String or even Date)
+         * @var any value2: 2nd value to compare, the type could be anything (number, String or even Date)
+         * @return boolean: a boolean result of the tested condition (true/false)
+         */
+        var testCondition = function(condition, value1, value2) {
+            var resultCond = false;
+      
+            switch (condition) {
+                case '<': resultCond = (value1 < value2) ? true : false;
+                    break;
+                case '<=': resultCond = (value1 <= value2) ? true : false;
+                    break;
+                case '>': resultCond = (value1 > value2) ? true : false;
+                    break;
+                case '>=': resultCond = (value1 >= value2) ? true : false;
+                    break;
+                case '!=':
+                case '<>': resultCond = (value1 != value2) ? true : false;
+                    break;
+                case '=':
+                case '==': resultCond = (value1 == value2) ? true : false;
+                    break;
+            }
+            return resultCond;
         }
 
         /** in general we will display error message at the next element after our input
