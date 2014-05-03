@@ -25,10 +25,10 @@
         var validationAttr = attrs.validation;
 
         // define the variables we'll use 
-        var validators = [];
         var regexMessage;    
         var regexPattern;
         var validations;       
+        var validators = [];
 
         // by default we'll consider field not required if not required then no need to validate empty value..right
         // if validation attribute calls it then we'll validate
@@ -284,6 +284,7 @@
                   message: "INVALID_NUMERIC",
                   type: "regex"
                 };
+                break; 
               case "numeric_signed" :
                 validators[i] = {
                   pattern: "^[-+]?\\d+[\\.]?\\d*$",
@@ -328,51 +329,39 @@
           } // end of for()         
         } // end of if()
         
-        /** Validate function, from the input value it will go through all validators (separated by pipe)
-         *  that were passed to the input element and will validate it. If field is invalid it will update
-         *  the error text of the span/div element dedicated for that error display.
-         * @param string value: value of the input field
-         */
-        var validate = function(strValue) {
-          var isValid = true;
-          var isFieldValid = true;
-          var message = "";
-          var regex;          
-
-          // loop through all validations (could be multiple)
-          for(var j = 0, jln = validators.length; j < jln; j++) {
-            if(validators[j].type === "condition_num") { 
-              // a condition type
-              if(validators[j].params.length == 2) {
-                // typically a "between" condition, a range of number >= and <= 
-                var isValid1 = testCondition(validators[j].condition[0], parseFloat(strValue), parseFloat(validators[j].params[0]));
-                var isValid2 = testCondition(validators[j].condition[1], parseFloat(strValue), parseFloat(validators[j].params[1]));
-                isValid = (isValid1 && isValid2) ? true : false;
+        /** We seem to have little problems validating a field of <input type="number"> 
+          * as angular reports undefined value even though user could type invalid chars
+          * Bind trigger to block alpha chars completely except these: numbers, decimal and dash
+          */
+        var bindBlockingCharsOnInputNumber = function() {
+          // get some properties of the inspected element
+          var elmTagName = elm.prop('tagName').toUpperCase();
+          var elmType = elm.prop('type').toUpperCase();
+          
+          // block chars completely, except numbers, decimal and dash
+          if(elmTagName === "INPUT" && elmType === "NUMBER") {
+            elm.bind('keydown', function(evt) {              
+              var charCode = (evt.which) ? evt.which : ((typeof event !== "undefined") ? event.keyCode : undefined);
+              if(typeof charCode === "undefined") {
+                evt.preventDefault();
+                return false;
+              }              
+              if (charCode > 31 && (charCode != 46 && ((charCode < 48 || charCode > 57) && charCode < 96 || charCode > 105)) && (charCode != 190 && charCode != 110 && charCode != 109 && charCode != 173)) {
+                evt.preventDefault();
+                return false;
               }else {
-                isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
+                return true;
               }
-            }else {
-              // run the Regex test through each iteration
-              regex = new RegExp(validators[j].pattern, 'i');
-              isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
-            }
-            if(!isValid) {
-              isFieldValid = false;              
-              message += $translate(validators[j].message);              
+            });            
+          }
+        }
 
-              // replace any error message params that were passed              
-              if(typeof validators[j].params !== "undefined") {
-                for(var k = 0, kln = validators[j].params.length; k < kln; k++) { 
-                  message = message.replace((':param'), validators[j].params[k]);
-                }                
-              }
-            } // end !isValid
-          } // end for() loop
-
-          // -- Error Display --//
-          updateErrorMsg(message, isFieldValid);
-
-          return isFieldValid;
+        /** Cancel current validation test and blank any leftover error message */
+        var cancelValidation = function() {
+          $timeout.cancel(timer);
+          updateErrorMsg("");
+          ctrl.$setValidity('validation', true);             
+          elm.unbind('blur'); // unbind onBlur else it will fail if input became dirty & empty
         }
 
         /** Test values with condition, I have created a switch case for all possible conditions.
@@ -426,45 +415,66 @@
           }
         }
 
+        /** Validate function, from the input value it will go through all validators (separated by pipe)
+         *  that were passed to the input element and will validate it. If field is invalid it will update
+         *  the error text of the span/div element dedicated for that error display.
+         * @param string value: value of the input field
+         */
+        var validate = function(strValue) {
+          var isValid = true;
+          var isFieldValid = true;
+          var message = "";
+          var regex;          
+
+          // loop through all validations (could be multiple)
+          for(var j = 0, jln = validators.length; j < jln; j++) {
+            if(validators[j].type === "condition_num") { 
+              // a condition type
+              if(validators[j].params.length == 2) {
+                // typically a "between" condition, a range of number >= and <= 
+                var isValid1 = testCondition(validators[j].condition[0], parseFloat(strValue), parseFloat(validators[j].params[0]));
+                var isValid2 = testCondition(validators[j].condition[1], parseFloat(strValue), parseFloat(validators[j].params[1]));
+                isValid = (isValid1 && isValid2) ? true : false;
+              }else {
+                isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
+              }
+            }else {
+              // run the Regex test through each iteration
+              regex = new RegExp(validators[j].pattern, 'i');
+              isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
+            }
+            if(!isValid) {
+              isFieldValid = false;              
+              message += $translate(validators[j].message);              
+
+              // replace any error message params that were passed              
+              if(typeof validators[j].params !== "undefined") {
+                for(var k = 0, kln = validators[j].params.length; k < kln; k++) { 
+                  message = message.replace((':param'), validators[j].params[k]);
+                }                
+              }
+            } // end !isValid
+          } // end for() loop
+
+          // -- Error Display --//
+          updateErrorMsg(message, isFieldValid);
+
+          return isFieldValid;
+        }
+
         /** Validator function to attach to the element, this will get call whenever the input field is updated
          *  and is also customizable through the (typing-limit) for which inactivity timer will trigger validation.
          * @param string value: value of the input field
          */
         var validator = function(value) { 
-          // if field is not required and his value is empty 
-          // then no need to validate & return it has valid
-          // make sure to unbind any events else it will try to continue validating
+          // if field is not required and his value is empty, cancel validation and exit out
           if(!isFieldRequired && (value === "" || typeof value === "undefined")) {
-            $timeout.cancel(timer);
-            updateErrorMsg("");
-            ctrl.$setValidity('validation', true);             
-            elm.unbind('keyup').unbind('keydown').unbind('blur');
+            cancelValidation();
             return value;
           }
 
-          // get some properties of the inspected element
-          var elmTagName = elm.prop('tagName').toUpperCase();
-          var elmType = elm.prop('type').toUpperCase();
-          
-          // We seem to have little problems validating a field of <input type="number"> 
-          // as angular reports undefined value even though user types chars
-          // so we'll simply block chars completely except numbers and decimal
-          if(elmTagName === "INPUT" && elmType === "NUMBER") {
-            elm.bind('keydown', function(evt) {              
-              var charCode = (evt.which) ? evt.which : ((typeof event !== "undefined") ? event.keyCode : undefined);
-              if(typeof charCode === "undefined") {
-                evt.preventDefault();
-                return false;
-              }
-              
-              if (charCode > 31 && (charCode != 46 && ((charCode < 48 || charCode > 57) && charCode < 96 || charCode > 105)) && (charCode != 190 && charCode != 110 && charCode != 109 && charCode != 173)) {
-                evt.preventDefault();
-                return false;
-              }else {
-                return true;
-              }
-            });            
-          }
+          // attach/bind trigger on a <input type="number"/> and only allow: numbers, decimal and dash
+          bindBlockingCharsOnInputNumber();
 
           // invalidate field before doing any validation 
           ctrl.$setValidity('validation', false); 
@@ -472,22 +482,19 @@
           // onBlur make validation without waiting
           elm.bind('blur', function() {  
             // make the regular validation of the field value
-            var isValid = validate(value);
-            scope.$apply(ctrl.$setValidity('validation', isValid)); 
+            scope.$apply(ctrl.$setValidity('validation', validate(value) )); 
             return value;
           });
 
           // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
-          // in case the field is already pre-filled
-          // we need to validate it without looking at the event binding
+          // in case the field is already pre-filled, we need to validate it without looking at the event binding
           if(value !== "" && typeof value !== "undefined") {
             // Make the validation only after the user has stopped activity on a field
             // everytime a new character is typed, it will cancel/restart the timer & we<ll erase any error mmsg
             updateErrorMsg("");
             $timeout.cancel(timer);            
-            timer = $timeout(function() {
-              var isValid = validate(value);     
-              ctrl.$setValidity('validation', isValid);
+            timer = $timeout(function() {  
+              ctrl.$setValidity('validation', validate(value));
             }, typingLimit);
           }
 
