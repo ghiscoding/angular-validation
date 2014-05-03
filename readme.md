@@ -1,4 +1,5 @@
-#Angular Validation
+#Angular Validation 
+### Form validation after user inactivity (customizable timeout)
 `Version: 1.1 Beta` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation in 1 line and displaying the errors on another 1 line...that's it! 
@@ -17,9 +18,7 @@ P.S. For real live example, please download the Github project and run the `inde
 <!-- example 1 -->
 <!-- change the typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
 <label for="input1">Simple Integer -- typing-limit(5sec)</label>
-<input type="text" name="input1" ng-model="form1.input1" 
-	validation="integer|required" 
-	typing-limit="5000" />
+<input type="text" name="input1" ng-model="form1.input1" typing-limit="5000" validation="integer|required" />
 <span class="validation text-danger"></span>
 
 <!-- example 2 -->
@@ -196,7 +195,8 @@ License
 [MIT License](http://www.opensource.org/licenses/mit-license.php)  
 
 # TODO 
-:memo: #### Any kind of help is welcome from the TODO list
+#### Any kind of help is welcome from the TODO list
+:memo: :point_up:
 
 * Add `same` and `different` validators (same password)
 * Add `street_address` validator
