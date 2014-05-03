@@ -1,21 +1,27 @@
 /**
- * angular-validation - v1.0 - 2014-02-07
+ * angular-validation - v1.1 - 2014-05-02
  * https://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
  *
  * @desc: If a field becomes invalid, the text inside the error <span> or <div> will show up because the error string gets filled
  * Though when the field becomes valid then the error message becomes an empty string, 
  * it will be transparent to the user even though the <span> still exist but becomes invisible since the text is empty.
+ *
+ * Version 1.1: only start validating after user inactivity, 
+ * it could also be passed as an argument for more customization of the inactivity timeout (typing-limit)
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', function($translate) {
+  .directive('validation', function($translate, $timeout) {
     return {
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
-        // default validation event that triggers the validation error to be displayed
-        var DEFAULT_EVENT = "keyup";         // keyup, blur, ...
+        // constant of default typing limit in ms
+        var TYPING_LIMIT = 1000; 
         
-        // get the validation attribute  
+        var timer;
+        var typingLimit = (attrs.hasOwnProperty('typingLimit')) ? parseInt(attrs.typingLimit, 10) : TYPING_LIMIT;
+
+        // get the validation attributes which are the list of validators  
         var validationAttr = attrs.validation;
 
         // define the variables we'll use 
@@ -113,7 +119,7 @@
                   condition: [">=","<="],
                   message: "INVALID_BETWEEN_NUM",
                   params: [range[0], range[1]],
-                  type: "condition"
+                  type: "condition_num"
                 };
                 break;
               case "creditCard" :
@@ -217,6 +223,27 @@
                   type: "regex"
                 };
                 break; 
+              case "ipv4" :
+                validators[i] = {
+                  pattern: "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$",
+                  message: "INVALID_IPV4",
+                  type: "regex"
+                };
+                break; 
+              case "ipv6" :
+                validators[i] = {
+                  pattern: "^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$",
+                  message: "INVALID_IPV6",
+                  type: "regex"
+                };
+                break; 
+              case "ipv6_hex" :
+                validators[i] = {
+                  pattern: "^((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)::((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)$",
+                  message: "INVALID_IPV6_HEX",
+                  type: "regex"
+                };
+                break; 
               case "maxLen" :
               case "max_len" :
                 validators[i] = {
@@ -231,7 +258,7 @@
                   condition: "<=",
                   message: "INVALID_MAX_NUM",
                   params: [params[1]],
-                  type: "condition"
+                  type: "condition_num"
                 };
                 break;
               case "minLen" :
@@ -248,7 +275,7 @@
                   condition: ">=",
                   message: "INVALID_MIN_NUM",
                   params: [params[1]],
-                  type: "condition"
+                  type: "condition_num"
                 };
                 break; 
               case "numeric" :
@@ -289,9 +316,17 @@
                   type: "regex"
                 };
                 break;
-            } 
-          }          
-        }
+              case "time" :
+                validators[i] = {
+                  pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
+                  message: "INVALID_TIME",
+                  type: "regex"
+                };
+                break;
+
+            } // end of switch() 
+          } // end of for()         
+        } // end of if()
         
         /** Validate function, from the input value it will go through all validators (separated by pipe)
          *  that were passed to the input element and will validate it. If field is invalid it will update
@@ -306,10 +341,10 @@
 
           // loop through all validations (could be multiple)
           for(var j = 0, jln = validators.length; j < jln; j++) {
-            if(validators[j].type === "condition") { 
+            if(validators[j].type === "condition_num") { 
               // a condition type
               if(validators[j].params.length == 2) {
-                // typically a between condition, a range of number >= and <= 
+                // typically a "between" condition, a range of number >= and <= 
                 var isValid1 = testCondition(validators[j].condition[0], parseFloat(strValue), parseFloat(validators[j].params[0]));
                 var isValid2 = testCondition(validators[j].condition[1], parseFloat(strValue), parseFloat(validators[j].params[1]));
                 isValid = (isValid1 && isValid2) ? true : false;
@@ -331,13 +366,11 @@
                   message = message.replace((':param'), validators[j].params[k]);
                 }                
               }
-
             } // end !isValid
-          } // end for loop
+          } // end for() loop
 
           // -- Error Display --//
-          updateErrorMsg(isFieldValid, message);
-          
+          updateErrorMsg(message, isFieldValid);
 
           return isFieldValid;
         }
@@ -375,43 +408,39 @@
           * @param bool isFieldValid: is the field valid?
           * @param string message: error message to display
           */
-        var updateErrorMsg = function(isFieldValid, message) {
-          var errorElm = (typeof attrs.validationErrorTo !== "undefined")
+        var updateErrorMsg = function(message, isFieldValid) {
+          var hasValidation = (typeof isFieldValid === "undefined") ? false : true;
+          var errorElm = (attrs.hasOwnProperty('validationErrorTo'))
             ? angular.element(document.querySelector('#'+attrs.validationErrorTo))
             : elm.next();
 
           // Re-Render Error display element inside the <span> or <div>
           if(typeof errorElm !== "undefined") {
-            if(!isFieldValid && ctrl.$dirty) {
+            if(hasValidation && !isFieldValid && ctrl.$dirty) {
               // Not valid & dirty, display the message
               errorElm.text(message);
             }else {
-              // element is prestine, error message has to be blank
+              // element is prestine or there's no validation applied, error message has to be blank
               errorElm.text("");   
             }
           }
         }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
-         *  and is also customizable through the (validation-event) which can be (onblur).
-         *  If no event is specified, it will validate (onkeyup) as a default action.
+         *  and is also customizable through the (typing-limit) for which inactivity timer will trigger validation.
          * @param string value: value of the input field
          */
         var validator = function(value) { 
           // if field is not required and his value is empty 
-          // then no need to validate & return it valid
+          // then no need to validate & return it has valid
+          // make sure to unbind any events else it will try to continue validating
           if(!isFieldRequired && (value === "" || typeof value === "undefined")) {
-            var isFieldValid = true;
-            ctrl.$setValidity('validation', isFieldValid); 
-            updateErrorMsg(isFieldValid, "");
-            elm.unbind('keyup').unbind('keydown');
+            $timeout.cancel(timer);
+            updateErrorMsg("");
+            ctrl.$setValidity('validation', true);             
+            elm.unbind('keyup').unbind('keydown').unbind('blur');
             return value;
           }
-
-          // analyze which event we'll use, if nothing was defined then use default
-          // also remove prefix substring of 'on' since we don't need it on the 'on' method
-          var evnt = (typeof attrs.validationEvent === "undefined") ? DEFAULT_EVENT : attrs.validationEvent;
-          evnt = evnt.replace('on', ''); // remove possible 'on' prefix
 
           // get some properties of the inspected element
           var elmTagName = elm.prop('tagName').toUpperCase();
@@ -437,41 +466,33 @@
             });            
           }
 
-          // Also make sure that if user has a select dropdown
-          // then we'll validate it has if it was a onBlur event
-          // since onKeyUp would fail has there would never be any keyup
-          if(elmTagName === "SELECT") {
-            if(isFieldRequired && (value === "" || typeof value === "undefined")) {
-              // if select option is null or empty string we already know it's invalid
-              // but we'll still run validation() to display proper error message
-              ctrl.$setValidity('validation', validate(value)); 
-              elm.unbind('blur');
-              return value;
-            }
-            // else we'll make sure we use an onBlur event to check validation
-            evnt = "blur";
-          }
-          
-          // invalidate field before doing validation 
+          // invalidate field before doing any validation 
           ctrl.$setValidity('validation', false); 
 
+          // onBlur make validation without waiting
+          elm.bind('blur', function() {  
+            // make the regular validation of the field value
+            var isValid = validate(value);
+            scope.$apply(ctrl.$setValidity('validation', isValid)); 
+            return value;
+          });
+
+          // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
           // in case the field is already pre-filled
           // we need to validate it without looking at the event binding
           if(value !== "" && typeof value !== "undefined") {
-            var isValid = validate(value);     
-            ctrl.$setValidity('validation', isValid);
+            // Make the validation only after the user has stopped activity on a field
+            // everytime a new character is typed, it will cancel/restart the timer & we<ll erase any error mmsg
+            updateErrorMsg("");
+            $timeout.cancel(timer);            
+            timer = $timeout(function() {
+              var isValid = validate(value);     
+              ctrl.$setValidity('validation', isValid);
+            }, typingLimit);
           }
 
-          // run the validate method on the event
-          // update the validation on both the field & form element            
-          elm.unbind('keyup').unbind(evnt).bind(evnt, function() {
-            // make the regular validation of the field value
-            var isValid = validate(value);
-            scope.$apply(ctrl.$setValidity('validation', isValid));            
-          });  
-
           return value;        
-        };
+        }; // end of validator()
 
         // attach the Validator object to the element
         ctrl.$parsers.unshift(validator);
@@ -488,6 +509,7 @@
                 ctrl.$setValidity('validation', validate(ctrl.$viewValue));
             }
         });
-      }
-    };
-  });
+
+      } // end of link: function()
+    }; // end of return;
+  }); // end of directive

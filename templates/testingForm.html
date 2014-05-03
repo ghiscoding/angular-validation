@@ -1,10 +1,8 @@
-
-
 <form novalidate name="formAdd" method="POST">
     <fieldset>  
         <div class="form-group">    
             <label for="input1">{{ 'INPUT1' | translate }}</label>
-            <input type="text" class="form-control" name="input1" placeholder="alpha_spaces|exact_len:3" ng-model="form1.input1" validation="alpha_spaces|exact_len:3|required" validation-event="blur" />
+            <input type="text" class="form-control" name="input1" placeholder="alpha_spaces|exact_len:3" ng-model="form1.input1" validation="alpha_spaces|exact_len:3|required" typing-limit="5000" />
             <span class="validation text-danger"></span>
         </div>
         <div class="form-group">    
@@ -34,27 +32,32 @@
         </div>
         <div class="form-group">    
             <label for="input7">{{ 'INPUT7' | translate }}</label>
-            <input type="text" class="form-control" name="input7" placeholder="credit_card|required" ng-model="form1.input7" validation="credit_card|required" />
-            <span class="validation text-danger"></span>
-        </div> 
-        <div class="form-group">    
-            <label for="input8">{{ 'INPUT8' | translate }}</label>
-            <input type="text" class="form-control" name="input8" placeholder="between_len:2,6|required" ng-model="form1.input8" validation="between_len:2,6|required" />
+            <input type="text" class="form-control" name="input7" placeholder="ipv4|required" ng-model="form1.input7" validation="ipv4|required" validation-event="blur" />
             <span class="validation text-danger"></span>
         </div>
         <div class="form-group">    
+            <label for="input8">{{ 'INPUT8' | translate }}</label>
+            <input type="text" class="form-control" name="input8" placeholder="credit_card|required" ng-model="form1.input8" validation="credit_card|required" />
+            <span class="validation text-danger"></span>
+        </div> 
+        <div class="form-group">    
             <label for="input9">{{ 'INPUT9' | translate }}</label>
-            <input type="text" class="form-control" name="input9" placeholder="date_iso|required" ng-model="form1.input9" validation="date_iso|required" />
+            <input type="text" class="form-control" name="input9" placeholder="between_len:2,6|required" ng-model="form1.input9" validation="between_len:2,6|required" />
             <span class="validation text-danger"></span>
         </div>
         <div class="form-group">    
             <label for="input10">{{ 'INPUT10' | translate }}</label>
-            <input type="text" class="form-control" name="input10" placeholder="date_us_long|required" ng-model="form1.input10" validation="date_us_long|required" />
+            <input type="text" class="form-control" name="input10" placeholder="date_iso|required" ng-model="form1.input10" validation="date_iso|required" />
+            <span class="validation text-danger"></span>
+        </div>
+        <div class="form-group">    
+            <label for="input11">{{ 'INPUT11' | translate }}</label>
+            <input type="text" class="form-control" name="input11" placeholder="date_us_long|required" ng-model="form1.input11" validation="date_us_long|required" />
             <span class="validation text-danger"></span>
         </div> 
         <div class="form-group">    
-            <label for="input11">{{ 'INPUT11' | translate }}</label>
-            <input type="text" class="form-control" name="input11" placeholder="min_len:2|max_len:10|alpha_num" ng-model="form1.input11" validation="min_len:2|max_len:10|alpha_num" />
+            <label for="input12">{{ 'INPUT12' | translate }}</label>
+            <input type="text" class="form-control" name="input12" placeholder="time" ng-model="form1.input12" validation="time" />
             <span class="validation text-danger"></span>
         </div>
         <div class="form-group">
@@ -76,17 +79,22 @@
             <span class="validation text-danger"></span>            
         </div> 
         <div class="form-group">
-            <label for="input12">{{ 'INPUT12' | translate }}</label>
+            <label for="input13">{{ 'INPUT13' | translate }}</label>
             <div class="input-group">
                 <span class="input-group-addon">@</span>
-                <input type="text" class="form-control" name="input12" placeholder="min_len:2|max_len:10|alpha_dash_spaces|required" ng-model="form1.input12" validation="min_len:2|max_len:10|alpha_dash_spaces|required" validation-error-to="error12" />
+                <input type="text" class="form-control" name="input13" placeholder="min_len:5|max_len:10|alpha_dash_spaces|required" ng-model="form1.input13" validation="min_len:5|max_len:10|alpha_dash_spaces|required" validation-error-to="error12" />
                 <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
             </div>
             <span id="error12" class="validation text-danger"></span>            
         </div> 
         <div class="form-group">    
-            <label for="input13">{{ 'INPUT13' | translate }}</label>
-            <input type="text" class="form-control" name="input13" placeholder="alpha|required" ng-model="form1.input13" validation="alpha|required" ng-disabled="true" />
+            <label for="input14">{{ 'INPUT14' | translate }}</label>
+            <input type="text" class="form-control" name="input14" placeholder="alpha|required" ng-model="form1.input14" validation="alpha|required" ng-disabled="true" />
+            <span class="validation text-danger"></span>
+        </div>
+        <div class="form-group">    
+            <label for="area1">{{ 'AREA1' | translate }}</label>
+            <textarea class="form-control" name="area1" rows="3" placeholder="alpha_dash_spaces|min_len:15|required" validation="alpha_dash_spaces|min_len:15|required" ng-model="form1.area1"></textarea>
             <span class="validation text-danger"></span>
         </div>
     </fieldset>

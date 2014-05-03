@@ -1,9 +1,11 @@
 #Angular Validation
-`Version: 1.0 Beta` 
+`Version: 1.1 Beta` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation in 1 line and displaying the errors on another 1 line...that's it! 
 
 The concept is not new, it comes from the easy form input validation approach of Laravel Framework and also from PHP Gump Validation. They both are built in PHP but why not use the same concept over Angular as well? Well now it is available and with some extras.
+
+For a smoother user experience, I also added validation on inactivity (timer). So validation will not bother the user while he is still typing...though as soon as user makes a pause for a certain amount of time, then validation comes in play. This feature is only while typing, if user is focusing out of the input (onBlur) it will validate instantly.
 
 ##  Some Working Examples
 
@@ -13,11 +15,11 @@ P.S. For real live example, please download the Github project and run the `inde
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
-<!-- changed the default validation trigger event to (blur), default being (keyup) -->
-<label for="input1">Simple Integer -- EVENT(onblur)</label>
+<!-- change the typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
+<label for="input1">Simple Integer -- typing-limit(5sec)</label>
 <input type="text" name="input1" ng-model="form1.input1" 
 	validation="integer|required" 
-	validation-event="blur" />
+	typing-limit="5000" />
 <span class="validation text-danger"></span>
 
 <!-- example 2 -->
@@ -39,11 +41,9 @@ P.S. For real live example, please download the Github project and run the `inde
 <span class="validation text-danger"></span>
 
 <!-- example 5 - required select option (dropdown) -->
-<!-- Select Option if required, it has to be validated as an onBlur event -->
-<!-- even if event is "keyup", the directive will use onBlur anyway for validation -->
 <div class="form-group">
     <label for="select1">Select Option Required</label>           
-    <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required" validation-event="blur">
+    <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
         <option value="">...</option>   
         <option value="1">Option #1</option>
         <option value="2">Option #2</option>
@@ -150,6 +150,9 @@ Available Validators
 * `iban` Check for a valid IBAN.
 * `integer` Only positive integer.
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
+* `ipv4` Check for valid IP (IPv4)
+* `ipv6` Check for valid IP (IPv6)
+* `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
@@ -159,6 +162,7 @@ Available Validators
 * `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
 * `required` Ensures the specified key value exists and is not empty
 * `url` Check for valid URL or subdomain
+* `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
 
 <a name="project"></a>
 Include it in your app project:
@@ -192,12 +196,10 @@ License
 [MIT License](http://www.opensource.org/licenses/mit-license.php)  
 
 # TODO 
-#### Any kind of help is welcome from the TODO list
+:memo: #### Any kind of help is welcome from the TODO list
 
 * Add `same` and `different` validators (same password)
-* Add `ipv4` and `ipv6` validators
 * Add `street_address` validator
-* Add `time` (12hrs/24hrs) validators
 * Add more validators...
 * Add more locale languages
 * Add online demo
