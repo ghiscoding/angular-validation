@@ -349,8 +349,6 @@
               if (charCode > 31 && (charCode != 46 && ((charCode < 48 || charCode > 57) && charCode < 96 || charCode > 105)) && (charCode != 190 && charCode != 110 && charCode != 109 && charCode != 173)) {
                 evt.preventDefault();
                 return false;
-              }else {
-                return true;
               }
             });            
           }
@@ -488,7 +486,7 @@
 
           // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
           // in case the field is already pre-filled, we need to validate it without looking at the event binding
-          if(value !== "" && typeof value !== "undefined") {
+          if(typeof value !== "undefined") {
             // Make the validation only after the user has stopped activity on a field
             // everytime a new character is typed, it will cancel/restart the timer & we<ll erase any error mmsg
             updateErrorMsg("");
