@@ -437,9 +437,14 @@
                 isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
               }
             }else {
-              // run the Regex test through each iteration
-              regex = new RegExp(validators[j].pattern, 'i');
-              isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
+              // a 'disabled' element should always be valid, there is no need to validate it
+              if(elm.prop('disabled')) {
+                isValid = true;
+              } else {
+                // run the Regex test through each iteration
+                regex = new RegExp(validators[j].pattern, 'i');
+                isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
+              }
             }
             if(!isValid) {
               isFieldValid = false;              
@@ -506,7 +511,7 @@
         // for the case of field that might be ng-disabled, we should skip validation
         // Observe the angular disabled attribute
         attrs.$observe("disabled",function(disabled) {
-            if(disabled){
+            if(disabled) {
                 // Turn off validation when disabled
                 ctrl.$setValidity('validation', true);
             } else {
