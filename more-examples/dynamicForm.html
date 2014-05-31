@@ -1,0 +1,14 @@
+<form novalidate name="formAdd" method="POST">
+    <fieldset>  
+        <div class="form-group" ng-repeat="k in data">    
+            <label for="k.name">{{k.name}}</label>
+            <dyninp modal="k.title" name="k.name" validate="k.validate"></dyninp>
+            <span class="validation text-danger"></span>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <!-- ng-disabled="formAdd.$invalid" -->
+        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="formAdd.$invalid" ng-click="">{{ 'SAVE' | translate }}</button>
+    </div>   
+</form>

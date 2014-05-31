@@ -1,0 +1,41 @@
+<!doctype html>
+<html ng-app="myApp" ng-cloak>
+	<head>
+	  <meta charset="utf-8">
+	  <title>Angular-Validation</title>	  
+	  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	  <link rel="stylesheet" href="../example-style.css">	  
+	</head>
+
+	<body>
+		<div>
+		<div class="container"  ng-controller="CtrlDynamic">
+			<h1>Angular Validation</h1>
+			<hr/>
+			<h3 class="text-info">{{'CHANGE_LANGUAGE' | translate}}</h3>
+			<div class="btn-group col-md-6">
+				<button type="button" class="btn btn-default" ng-click="switchLanguage('fr')">Français</button>
+				<button type="button" class="btn btn-default" ng-click="switchLanguage('en')">English</button>
+			</div>
+
+			<br/><hr/>
+			
+			<ng-view></ng-view>
+
+			<!-- external librairies CDN -->
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.js"></script>
+			<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.js"></script>
+
+			<!-- angular-translate -->		
+			<!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+			<script src="../lib/angular-translate/angular-translate.min.js"></script>
+			<script src="../lib/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+			<!-- Angular-Validation Directive -->
+		  	<script type="text/javascript" src="../angular-validation.js"></script>
+
+			<!-- my application -->
+		  	<script type="text/javascript" src="dynamic-app.js"></script>
+	  	</div>
+  	</body>
+</html>
