@@ -25,6 +25,6 @@ myApp.controller('Ctrl', ['$scope', '$translate', function ($scope, $translate) 
   $scope.form1 = {};
   
   $scope.switchLanguage = function (key) {
-    $translate.uses(key);
+    $translate.use(key);
   };
 }]);

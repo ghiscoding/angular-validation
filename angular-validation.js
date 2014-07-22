@@ -351,6 +351,9 @@
                 return false;
               }
             });            
+          }else if(elmTagName === "SELECT") {
+            // select(options) will be validated on the spot
+            typingLimit = 0;
           }
         }
 
@@ -448,7 +451,7 @@
             }
             if(!isValid) {
               isFieldValid = false;              
-              message += $translate(validators[j].message);              
+              message += $translate.instant(validators[j].message);   
 
               // replace any error message params that were passed              
               if(typeof validators[j].params !== "undefined") {
