@@ -351,9 +351,6 @@
                 return false;
               }
             });            
-          }else if(elmTagName === "SELECT") {
-            // select(options) will be validated on the spot
-            typingLimit = 0;
           }
         }
 
@@ -444,9 +441,9 @@
               if(elm.prop('disabled')) {
                 isValid = true;
               } else {
-                // run the Regex test through each iteration
+                // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
                 regex = new RegExp(validators[j].pattern, 'i');
-                isValid = (validators[j].pattern === "required" && typeof strValue === "undefined") ? false : regex.test(strValue);
+                isValid = (validators[j].pattern === "\\S+" && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
               }
             }
             if(!isValid) {
@@ -474,7 +471,7 @@
          */
         var validator = function(value) { 
           // if field is not required and his value is empty, cancel validation and exit out
-          if(!isFieldRequired && (value === "" || typeof value === "undefined")) {
+          if(!isFieldRequired && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
             return value;
           }
@@ -483,7 +480,9 @@
           bindBlockingCharsOnInputNumber();
 
           // invalidate field before doing any validation 
-          ctrl.$setValidity('validation', false); 
+          if(isFieldRequired) { 
+            ctrl.$setValidity('validation', false); // this breaks with AngularJS 1.3 as it return invalid field
+          }
 
           // onBlur make validation without waiting
           elm.bind('blur', function() {  
@@ -492,15 +491,22 @@
             return value;
           });
 
+          // select(options) will be validated on the spot
+          if(elm.prop('tagName').toUpperCase() === "SELECT") {
+            ctrl.$setValidity('validation', validate(value));
+            return value;
+          }
+
           // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
           // in case the field is already pre-filled, we need to validate it without looking at the event binding
           if(typeof value !== "undefined") {
+
             // Make the validation only after the user has stopped activity on a field
             // everytime a new character is typed, it will cancel/restart the timer & we<ll erase any error mmsg
             updateErrorMsg("");
             $timeout.cancel(timer);            
             timer = $timeout(function() {  
-              ctrl.$setValidity('validation', validate(value));
+              scope.$apply(ctrl.$setValidity('validation', validate(value) ));
             }, typingLimit);
           }
 
@@ -513,7 +519,7 @@
 
         // for the case of field that might be ng-disabled, we should skip validation
         // Observe the angular disabled attribute
-        attrs.$observe("disabled",function(disabled) {
+        attrs.$observe("disabled", function(disabled) {
             if(disabled) {
                 // Turn off validation when disabled
                 ctrl.$setValidity('validation', true);
