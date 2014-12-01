@@ -1,5 +1,5 @@
 /**
- * angular-validation - v1.3 - 2014-12-01
+ * angular-validation - v1.1 - 2014-05-02
  * https://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
  *
@@ -9,8 +9,6 @@
  *
  * Version 1.1: only start validating after user inactivity, 
  * it could also be passed as an argument for more customization of the inactivity timeout (typing-limit)
- * 
- * Version 1.3: support to Angular 1.3.x
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
   .directive('validation', function($translate, $timeout) {
@@ -483,13 +481,13 @@
 
           // invalidate field before doing any validation 
           if(isFieldRequired) { 
-            ctrl.$setValidity('validation', false);
+            ctrl.$setValidity('validation', false); // this breaks with AngularJS 1.3 as it return invalid field
           }
 
           // onBlur make validation without waiting
           elm.bind('blur', function() {  
             // make the regular validation of the field value
-            scope.$evalAsync(ctrl.$setValidity('validation', validate(value) ));
+            scope.$apply(ctrl.$setValidity('validation', validate(value) )); 
             return value;
           });
 
@@ -508,7 +506,7 @@
             updateErrorMsg("");
             $timeout.cancel(timer);            
             timer = $timeout(function() {  
-              scope.$evalAsync(ctrl.$setValidity('validation', validate(value) ));
+              scope.$apply(ctrl.$setValidity('validation', validate(value) ));
             }, typingLimit);
           }
 

@@ -1,12 +1,14 @@
 #Angular Validation 
 ### Form validation after user inactivity (customizable timeout)
-`Version: 1.1 Beta` 
+`Version: 1.3` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation in 1 line and displaying the errors on another 1 line...that's it! 
 
 The concept is not new, it comes from the easy form input validation approach of Laravel Framework and also from PHP Gump Validation. They both are built in PHP but why not use the same concept over Angular as well? Well now it is available and with some extras.
 
 For a smoother user experience, I also added validation on inactivity (timer). So validation will not bother the user while he is still typing...though as soon as user makes a pause for a certain amount of time, then validation comes in play. This feature is only while typing, if user is focusing out of the input (onBlur) it will validate instantly.
+
+Now also supporting AngularJS 1.3.x (see legacy folder for 1.2.x support)
 
 ##  Some Working Examples
 
@@ -189,6 +191,7 @@ Dependencies:
 
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
 2. Bootstrap 3 *optional* (http://getbootstrap.com/)
+3. AngularJS 1.3.x (https://angularjs.org/) see legacy folder for 1.2.x
 
 License
 -----
