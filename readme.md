@@ -1,6 +1,6 @@
 #Angular Validation 
 ### Form validation after user inactivity (customizable timeout)
-`Version: 1.3` 
+`Version: 1.3.1` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation in 1 line and displaying the errors on another 1 line...that's it! 
 
@@ -35,13 +35,23 @@ P.S. For real live example, please download the Github project and run the `inde
 <input type="number" name="input3" ng-model="form1.input3" validation="numeric|between_num:6,99.9|required"  />
 <span class="validation text-danger"></span>
 
-<!-- example 4 - with Regular Expression (Date Code of YYWW) -->
-<label for="input4">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
-<input type="text" name="input4" ng-model="form1.input4" 
+<!-- example 4 -->
+<!-- input match confirmation, as for example: password confirmation -->
+<!-- match validation could use 1 or 2 params (match:field1 ...or... match:field1,Text to Display), if 2 params are passed it will use the 2nd param as text displayed -->
+<label for="input4">Password</label>
+<input type="password" name="input4" ng-model="form1.input4" validation="alpha|min_len:4|required"  />
+<span class="validation text-danger"></span>
+<label for="input4c">Password Confirmation</label>
+<input type="password" name="input4c" ng-model="form1.input4c" validation="match:form1.input4,Password|required"  />
+<span class="validation text-danger"></span>
+
+<!-- example 5 - with Regular Expression (Date Code of YYWW) -->
+<label for="input5">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
+<input type="text" name="input5" ng-model="form1.input5" 
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 <span class="validation text-danger"></span>
 
-<!-- example 5 - required select option (dropdown) -->
+<!-- example 6 - required select option (dropdown) -->
 <div class="form-group">
     <label for="select1">Select Option Required</label>           
     <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
@@ -154,6 +164,8 @@ Available Validators
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
 * `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
+* `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
+* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternative text to be displayed.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
@@ -201,8 +213,7 @@ License
 #### Any kind of help is welcome from the TODO list
 :memo: :point_up:
 
-* Add `same` and `different` validators (same password)
 * Add `street_address` validator
 * Add more validators...
-* Add more locale languages
+* Add more locale languages... I need your help on that one!!!
 * Add online demo

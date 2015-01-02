@@ -93,6 +93,16 @@
             <span class="validation text-danger"></span>
         </div>
         <div class="form-group">    
+            <label for="input15">{{ 'INPUT15' | translate }}</label>
+            <input type="password" class="form-control" name="input14" placeholder="alpha|min_len:3|required" ng-model="form1.input15" validation="alpha|min_len:3|required" />
+            <span class="validation text-danger"></span>
+        </div>
+        <div class="form-group">    
+            <label for="input16">{{ 'INPUT16' | translate }}</label>
+            <input type="password" class="form-control" name="input14" placeholder="match:form1.input15|required" ng-model="form1.input16" validation="match:form1.input15,Password|required" />
+            <span class="validation text-danger"></span>
+        </div>
+        <div class="form-group">    
             <label for="area1">{{ 'AREA1' | translate }}</label>
             <textarea class="form-control" name="area1" rows="3" placeholder="alpha_dash_spaces|min_len:15|required" validation="alpha_dash_spaces|min_len:15|required" ng-model="form1.area1"></textarea>
             <span class="validation text-danger"></span>

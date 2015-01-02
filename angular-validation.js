@@ -107,6 +107,9 @@
               case "betweenLen" :
               case "between_len" :
                 var range = params[1].split(',');
+                if (range.length !== 2) {
+                  throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_len:1,5";
+                }
                 validators[i] = {
                   pattern: "^.{" + range[0] + "," + range[1] + "}$",
                   message: "INVALID_BETWEEN_CHAR",
@@ -117,6 +120,9 @@
               case "betweenNum" :
               case "between_num" :
                 var range = params[1].split(',');
+                if (range.length !== 2) {
+                  throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_num:1,5";
+                }
                 validators[i] = {
                   condition: [">=","<="],
                   message: "INVALID_BETWEEN_NUM",
@@ -246,6 +252,14 @@
                   type: "regex"
                 };
                 break; 
+              case "match" :
+                var args = params[1].split(',');
+                validators[i] = {
+                  message: "INVALID_INPUT_MATCH",
+                  params: args,
+                  type: "match"
+                };
+                break;
               case "maxLen" :
               case "max_len" :
                 validators[i] = {
@@ -438,6 +452,10 @@
               }else {
                 isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
               }
+            }else if(validators[j].type === "match") {
+              var otherNgModel = validators[j].params[0];
+              var otherNgModelVal = scope.$eval(otherNgModel);
+              isValid = (otherNgModelVal === strValue);
             }else {
               // a 'disabled' element should always be valid, there is no need to validate it
               if(elm.prop('disabled')) {
@@ -455,6 +473,11 @@
               // replace any error message params that were passed              
               if(typeof validators[j].params !== "undefined") {
                 for(var k = 0, kln = validators[j].params.length; k < kln; k++) { 
+                  if(validators[j].type === "match" && kln > 1 && k === 0) {
+                    // if validation type is "match" and include more than 1 params
+                    // then we'll skip param[0] to find our real text inside param[1]
+                    continue;
+                  }
                   message = message.replace((':param'), validators[j].params[k]);
                 }                
               }
