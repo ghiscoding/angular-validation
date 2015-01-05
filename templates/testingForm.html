@@ -7,12 +7,12 @@
         </div>
         <div class="form-group">    
             <label for="input2">{{ 'INPUT2' | translate }}</label>
-            <input type="number" class="form-control" name="input2" placeholder="float_signed|required" ng-model="form1.input2" validation="float_signed|required" />
+            <input type="number" class="form-control" name="input2" placeholder="numeric_signed|required" ng-model="form1.input2" validation="numeric_signed|required" />
             <span class="validation text-danger"></span>
         </div>  
         <div class="form-group">    
             <label for="input3">{{ 'INPUT3' | translate }}</label>
-            <input type="number" class="form-control" name="input3" placeholder="float_signed|between_num:6,99.5|required" ng-model="form1.input3" validation="float_signed|between_num:6,99.5|required" />
+            <input type="number" class="form-control" name="input3" placeholder="float_signed|between_num:-0.6,99.5|required" ng-model="form1.input3" validation="float_signed|between_num:-0.6,99.5|required" />
             <span class="validation text-danger"></span>
         </div>     
         <div class="form-group">    

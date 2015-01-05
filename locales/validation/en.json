@@ -25,6 +25,7 @@
     "INVALID_IPV4":             "Must be a valid IP (IPV4). ",    
     "INVALID_IPV6":             "Must be a valid IP (IPV6). ",    
     "INVALID_IPV6_HEX":         "Must be a valid IP (IPV6 Hex). ",    
+    "INVALID_KEY_CHAR":         "Invalid keyboard entry on a field of type \"number\". ",
     "INVALID_MAX_CHAR":         "May not be greater than :param characters. ",
     "INVALID_MAX_NUM":          "Needs to be a numeric value, equal to, or lower than :param. ",
     "INVALID_MIN_CHAR":         "Must be at least :param characters. ",
@@ -39,7 +40,7 @@
 
     "AREA1":            "TextArea: Alphanumeric + Minimum(15) + Required",
     "INPUT1":           "Alphanumeric + Exactly(3) + Required  -- typing-limit(5sec)",
-    "INPUT2":           "Float (integer excluded) -- input type=\"number\" -- BLOCK non-numeric characters ",
+    "INPUT2":           "Number positive or negative -- input type=\"number\" -- Error on non-numeric characters ",
     "INPUT3":           "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y ",
     "INPUT4":           "Multiple Validations + Custom Regex of Date Code (YYWW)",
     "INPUT5":           "Email",

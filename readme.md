@@ -10,6 +10,9 @@ For a smoother user experience, I also added validation on inactivity (timer). S
 
 Now also supporting AngularJS 1.3.x (see legacy folder for 1.2.x support)
 
+## Live Demo
+http://plnkr.co/edit/jADq7H?p=preview
+
 ##  Some Working Examples
 
 Let's start with a simple example and then let's get down to real business.
@@ -139,11 +142,12 @@ P.S. If you define new Language set, please make a pull request and I would be h
 
 Available Validators
 --------------------
-##### All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
+All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
+##### NOTE: on an input type="number", the "+" sign is an invalid character (browser limitation) even if you are using a `signed` validator. If you really wish to use the "+", then change your input to type="text".
 * `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
-* `alpha_num_spaces` Only alpha-numeric characters (with latin) and spaces are present (a-z, A-Z, 0-9)
+* `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max string length.
@@ -155,7 +159,7 @@ Available Validators
 * `date_euro_long` Ensure date follows the Europe long format (dd-mm-yyyy) or (dd/mm/yyyy)
 * `date_euro_short` Ensure date follows the Europe short format (dd-mm-yy) or (dd/mm/yy)
 * `email` Checks for a valid email address
-* `exact_len:n` Ensures that field length precisely matches the specified length. n = length parameter.
+* `exact_len:n` Ensures that field length precisely matches the specified length (n).
 * `float` Only a positive floating point value (integer are excluded)
 * `float_signed` Only a floating point value (integer excluded), could be signed (-/+) positive/negative.
 * `iban` Check for a valid IBAN.

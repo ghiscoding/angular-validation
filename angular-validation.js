@@ -196,7 +196,7 @@
                 break; 
               case "float" :
                 validators[i] = {
-                  pattern: "^\\d+[\\.]+\\d+$",
+                  pattern: "^\\d*\\.{1}\\d+$",
                   message: "INVALID_FLOAT",
                   type: "regex"
                 };
@@ -204,7 +204,7 @@
               case "floatSigned" :
               case "float_signed" :
                 validators[i] = {
-                  pattern: "^[+-]?\\d+[\\.]+\\d+$",
+                  pattern: "^[-+]?\\d*\\.{1}\\d+$",
                   message: "INVALID_FLOAT_SIGNED",
                   type: "regex"
                 };
@@ -296,14 +296,14 @@
                 break; 
               case "numeric" :
                 validators[i] = {
-                  pattern: "^\\d+[\\.]?\\d*$",
+                  pattern: "^\\d*\\.?\\d+$",
                   message: "INVALID_NUMERIC",
                   type: "regex"
                 };
                 break; 
               case "numeric_signed" :
                 validators[i] = {
-                  pattern: "^[-+]?\\d+[\\.]?\\d*$",
+                  pattern: "^[-+]?\\d*\\.?\\d+$",
                   message: "INVALID_NUMERIC_SIGNED",
                   type: "regex"
                 };
@@ -347,7 +347,7 @@
         
         /** We seem to have little problems validating a field of <input type="number"> 
           * as angular reports undefined value even though user could type invalid chars
-          * Bind trigger to block alpha chars completely except these: numbers, decimal and dash
+          * Bind trigger to block alpha chars completely except these: numbers, decimal, add and dash
           */
         var bindBlockingCharsOnInputNumber = function() {
           // get some properties of the inspected element
@@ -362,7 +362,9 @@
                 evt.preventDefault();
                 return false;
               }              
-              if (charCode > 31 && (charCode != 46 && ((charCode < 48 || charCode > 57) && charCode < 96 || charCode > 105)) && (charCode != 190 && charCode != 110 && charCode != 109 && charCode != 173)) {
+              // keycode: 8(backspace), 35(home), 36(end), 37(left arrow), 39(right arrow), 46(delete), 48-57(0-9), 96-105(numpad 0-9), 107(add), 109(substract), 110(decimal), 173(dash), 190(period)
+              regexBlocking = new RegExp("^(8|3[5-7]|39|46|4[8-9]|5[0-7]|9[6-9]|10[0-5]|107|109|110|173|190)$");
+              if(!regexBlocking.test(charCode)) {
                 evt.preventDefault();
                 return false;
               }
@@ -461,9 +463,15 @@
               if(elm.prop('disabled')) {
                 isValid = true;
               } else {
-                // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-                regex = new RegExp(validators[j].pattern, 'i');
-                isValid = (validators[j].pattern === "\\S+" && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
+                // before running Regex test, we'll make sure that an input of type="number" doesn't hold an invalid keyboard character, if that is the case then no need to run Regex
+                if(typeof strValue === "string" && strValue === "" && elm.prop('type').toUpperCase() === "NUMBER") {
+                  validators[0].message = "INVALID_KEY_CHAR"; // replace the first error message by the invalid keyboard error msg
+                  isValid = false;
+                }else {
+                  // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
+                  regex = new RegExp(validators[j].pattern, 'i');
+                  isValid = (validators[j].pattern === "\\S+" && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
+                }
               }
             }
             if(!isValid) {
@@ -502,7 +510,7 @@
           }
 
           // attach/bind trigger on a <input type="number"/> and only allow: numbers, decimal and dash
-          bindBlockingCharsOnInputNumber();
+          //bindBlockingCharsOnInputNumber();
 
           // invalidate field before doing any validation 
           if(isFieldRequired) { 
