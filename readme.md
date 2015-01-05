@@ -11,7 +11,7 @@ For a smoother user experience, I also added validation on inactivity (timer). S
 Now also supporting AngularJS 1.3.x (see legacy folder for 1.2.x support)
 
 ## Live Demo
-http://plnkr.co/jADq7H
+[Plunker](http://plnkr.co/jADq7H)
 
 ##  Some Working Examples
 
