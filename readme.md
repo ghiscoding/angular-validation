@@ -1,6 +1,6 @@
 #Angular Validation 
 ### Form validation after user inactivity (customizable timeout)
-`Version: 1.3.1` 
+`Version: 1.3.3` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation in 1 line and displaying the errors on another 1 line...that's it! 
 
@@ -13,7 +13,7 @@ Now also supporting AngularJS 1.3.x (see legacy folder for 1.2.x support)
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 
-##  Some Working Examples
+## Some Working Examples
 
 Let's start with a simple example and then let's get down to real business.
 
@@ -220,4 +220,9 @@ License
 * Add `street_address` validator
 * Add more validators...
 * Add more locale languages... I need your help on that one!!!
-* Add online demo
+
+## CHANGELOG
+* [1.3.0](https://github.com/ghiscoding/angular-validation/commit/d106996926bef86a0457c90fbb65fe6233f3928d) (2014-12-01) Added support to AngularJS 1.3
+* [1.3.1](https://github.com/ghiscoding/angular-validation/commit/44fe9de050504a46bb0eb975c31bc4b0f3b6f516) (2015-01-02) Added Input Match (confirmation) Validator
+* [1.3.2](https://github.com/ghiscoding/angular-validation/commit/41f9ed9abc7a6d66d4ecf6418b810459bf1d8717) (2015-01-03) Float number validator to also permit dot (.) as first char. Also removed keyboard blocking of invalid character on input type="number" instead display error message.
+* 1.3.3 (2015-01-04) Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
