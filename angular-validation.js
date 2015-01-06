@@ -1,16 +1,21 @@
 /**
- * angular-validation - v1.3 - 2014-12-01
+ * angular-validation (ghiscoding)
  * https://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
+ * @start-date: 2014-02-04
+ * @last-update: 2015-01-06
+ * @last-version: 1.3.4
  *
  * @desc: If a field becomes invalid, the text inside the error <span> or <div> will show up because the error string gets filled
  * Though when the field becomes valid then the error message becomes an empty string, 
  * it will be transparent to the user even though the <span> still exist but becomes invisible since the text is empty.
  *
- * Version 1.1: only start validating after user inactivity, 
- * it could also be passed as an argument for more customization of the inactivity timeout (typing-limit)
- * 
- * Version 1.3: support to Angular 1.3.x
+ * 1.1.0: only start validating after user inactivity, it could also be passed as an argument for more customization of the inactivity timeout (typing-limit) * 
+ * 1.3.0: support to Angular 1.3.x
+ * 1.3.1: Added Input Match (confirmation) Validator
+ * 1.3.2: Float number validator to also permit dot (.) as first char. Also removed keyboard blocking of invalid character on input type="number" instead display error message.
+ * 1.3.3: Updated Bootstrap(3.3.1) and AngularJS(1.3.7) to latest versions
+ * 1.3.4: Removed the necessity of creating a <span> for displaying the error message, the directive now handles it by itself.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
   .directive('validation', function($translate, $timeout) {
@@ -216,6 +221,7 @@
                   type: "regex"
                 };
                 break; 
+              case "int" :
               case "integer" :
                 validators[i] = {
                   pattern: "^\\d+$",
@@ -223,7 +229,9 @@
                   type: "regex"
                 };
                 break;
+              case "intSigned" :
               case "integerSigned" :
+              case "int_signed" :
               case "integer_signed" :
                 validators[i] = {
                   pattern: "^[+-]?\\d+$",
@@ -269,6 +277,7 @@
                   type: "regex"
                 };
                 break;
+              case "maxNum" :
               case "max_num" :
                 validators[i] = {
                   condition: "<=",
@@ -286,6 +295,7 @@
                   type: "regex"
                 };
                 break;
+              case "minNum" :
               case "min_num" :
                 validators[i] = {
                   condition: ">=",
@@ -301,6 +311,7 @@
                   type: "regex"
                 };
                 break; 
+              case "numericSigned" :
               case "numeric_signed" :
                 validators[i] = {
                   pattern: "^[-+]?\\d*\\.?\\d+$",
@@ -345,33 +356,6 @@
           } // end of for()         
         } // end of if()
         
-        /** We seem to have little problems validating a field of <input type="number"> 
-          * as angular reports undefined value even though user could type invalid chars
-          * Bind trigger to block alpha chars completely except these: numbers, decimal, add and dash
-          */
-        var bindBlockingCharsOnInputNumber = function() {
-          // get some properties of the inspected element
-          var elmTagName = elm.prop('tagName').toUpperCase();
-          var elmType = elm.prop('type').toUpperCase();
-          
-          // block chars completely, except numbers, decimal and dash
-          if(elmTagName === "INPUT" && elmType === "NUMBER") {
-            elm.bind('keydown', function(evt) {              
-              var charCode = (evt.which) ? evt.which : ((typeof event !== "undefined") ? event.keyCode : undefined);
-              if(typeof charCode === "undefined") {
-                evt.preventDefault();
-                return false;
-              }              
-              // keycode: 8(backspace), 35(home), 36(end), 37(left arrow), 39(right arrow), 46(delete), 48-57(0-9), 96-105(numpad 0-9), 107(add), 109(substract), 110(decimal), 173(dash), 190(period)
-              regexBlocking = new RegExp("^(8|3[5-7]|39|46|4[8-9]|5[0-7]|9[6-9]|10[0-5]|107|109|110|173|190)$");
-              if(!regexBlocking.test(charCode)) {
-                evt.preventDefault();
-                return false;
-              }
-            });            
-          }
-        }
-
         /** Cancel current validation test and blank any leftover error message */
         var cancelValidation = function() {
           $timeout.cancel(timer);
@@ -408,26 +392,39 @@
             return resultCond;
         }
 
-        /** in general we will display error message at the next element after our input
-          * but in some cases user want to define which DOM id to display error (as validation attribute)
+        /** in general we will display error message at the next element after our input as <span class="validation validation-inputName text-danger">
+          * but in some cases user might want to define which DOM id to display error (as validation attribute)
           * @param bool isFieldValid: is the field valid?
           * @param string message: error message to display
           */
         var updateErrorMsg = function(message, isFieldValid) {
+          // get the name attribute of current element, make sure to strip dirty characters, for example remove a <input name="options[]"/>, we need to strip the "[]"
+          var elmInputName = elm.attr('name').replace(/[|&;$%@"<>()+,\[\]\{\}]/g, "");
           var hasValidation = (typeof isFieldValid === "undefined") ? false : true;
-          var errorElm = (attrs.hasOwnProperty('validationErrorTo'))
-            ? angular.element(document.querySelector('#'+attrs.validationErrorTo))
-            : elm.next();
+          var errorElm = null;
 
-          // Re-Render Error display element inside the <span> or <div>
-          if(typeof errorElm !== "undefined") {
-            if(hasValidation && !isFieldValid && ctrl.$dirty) {
-              // Not valid & dirty, display the message
-              errorElm.text(message);
-            }else {
-              // element is prestine or there's no validation applied, error message has to be blank
-              errorElm.text("");   
-            }
+          if(typeof elmInputName === "undefined") {
+            throw 'Angular-Validation requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + elm.attr('ng-model') + '"';
+          }
+
+          // find the element which we'll display the error message, this element might be defined by the user with 'validationErrorTo'
+          if(attrs.hasOwnProperty('validationErrorTo')) {
+            // validationErrorTo can be used in 3 different ways: with '.' (element error className) or with/without '#' (element error id)
+            var firstChar = attrs.validationErrorTo.charAt(0);
+            var selector = (firstChar === '.' || firstChar === '#') ? attrs.validationErrorTo : '#'+attrs.validationErrorTo;
+            errorElm = angular.element(document.querySelector(selector));
+          }else {
+            // most common way, let's try to find our <span class="validation-inputName">
+            errorElm = angular.element(document.querySelector('.validation-'+elmInputName));
+          }
+
+          // Re-Render Error display element inside a <span class="validation validation-inputName text-danger">
+          if(hasValidation && !isFieldValid && ctrl.$dirty) {
+            // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
+            (errorElm.length > 0) ? errorElm.text(message) : elm.after('<span class="validation validation-'+elmInputName+' text-danger">'+message+'</span>');
+          }else {
+            // element is pristine or there's no validation applied, error message has to be blank
+            errorElm.text('');   
           }
         }
 
@@ -439,7 +436,7 @@
         var validate = function(strValue) {
           var isValid = true;
           var isFieldValid = true;
-          var message = "";
+          var message = '';
           var regex;          
 
           // loop through all validations (could be multiple)
@@ -447,7 +444,7 @@
             if(validators[j].type === "condition_num") { 
               // a condition type
               if(validators[j].params.length == 2) {
-                // typically a "between" condition, a range of number >= and <= 
+                // this is typically a "between" condition, a range of number >= and <= 
                 var isValid1 = testCondition(validators[j].condition[0], parseFloat(strValue), parseFloat(validators[j].params[0]));
                 var isValid2 = testCondition(validators[j].condition[1], parseFloat(strValue), parseFloat(validators[j].params[1]));
                 isValid = (isValid1 && isValid2) ? true : false;
@@ -455,17 +452,18 @@
                 isValid = testCondition(validators[j].condition, parseFloat(strValue), parseFloat(validators[j].params[0]));
               }
             }else if(validators[j].type === "match") {
+              // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
               var otherNgModel = validators[j].params[0];
-              var otherNgModelVal = scope.$eval(otherNgModel);
+              var otherNgModelVal = scope.$eval(otherNgModel); 
               isValid = (otherNgModelVal === strValue);
             }else {
               // a 'disabled' element should always be valid, there is no need to validate it
-              if(elm.prop('disabled')) {
+              if(elm.prop("disabled")) {
                 isValid = true;
               } else {
-                // before running Regex test, we'll make sure that an input of type="number" doesn't hold an invalid keyboard character, if that is the case then no need to run Regex
+                // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
                 if(typeof strValue === "string" && strValue === "" && elm.prop('type').toUpperCase() === "NUMBER") {
-                  validators[0].message = "INVALID_KEY_CHAR"; // replace the first error message by the invalid keyboard error msg
+                  message = $translate.instant("INVALID_KEY_CHAR");
                   isValid = false;
                 }else {
                   // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
@@ -476,14 +474,13 @@
             }
             if(!isValid) {
               isFieldValid = false;              
-              message += $translate.instant(validators[j].message);   
+              message += $translate.instant(validators[j].message);
 
-              // replace any error message params that were passed              
+              // replace any error message param(s) that were possibly passed              
               if(typeof validators[j].params !== "undefined") {
                 for(var k = 0, kln = validators[j].params.length; k < kln; k++) { 
                   if(validators[j].type === "match" && kln > 1 && k === 0) {
-                    // if validation type is "match" and include more than 1 params
-                    // then we'll skip param[0] to find our real text inside param[1]
+                    // if validation type is "match" and includes more than 1 param, our real text is in param[1], so we need to skip index [0]
                     continue;
                   }
                   message = message.replace((':param'), validators[j].params[k]);
@@ -509,9 +506,6 @@
             return value;
           }
 
-          // attach/bind trigger on a <input type="number"/> and only allow: numbers, decimal and dash
-          //bindBlockingCharsOnInputNumber();
-
           // invalidate field before doing any validation 
           if(isFieldRequired) { 
             ctrl.$setValidity('validation', false);
@@ -533,10 +527,9 @@
           // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
           // in case the field is already pre-filled, we need to validate it without looking at the event binding
           if(typeof value !== "undefined") {
-
             // Make the validation only after the user has stopped activity on a field
             // everytime a new character is typed, it will cancel/restart the timer & we<ll erase any error mmsg
-            updateErrorMsg("");
+            updateErrorMsg('');
             $timeout.cancel(timer);            
             timer = $timeout(function() {  
               scope.$evalAsync(ctrl.$setValidity('validation', validate(value) ));

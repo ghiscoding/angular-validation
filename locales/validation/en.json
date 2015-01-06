@@ -16,7 +16,7 @@
     "INVALID_DATE_US_SHORT":    "Must be a valid date format (mm/dd/yy) OR (mm-dd-yy). ",
     "INVALID_EMAIL":            "Must be a valid email address. ",
     "INVALID_EXACT_LEN":        "Must have a length of exactly :param characters. ",
-    "INVALID_FLOAT":            "May only contain a float value (integer excluded). ",
+    "INVALID_FLOAT":            "May only contain a positive float value (integer excluded). ",
     "INVALID_FLOAT_SIGNED":     "May only contain a positive or negative float value (integer excluded). ",
     "INVALID_IBAN":             "Must a valid IBAN. ",
     "INVALID_INPUT_MATCH":      "Confirmation field does not match specified field \":param\". ",
@@ -39,6 +39,7 @@
 
 
     "AREA1":            "TextArea: Alphanumeric + Minimum(15) + Required",
+    "CHANGE_LANGUAGE":  "Change language.",
     "INPUT1":           "Alphanumeric + Exactly(3) + Required  -- typing-limit(5sec)",
     "INPUT2":           "Number positive or negative -- input type=\"number\" -- Error on non-numeric characters ",
     "INPUT3":           "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y ",
@@ -54,8 +55,7 @@
     "INPUT13":          "AlphaDashSpaces + Required + Minimum(5) Characters -- MUST USE: validation-error-to=\" \"",
     "INPUT14":          "Alphanumeric + Required -- NG-DISABLED",
     "INPUT15":          "Password",
-    "INPUT16":          "Password Confirmation",
-    "CHANGE_LANGUAGE":  "Change language.",
+    "INPUT16":          "Password Confirmation",    
     "SAVE":             "Save",
     "SELECT1":          "Required (select) -- NoEVENT default(keyup) -- Directive will validate has EVENT (blur)",
     "SELECT2":          "Required (select) -- EVENT (blur)"
