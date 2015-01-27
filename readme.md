@@ -11,13 +11,15 @@ For a smoother user experience, I also added validation on inactivity (timer). S
 Now also supporting AngularJS 1.3.x 
 *current code should work with 1.2.x just the same*
 
-## Requirements
-Angular-Validation requires the element that will use validation to have a `name=""` attribute so that it can use this name to associate a `<span>` for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
-...* the necessity of name attribute is new since version 1.3.4+, since prior to this change it was asking the user to create his own `<span>` for error displaying.*
-
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 <a name="live_demo"></a>
+
+## Requirements
+Angular-Validation requires the element that will use validation to have a `name=""` attribute, so that it can use this name to associate a `<span>` for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
+
+*the necessity of name attribute is new since version 1.3.4+, since prior to this change it was asking the user to create his own `<span>` for error displaying*
+
 
 ## Some Working Examples
 Let's start with a simple example and then let's get down to real business.
@@ -227,7 +229,7 @@ Dependencies:
 
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
 2. Bootstrap 3.x *optional* (http://getbootstrap.com/)
-3. AngularJS 1.3.x (https://angularjs.org/) see legacy folder for 1.2.x
+3. AngularJS 1.2.x / 1.3.x (https://angularjs.org/)
 
 License
 -----
@@ -235,8 +237,6 @@ License
 
 # TODO 
 #### Any kind of help is welcome from the TODO list
-:memo: :point_up:
-
 * Add more validators...
 * Add more locale languages... I need your help on that one!!!
 * Create an Angular Service that will provide access to attaching validation on the fly from within a controller
@@ -246,4 +246,5 @@ License
 * [1.3.1](https://github.com/ghiscoding/angular-validation/commit/44fe9de050504a46bb0eb975c31bc4b0f3b6f516) `2015-01-02` Added Input Match/Confirmation Validator, ex: password confirmation.
 * [1.3.2](https://github.com/ghiscoding/angular-validation/commit/41f9ed9abc7a6d66d4ecf6418b810459bf1d8717) `2015-01-03` Float number validator to also permit dot (.) as first character. Also removed keyboard blocking of invalid character on input type="number" now displays error message.
 * [1.3.3](https://github.com/ghiscoding/angular-validation/commit/7b3043a97006a3d7043b198f89c91f8b6c49476e) `2015-01-04` Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
-* 1.3.4 `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
+* [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
+* [1.3.5]() `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.

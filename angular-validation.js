@@ -398,14 +398,15 @@
           * @param string message: error message to display
           */
         var updateErrorMsg = function(message, isFieldValid) {
+          // Make sure that element has a name="" attribute else it will not work
+          if(typeof elm.attr('name') === "undefined") {
+            throw 'Angular-Validation requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + elm.attr('ng-model') + '"';
+          }
+
           // get the name attribute of current element, make sure to strip dirty characters, for example remove a <input name="options[]"/>, we need to strip the "[]"
           var elmInputName = elm.attr('name').replace(/[|&;$%@"<>()+,\[\]\{\}]/g, "");
           var hasValidation = (typeof isFieldValid === "undefined") ? false : true;
           var errorElm = null;
-
-          if(typeof elmInputName === "undefined") {
-            throw 'Angular-Validation requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + elm.attr('ng-model') + '"';
-          }
 
           // find the element which we'll display the error message, this element might be defined by the user with 'validationErrorTo'
           if(attrs.hasOwnProperty('validationErrorTo')) {
