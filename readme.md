@@ -18,7 +18,7 @@ Now also supporting AngularJS 1.3.x
 ## Requirements
 Angular-Validation requires the element that will use validation to have a `name=""` attribute, so that it can use this name to associate a `<span>` for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
 
-*the necessity of name attribute is new since version 1.3.4+, since prior to this change it was asking the user to create his own `<span>` for error displaying*
+*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. To make it more clear, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
 
 ## Some Working Examples
@@ -247,4 +247,4 @@ License
 * [1.3.2](https://github.com/ghiscoding/angular-validation/commit/41f9ed9abc7a6d66d4ecf6418b810459bf1d8717) `2015-01-03` Float number validator to also permit dot (.) as first character. Also removed keyboard blocking of invalid character on input type="number" now displays error message.
 * [1.3.3](https://github.com/ghiscoding/angular-validation/commit/7b3043a97006a3d7043b198f89c91f8b6c49476e) `2015-01-04` Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
-* [1.3.5]() `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
+* [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
