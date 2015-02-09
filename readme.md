@@ -2,14 +2,14 @@
 ### Form validation after user inactivity (customizable timeout)
 `Version: 1.3.4` 
 
-Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your validation="" directly within your element to validate (input, textarea, etc) and...that's it!!! The directive will take care of the rest!
+Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive will take care of the rest!
 
 The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available and with some extras.
 
-For a smoother user experience, I also added validation on inactivity (timer). So validation will not bother the user while he is still typing...though as soon as user makes a pause for a certain amount of time, then validation comes in play. This feature is only while typing, if user is focusing out of the input (onBlur) it will validate instantly.
+For a smoother user experience, I also added validation on inactivity (timer). So validation will not bother the user while he is still typing... but as soon as the user makes a pause for a certain amount of time, then validation comes into play. This feature is only while typing, if user is focusing out of the input (onBlur) it will validate instantly.
 
 Now also supporting AngularJS 1.3.x 
-*current code should work with 1.2.x just the same*
+*current code should work with 1.2.x just the same but is no more verified*
 
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
@@ -18,7 +18,7 @@ Now also supporting AngularJS 1.3.x
 ## Requirements
 Angular-Validation requires the element that will use validation to have a `name=""` attribute, so that it can use this name to associate a `<span>` for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
 
-*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. To make it more clear, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
+*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. For a better understanding, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
 
 ## Some Working Examples
@@ -131,18 +131,6 @@ Step #1-4 are for explanation only, at the end we show the full regex (make sure
 Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
 
 
-Validation Event (default: keyup)
---------------------
-We could also specify whichever validation event we want to trigger the validation (keyup, blur, etc...).
-
-Features:
-
-1. All possible events of the element are accepted `keyup`, `blur`, etc...
-
-2. Event could be written with/without the `on` as prefix. `onblur` is equivalent to `blur`.
-
-3. Default event `keyup` can be changed in the directive itself via constant `DEFAULT_EVENT`
-
 Locales (languages)
 --------------------
 Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
@@ -154,7 +142,7 @@ Note: To be fully localized, I should add the country code at the end of my JSON
 var key = 'fr'; 
 
 $scope.switchLanguage = function (key) {
-  $translate.uses(key);
+  $translate.use(key);
 };
 ```	  
 
@@ -208,7 +196,7 @@ Include it in your app project:
 --------------------
 ```javascript
 // include it your app module ( we need both Translate & Validation)
-var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghiscoding.validation']);
+var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
 
 // include validation languages
 // if you want full localization add it in the suffix
@@ -228,7 +216,7 @@ Dependencies:
 ------------------
 
 1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
-2. Bootstrap 3.x *optional* (http://getbootstrap.com/)
+2. Bootstrap 3.x *is optional* (http://getbootstrap.com/)
 3. AngularJS 1.2.x / 1.3.x (https://angularjs.org/)
 
 License
@@ -248,4 +236,4 @@ License
 * [1.3.3](https://github.com/ghiscoding/angular-validation/commit/7b3043a97006a3d7043b198f89c91f8b6c49476e) `2015-01-04` Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
-* [1.3.6]() `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
+* [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
