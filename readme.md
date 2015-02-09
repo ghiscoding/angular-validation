@@ -248,3 +248,4 @@ License
 * [1.3.3](https://github.com/ghiscoding/angular-validation/commit/7b3043a97006a3d7043b198f89c91f8b6c49476e) `2015-01-04` Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
+* [1.3.6]() `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 

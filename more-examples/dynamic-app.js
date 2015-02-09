@@ -2,9 +2,7 @@
 
 var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghiscoding.validation']);
 
-myApp
-  // Routing
-  .config(function ($routeProvider, $locationProvider) {
+myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider.when('/dynamic', {
           templateUrl: 'dynamicForm.html',
           controller: 'CtrlDynamic'
@@ -12,8 +10,8 @@ myApp
     $routeProvider.otherwise({
           redirectTo: 'dynamic',
     });
-  })
-	.config(function ($translateProvider) {
+  }])
+	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
 	    prefix: '../locales/validation/',
 	    suffix: '.json'
@@ -21,12 +19,12 @@ myApp
   
   	// load English ('en') table on startup
 		$translateProvider.preferredLanguage('en');
-	})
+	}])
   .controller('CtrlDynamic', ['$scope', '$translate', function ($scope, $translate) {
     $scope.form1 = {};
     
     $scope.switchLanguage = function (key) {
-      $translate.uses(key);
+      $translate.use(key);
     };
 
     $scope.data = [{
@@ -43,7 +41,7 @@ myApp
         'validate':"max_len:22|required"
     }];
   }])
-  .directive('dyninp', function ( ) {
+  .directive('dyninp', [ function () {
     return {
         restrict: 'AE',
         scope: {
@@ -54,4 +52,4 @@ myApp
         template: '<input type="text" class="form-control" ng-model="modal" validation="{{validate}}" />',
         link: function (scope, element, attrs) {}
     }
-});
+  }]);

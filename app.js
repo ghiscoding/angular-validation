@@ -2,7 +2,7 @@
 
 var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghiscoding.validation']);
 
-myApp.config(function ($routeProvider, $locationProvider) {
+myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider.when('/validate', {
           templateUrl: 'templates/testingForm.html',
           controller: 'Ctrl'
@@ -10,8 +10,8 @@ myApp.config(function ($routeProvider, $locationProvider) {
     $routeProvider.otherwise({
           redirectTo: 'validate',
     });
-  })
-	.config(function ($translateProvider) {
+  }])
+	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
 	    prefix: 'locales/validation/',
 	    suffix: '.json'
@@ -19,7 +19,7 @@ myApp.config(function ($routeProvider, $locationProvider) {
   
   	// load English ('en') table on startup
 		$translateProvider.preferredLanguage('en');
-	});
+	}]);
 
 myApp.controller('Ctrl', ['$scope', '$translate', function ($scope, $translate) {
   $scope.form1 = {};

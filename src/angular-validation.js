@@ -18,7 +18,7 @@
  * 1.3.4: Removed the necessity of creating a <span> for displaying the error message, the directive now handles it by itself.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', function($translate, $timeout) {
+  .directive('validation', ['$translate', '$timeout', function($translate, $timeout) {
     return {
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
@@ -558,4 +558,4 @@
 
       } // end of link: function()
     }; // end of return;
-  }); // end of directive
+  }]); // end of directive
