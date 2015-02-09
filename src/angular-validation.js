@@ -3,8 +3,8 @@
  * https://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
  * @start-date: 2014-02-04
- * @last-update: 2015-01-06
- * @last-version: 1.3.4
+ * @last-update: 2015-02-09
+ * @last-version: 1.3.6
  *
  * @desc: If a field becomes invalid, the text inside the error <span> or <div> will show up because the error string gets filled
  * Though when the field becomes valid then the error message becomes an empty string, 
@@ -16,6 +16,8 @@
  * 1.3.2: Float number validator to also permit dot (.) as first char. Also removed keyboard blocking of invalid character on input type="number" instead display error message.
  * 1.3.3: Updated Bootstrap(3.3.1) and AngularJS(1.3.7) to latest versions
  * 1.3.4: Removed the necessity of creating a <span> for displaying the error message, the directive now handles it by itself.
+ * 1.3.5: Throw an error message when user did not provide a name="" property inside the element to validate.
+ * 1.3.6: Added ng-strict-di for minification, renamed some files and folder lib to /vendors, moved directive into new /src folder for better separation.
  */
  angular.module('ghiscoding.validation', ['pascalprecht.translate'])
   .directive('validation', ['$translate', '$timeout', function($translate, $timeout) {
