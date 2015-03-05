@@ -422,7 +422,7 @@
           }
 
           // Re-Render Error display element inside a <span class="validation validation-inputName text-danger">
-          if(hasValidation && !isFieldValid && ctrl.$dirty) {
+          if(hasValidation && !isFieldValid && (ctrl.$dirty || ctrl.$touched)) {
             // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
             (errorElm.length > 0) ? errorElm.text(message) : elm.after('<span class="validation validation-'+elmInputName+' text-danger">'+message+'</span>');
           }else {
