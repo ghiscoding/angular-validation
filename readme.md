@@ -1,6 +1,6 @@
 #Angular Validation 
 ### Form validation after user inactivity (customizable timeout)
-`Version: 1.3.4` 
+`Version: 1.3.7` 
 
 Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive will take care of the rest!
 
@@ -10,6 +10,8 @@ For a smoother user experience, I also added validation on inactivity (timer). S
 
 Now also supporting AngularJS 1.3.x 
 *current code should work with 1.2.x just the same but is no more verified*
+
+Huge rewrite of the code to better separate the code and also adding support to Service functionality. Specifically the `validation-rules` to add rules without affecting the core and `validation-common` for shared functions (shared by Directive/Service).
 
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
@@ -21,16 +23,16 @@ Angular-Validation requires the element that will use validation to have a `name
 *The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. For a better understanding, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
 
-## Some Working Examples
+## Some Working Examples (Directive)
 Let's start with a simple example and then let's get down to real business.
 
 P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (no server required, except Chrome which doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
-<!-- change the typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
-<label for="input1">Simple Integer -- typing-limit(5sec)</label>
-<input type="text" name="input1" ng-model="form1.input1" typing-limit="5000" validation="integer|required" />
+<!-- change the debounce or typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
+<label for="input1">Simple Integer -- debounce(5sec)</label>
+<input type="text" name="input1" ng-model="form1.input1" debounce="5000" validation="integer|required" />
 
 <!-- example 2 -->
 <label for="input2">email + min(3) + max(10) + required</label>
@@ -78,6 +80,42 @@ P.S. For real live sample, see the [live demo](#live_demo) or download the Githu
 <!-- EXCEPTIONS: We could also use our own custom <span> or <div> element when needed, for example input groups wrapper, see next step -->
 ```
 
+## Service Working Examples (Service)
+Let's start with a simple example and then let's get down to real business.
+
+P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (no server required, except Chrome which doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
+<a name="examples-service"></a>
+```javascript
+  // start by creating the service
+  var myValidation = new validationService();
+
+  // you can create indepent call to the validation service  
+  myValidation.addValidator({
+    elmName: 'input2',
+    debounce: 3000,
+    scope: $scope,
+    rules: 'numeric_signed|required'
+  });
+
+  // you can also chain validation service and add multiple validators at once
+  // we optionally start by defining some global options. Note: each validator can overwrite individually these properties (ex.: validatorX can have a `debounce` different than the global set)
+  // there is 2 ways to write a call... #1 with elementName & rules defined as 2 strings arguments ... #2 with 1 object as argument (with defined property names)
+  //    #1 .addValidtor('myElementName', 'myRules') ... #2 .addValidator({ elmName: 'inputX', rules: 'myRules'})
+  // the available object properties are the exact same set as the directive except that they are camelCase
+  myValidation
+    .setGlobalOptions({ debounce: 1500, scope: $scope }) 
+    .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
+    .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
+    .addValidator('input5', 'email|required|min_len:6');
+
+  // you can also remove a Validator with an ngClick or whichever way you prefer by calling .removeValidator()
+  $scope.removeInputValidator = function ( elmName ) {
+    // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
+    myValidation.removeValidator(elmName); 
+  };
+
+```
+
 Bootstrap Input Groups Wrapping - Exceptions HOWTO
 --------------------
 Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasions, we will add a `<span>` or a `<div>` for displaying the possible error and give the this element an `id="someId"` or a `class="className"` and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` or a `className` and call the `validation-error-to` attribute. This attribute could be called in 3 different ways: with '.' (element error className) or with/without '#' (element error id) We could even do a validation summary with this...just saying hehe.
@@ -113,22 +151,22 @@ Well let's face it, having the `<span>` for error display right after the elemen
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will fail. Let's explain how it works... 
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will fail. Let's explain how it works... 
 
 Regex validation is divided in 4 specific parts (Step #1-4). 
 
-Let's use the previous [Examples](#examples) #3 and extract the information out of it to see how it works. 
+Let's use the previous [Examples](#examples) #5 and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
-1. Start and End the filter with the following `regex: :regex` that tells the directive to extract it.
+1. Start and End the filter with the following `regex: :regex` which tells the directive where to extract it.
 
-2. Custom error message `YYWW` (what do we want to display to user)
+2. Custom error message `YYWW` (what do we want to display to the user)
 
-3. Followed by a separator which basically says, after this will come the regex `:=`
+3. Followed by a separator which basically says... after `:=` separator comes the regex pattern
 
 4. Custom regex pattern `^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$`
 
-Final code (no spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
+Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
 
 
 Locales (languages)
@@ -158,7 +196,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
-* `between_len:min,max` Ensures the length of a string is between a min,max string length.
+* `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
@@ -227,7 +265,6 @@ License
 #### Any kind of help is welcome from the TODO list
 * Add more validators...
 * Add more locale languages... I need your help on that one!!!
-* Create an Angular Service that will provide access to attaching validation on the fly from within a controller
 
 ## CHANGELOG
 * [1.3.0](https://github.com/ghiscoding/angular-validation/commit/d106996926bef86a0457c90fbb65fe6233f3928d) `2014-12-01` Added support to AngularJS 1.3
@@ -237,3 +274,4 @@ License
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
 * [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
+* [1.3.7]() `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and easily be used by both Validation Directive and Service, also created a common file for shared functions.

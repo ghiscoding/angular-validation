@@ -40,7 +40,6 @@
 
     "AREA1":            "TextArea: Alphanumeric + Minimum(15) + Required",
     "CHANGE_LANGUAGE":  "Change language.",
-    "INPUT1":           "Alphanumeric + Exactly(3) + Required  -- typing-limit(5sec)",
     "INPUT2":           "Number positive or negative -- input type=\"number\" -- Error on non-numeric characters ",
     "INPUT3":           "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y ",
     "INPUT4":           "Multiple Validations + Custom Regex of Date Code (YYWW)",
@@ -55,7 +54,8 @@
     "INPUT13":          "AlphaDashSpaces + Required + Minimum(5) Characters -- MUST USE: validation-error-to=\" \"",
     "INPUT14":          "Alphanumeric + Required -- NG-DISABLED",
     "INPUT15":          "Password",
-    "INPUT16":          "Password Confirmation",    
+    "INPUT16":          "Password Confirmation",  
+    "INPUT17":           "Alphanumeric + Exactly(3) + Required  -- debounce(5sec)",  
     "SAVE":             "Save",
     "SELECT1":          "Required (select) -- NoEVENT default(keyup) -- Directive will validate has EVENT (blur)",
     "SELECT2":          "Required (select) -- EVENT (blur)"

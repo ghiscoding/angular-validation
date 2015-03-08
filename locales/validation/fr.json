@@ -40,7 +40,6 @@
 
     "AREA1":            "TextArea: Alphanumérique + Minimum(15) + Required",
     "CHANGE_LANGUAGE":  "Changer de langue.",
-    "INPUT1":           "Alphanumérique + Exactement(3) + Requis  -- typing-limit(5sec)",
     "INPUT2":           "Nombre positif ou négatif -- input type=\"number\" -- Erreur sur caractères non-numérique",
     "INPUT3":           "Intervalle de Nombre Flottant (entier exclu) -- between_num:x,y OU min_num:x|max_num:y",
     "INPUT4":           "Multiple Validations + Regex Personnalisé d'un Code Date (AASS)",
@@ -55,7 +54,8 @@
     "INPUT13":          "AlphaDashSpaces + Requis + Minimum(5) Caractères -- DOIT UTILISER: validation-error-to=\" \"",
     "INPUT14":          "Alphanumérique + Requis -- NG-DISABLED",
     "INPUT15":          "Mot de Passe",
-    "INPUT16":          "Mot de Passe (Confirmation)",    
+    "INPUT16":          "Mot de Passe (Confirmation)",
+    "INPUT17":           "Alphanumérique + Exactement(3) + Requis  -- debounce(5sec)",
     "SAVE":             "Sauvegarder",
     "SELECT1":          "Requis (select) -- Aucun EVENT défaut(keyup) -- Directive va valider avec EVENT (blur)",
     "SELECT2":          "Requis (select) -- EVENT (blur)"
