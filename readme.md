@@ -1,4 +1,4 @@
-#Angular Validation 
+#Angular Validation (Directive and Service)
 ### Form validation after user inactivity (customizable timeout)
 `Version: 1.3.7` 
 
@@ -11,6 +11,7 @@ For a smoother user experience, I also added validation on inactivity (timer). S
 Now also supporting AngularJS 1.3.x 
 *current code should work with 1.2.x just the same but is no more verified*
 
+Now support <b>Service</b> using the same functionality as the Directive.
 Huge rewrite of the code to better separate the code and also adding support to Service functionality. Specifically the `validation-rules` to add rules without affecting the core and `validation-common` for shared functions (shared by Directive/Service).
 
 ## Live Demo
@@ -26,7 +27,7 @@ Angular-Validation requires the element that will use validation to have a `name
 ## Some Working Examples (Directive)
 Let's start with a simple example and then let's get down to real business.
 
-P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (no server required, except Chrome which doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
+P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
 <a name="examples"></a>
 ```html
 <!-- example 1 -->
@@ -81,9 +82,7 @@ P.S. For real live sample, see the [live demo](#live_demo) or download the Githu
 ```
 
 ## Service Working Examples (Service)
-Let's start with a simple example and then let's get down to real business.
-
-P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (no server required, except Chrome which doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingForm.html` for a better separation.
+P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormService.html` for a better separation.
 <a name="examples-service"></a>
 ```javascript
   // start by creating the service
@@ -173,7 +172,7 @@ Locales (languages)
 --------------------
 Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
 
-Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then it would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to fully localize, then see the example in [Include it in your Project](#project)
+Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to be fully localized, then see the example in [Include it in your Project](#project)
 
 ```javascript
 // define a key, could be on the fly with a button or a menu link
@@ -184,7 +183,7 @@ $scope.switchLanguage = function (key) {
 };
 ```	  
 
-P.S. If you define new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.
+P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.
 
 Available Validators
 --------------------
@@ -274,4 +273,4 @@ License
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
 * [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
-* [1.3.7]() `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and easily be used by both Validation Directive and Service, also created a common file for shared functions.
+* [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and easily be used by both Validation Directive and Service, also created a common file for shared functions.

@@ -29,7 +29,7 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
 
 // -- Main Controller for Angular-Validation Directive
 // ---------------------------------------------------
-myApp.controller('Ctrl', ['$location', '$scope', '$translate', 'validationService', function ($location, $scope, $translate) {
+myApp.controller('Ctrl', ['$location', '$scope', '$translate', function ($location, $scope, $translate) {
   $scope.switchLanguage = function (key) {
     $translate.use(key);
   };
