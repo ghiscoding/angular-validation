@@ -2,8 +2,8 @@
     <fieldset>  
         <div class="form-group" ng-repeat="k in data">    
             <label for="k.name">{{k.name}}</label>
-            <dyninp modal="k.title" name="k.name" validate="k.validate"></dyninp>
-            <span class="validation text-danger"></span>
+            <dyninp modal="k.title" name="{{k.name}}" validate="k.validate"></dyninp>
+            <span ng-class="validation-{{k.name}} validation text-danger"></span>
         </div>
     </fieldset>
 
