@@ -1,34 +1,34 @@
-#Angular Validation (Directive and Service)
-### Form validation after user inactivity (customizable timeout)
+#Forms Angular Validation (Directive / Service)
 `Version: 1.3.7` 
+### Form validation after user inactivity (customizable timeout)
 
-Angular Validation made easy! Angular Validation is an angular directive with locales (languages) with a simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive will take care of the rest!
+Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
 
-The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available and with some extras.
+The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available with some extras.
 
-For a smoother user experience, I also added validation on inactivity (timer). So validation will not bother the user while he is still typing... but as soon as the user makes a pause for a certain amount of time, then validation comes into play. This feature is only while typing, if user is focusing out of the input (onBlur) it will validate instantly.
+For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still busy typing... though as soon as the user makes a pause, for a certain amount of time, then validation comes into play. It's worth noting that this inactivity timer is only available while typing, if user focuses away of his form input (onBlur) it will validate instantly.
 
-Now also supporting AngularJS 1.3.x 
+Supporting AngularJS 1.3.x 
 *current code should work with 1.2.x just the same but is no more verified*
 
-Now support <b>Service</b> using the same functionality as the Directive.
+Now support <b>Service</b> using the same functionality as the <b>Directive</b>.
 Huge rewrite of the code to better separate the code and also adding support to Service functionality. Specifically the `validation-rules` to add rules without affecting the core and `validation-common` for shared functions (shared by Directive/Service).
 
+<a name="plunker"></a>
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
-<a name="live_demo"></a>
 
 ## Requirements
-Angular-Validation requires the element that will use validation to have a `name=""` attribute, so that it can use this name to associate a `<span>` for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
+Angular-Validation requires the element that will use validation to have a `name=""` attribute, so that in the background it can use this name to properly associate a `<span>` right after this input for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
 
-*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. For a better understanding, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
+*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. In other words, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
 
 ## Some Working Examples (Directive)
 Let's start with a simple example and then let's get down to real business.
 
-P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
 <a name="examples"></a>
+P.S. For real live sample, see the [live plunker demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
 ```html
 <!-- example 1 -->
 <!-- change the debounce or typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
@@ -81,9 +81,9 @@ P.S. For real live sample, see the [live demo](#live_demo) or download the Githu
 <!-- EXCEPTIONS: We could also use our own custom <span> or <div> element when needed, for example input groups wrapper, see next step -->
 ```
 
-## Service Working Examples (Service)
-P.S. For real live sample, see the [live demo](#live_demo) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormService.html` for a better separation.
 <a name="examples-service"></a>
+## Other Working Examples (Service)
+P.S. For real live sample, see the [live demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormService.html` for a better separation.
 ```javascript
   // start by creating the service
   var myValidation = new validationService();
@@ -150,16 +150,16 @@ Well let's face it, having the `<span>` for error display right after the elemen
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will fail. Let's explain how it works... 
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works... 
 
 Regex validation is divided in 4 specific parts (Step #1-4). 
 
 Let's use the previous [Examples](#examples) #5 and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
-1. Start and End the filter with the following `regex: :regex` which tells the directive where to extract it.
+1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
 
-2. Custom error message `YYWW` (what do we want to display to the user)
+2. Custom error message `YYWW` (what do we want to display to the user, it will be appended to INVALID_PATTERN, refer to the translation file. In english it will display the following:  Must be following this format: YYWW)
 
 3. Followed by a separator which basically says... after `:=` separator comes the regex pattern
 
@@ -172,7 +172,7 @@ Locales (languages)
 --------------------
 Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
 
-Note: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to be fully localized, then see the example in [Include it in your Project](#project)
+NOTE: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to be fully localized, then see the example in [Include it in your Project](#project)
 
 ```javascript
 // define a key, could be on the fly with a button or a menu link
@@ -183,12 +183,12 @@ $scope.switchLanguage = function (key) {
 };
 ```	  
 
-P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.
+*P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*
 
 Available Validators
 --------------------
 All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
-##### NOTE: on an input type="number", the "+" sign is an invalid character (browser limitation) even if you are using a `signed` validator. If you really wish to use the "+", then change your input to type="text".
+##### NOTE: on an `input type="number"`, the "+" sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the "+", then change your input to a `type="text"`.
 * `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
@@ -197,7 +197,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value is between a min,max number.
-* `credit_card` Check for valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
+* `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_us_long` Ensure date follows the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
 * `date_us_short` Ensure date follows the US short format (mm-dd-yy) or (mm/dd/yy)
@@ -216,7 +216,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `ipv6` Check for valid IP (IPv6)
 * `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
 * `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
-* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternative text to be displayed.
+* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternative text to be displayed in the error message.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
@@ -273,4 +273,4 @@ License
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
 * [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
-* [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and easily be used by both Validation Directive and Service, also created a common file for shared functions.
+* [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
