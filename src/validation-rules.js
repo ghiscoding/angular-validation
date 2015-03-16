@@ -6,7 +6,7 @@
  * @desc: angular-validation rules definition
  * Each rule objects must have 3 properties {pattern, message, type}
  * and in some cases you could also define a 4th properties {params} to pass extras, for example: max_len will know his maximum length by this extra {params}
- * Rule.type can be {conditionalNumber, match, regex}
+ * Rule.type can be {conditionalDate, conditionalNumber, match, regex}
  *
  * WARNING: Rule patterns are defined as String type so don't forget to escape your characters: \\
  */
@@ -115,6 +115,108 @@ angular
             type: "regex"
           };
           break;
+        case "dateEuroLong" :
+        case "date_euro_long" :
+          validator = {
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_EURO_LONG",
+            type: "regex"
+          };
+          break; 
+        case "dateEuroLongBetween" :
+        case "date_euro_long_between" :
+        case "betweenDateEuroLong" :
+        case "between_date_euro_long" : 
+          var range = ruleParam.split(','); 
+          if (range.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_euro_long:01-01-1990,31-12-2015";
+          }     
+          validator = {
+            condition: [">=","<="],
+            dateType: "EURO_LONG",
+            params: [range[0], range[1]],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_EURO_LONG_BETWEEN",
+            type: "conditionalDate"
+          };
+          break; 
+        case "dateEuroLongMax" :
+        case "date_euro_long_max" :
+        case "maxDateEuroLong" :
+        case "max_date_euro_long" :        
+          validator = {
+            condition: "<=",
+            dateType: "EURO_LONG",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_EURO_LONG_MAX",
+            type: "conditionalDate"
+          };
+          break;  
+        case "dateEuroLongMin" :
+        case "date_euro_long_min" :
+        case "minDateEuroLong" :
+        case "min_date_euro_long" :        
+          validator = {
+            condition: ">=",
+            dateType: "EURO_LONG",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_EURO_LONG_MIN",
+            type: "conditionalDate"
+          };
+          break;
+        case "dateEuroShort" :
+        case "date_euro_short" :
+          validator = {
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            message: "INVALID_DATE_EURO_SHORT",
+            type: "regex"
+          };
+          break;
+        case "dateEuroShortBetween" :
+        case "date_euro_short_between" :
+        case "betweenDateEuroShort" :
+        case "between_date_euro_short" :
+          var range = ruleParam.split(',');
+          if (range.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_euro_short:01-01-90,31-12-15";
+          }      
+          validator = {
+            condition: [">=","<="],
+            dateType: "EURO_SHORT",
+            params: [range[0], range[1]],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            message: "INVALID_DATE_EURO_SHORT_BETWEEN",
+            type: "conditionalDate"
+          };
+          break; 
+        case "dateEuroShortMax" :
+        case "date_euro_short_max" :
+        case "maxDateEuroShort" :
+        case "max_date_euro_short" :
+          validator = {
+            condition: "<=",
+            dateType: "EURO_SHORT",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            message: "INVALID_DATE_EURO_SHORT_MAX",
+            type: "conditionalDate"
+          };
+          break;  
+        case "dateEuroShortMin" :
+        case "date_euro_short_min" :
+        case "minDateEuroShort" :
+        case "min_date_euro_short" :
+          validator = {
+            condition: ">=",
+            dateType: "EURO_SHORT",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            message: "INVALID_DATE_EURO_SHORT_MIN",
+            type: "conditionalDate"
+          };
+          break;
         case "dateIso" :
         case "date_iso" :
           validator = {
@@ -122,13 +224,99 @@ angular
             message: "INVALID_DATE_ISO",
             type: "regex"
           };
+          break;
+        case "dateIsoBetween" :
+        case "date_iso_between" :
+        case "betweenDateIso" :
+        case "between_date_iso" :
+          var range = ruleParam.split(',');
+          if (range.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_iso:1990-01-01,2000-12-31";
+          }      
+          validator = {
+            condition: [">=","<="],
+            dateType: "ISO",
+            params: [range[0], range[1]],
+            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            message: "INVALID_DATE_ISO_BETWEEN",
+            type: "conditionalDate"
+          };
           break;  
+        case "dateIsoMax" :
+        case "date_iso_max" :
+        case "maxDateIso" :
+        case "max_date_iso" :
+          validator = {
+            condition: "<=",
+            dateType: "ISO",
+            params: [ruleParam],
+            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            message: "INVALID_DATE_ISO_MAX",
+            type: "conditionalDate"
+          };
+          break;  
+        case "dateIsoMin" :
+        case "date_iso_min" :
+        case "minDateIso" :
+        case "min_date_iso" :
+          validator = {
+            condition: ">=",
+            dateType: "ISO",
+            params: [ruleParam],
+            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            message: "INVALID_DATE_ISO_MIN",
+            type: "conditionalDate"
+          };
+          break;
         case "dateUsLong" :
         case "date_us_long" :
           validator = {
             pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$",
             message: "INVALID_DATE_US_LONG",
             type: "regex"
+          };
+          break;
+        case "dateUsLongBetween" :
+        case "date_us_long_between" :
+        case "betweenDateUsLong" :
+        case "between_date_us_long" :
+          var range = ruleParam.split(',');
+          if (range.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_us_long:01/01/1990,12/31/2015";
+          }      
+          validator = {
+            condition: [">=","<="],
+            dateType: "US_LONG",
+            params: [range[0], range[1]],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_US_LONG_BETWEEN",
+            type: "conditionalDate"
+          };
+          break; 
+        case "dateUsLongMax" :
+        case "date_us_long_max" :
+        case "maxDateUsLong" :
+        case "max_date_us_long" :
+          validator = {
+            condition: "<=",
+            dateType: "US_LONG",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_US_LONG_MAX",
+            type: "conditionalDate"
+          };
+          break;  
+        case "dateUsLongMin" :
+        case "date_us_long_min" :
+        case "minDateUsLong" :
+        case "min_date_us_long" :
+          validator = {
+            condition: ">=",
+            dateType: "US_LONG",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/](19|20)\\d\\d$",
+            message: "INVALID_DATE_US_LONG_MIN",
+            type: "conditionalDate"
           };
           break;
         case "dateUsShort" :
@@ -139,22 +327,49 @@ angular
             type: "regex"
           };
           break;  
-        case "dateEuroLong" :
-        case "date_euro_long" :
+        case "dateUsShortBetween" :
+        case "date_us_short_between" :
+        case "betweenDateUsShort" :
+        case "between_date_us_short" :
+          var range = ruleParam.split(',');
+          if (range.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_us_short:01/01/90,12/31/15";
+          }      
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
-            message: "INVALID_DATE_EURO_LONG",
-            type: "regex"
+            condition: [">=","<="],
+            dateType: "US_SHORT",
+            params: [range[0], range[1]],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$",
+            message: "INVALID_DATE_US_SHORT_BETWEEN",
+            type: "conditionalDate"
+          };
+          break; 
+        case "dateUsShortMax" :
+        case "date_us_short_max" :
+        case "maxDateUsShort" :
+        case "max_date_us_short" :
+          validator = {
+            condition: "<=",
+            dateType: "US_SHORT",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$",
+            message: "INVALID_DATE_US_SHORT_MAX",
+            type: "conditionalDate"
           };
           break;  
-        case "dateEuroShort" :
-        case "date_euro_short" :
+        case "dateUsShortMin" :
+        case "date_us_short_min" :
+        case "minDateUsShort" :
+        case "min_date_us_short" :
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
-            message: "INVALID_DATE_EURO_SHORT",
-            type: "regex"
+            condition: ">=",
+            dateType: "US_SHORT",
+            params: [ruleParam],
+            pattern: "^(0[1-9]|1[012])[-/](0[1-9]|[12][0-9]|3[01])[-/]\\d\\d$",
+            message: "INVALID_DATE_US_SHORT_MIN",
+            type: "conditionalDate"
           };
-          break;  
+          break;
         case "email" :
           validator = {
             pattern: "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$",

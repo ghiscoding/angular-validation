@@ -54,14 +54,6 @@
             </select>            
         </div>
         <div class="form-group">
-            <label for="select2">{{ 'SELECT2' | translate }}</label>                       
-            <select class="form-control" name="select2" ng-model="select2" validation="required">
-                <option value="">...</option>   
-                <option value="1">Option #1</option>
-                <option value="2">Option #2</option>
-            </select>            
-        </div> 
-        <div class="form-group">
             <label for="input13">{{ 'INPUT13' | translate }}</label>
             <div class="input-group">
                 <span class="input-group-addon">@</span>
@@ -85,7 +77,15 @@
         </div>
         <div class="form-group">    
             <label for="input17">{{ 'INPUT17' | translate }}</label>
-            <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3" ng-model="input17" validation="alpha_spaces|exact_len:3|required" debounce="5000" />
+            <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3|required" ng-model="input17" validation="alpha_spaces|exact_len:3|required" debounce="5000" />
+        </div>
+        <div class="form-group">    
+            <label for="input17">{{ 'INPUT18' | translate }}</label>
+            <input type="text" class="form-control" name="input18" placeholder="date_iso_min:1999-12-31|required" ng-model="input18" validation="date_iso_min:1999-12-31|required" />
+        </div>
+        <div class="form-group">    
+            <label for="input17">{{ 'INPUT19' | translate }}</label>
+            <input type="text" class="form-control" name="input19" placeholder="date_us_short_between:11/28/99,12/31/15|required" ng-model="input19" validation="date_us_short_between:11/28/99,12/31/15|required" />
         </div>
         <div class="form-group">    
             <label for="area1">{{ 'AREA1' | translate }}</label>

@@ -172,22 +172,56 @@ angular
 
       // loop through all validators (could be multiple)
       for(var j = 0, jln = self.validators.length; j < jln; j++) {
-        if(self.validators[j].type === "conditionalNumber") { 
-          // a condition type
+        if(self.validators[j].type === "conditionalDate") { 
+          // 1- we first need to validate that the Date input is well formed through regex
+          // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
+          regex = new RegExp(self.validators[j].pattern, 'i');
+          isValid = (self.validators[j].pattern === "\\S+" && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
+          
+          // 2- date is valid, then we can do our conditional date check
+          if(isValid) {
+            // For Date comparison, we will need to construct a Date Object that follows the ECMA so then it could work in all browser
+            // Then convert to timestamp & finally we can compare both dates for filtering
+            var dateType = self.validators[j].dateType;                   // date type (ISO, EURO, US-SHORT, US-LONG)
+            var timestampValue = parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
+
+            // if 2 params, then it's a between condition
+            if(self.validators[j].params.length == 2) {
+              // this is typically a "between" condition, a range of number >= and <=
+              var timestampParam0 = parseDate(self.validators[j].params[0], dateType).getTime();
+              var timestampParam1 = parseDate(self.validators[j].params[1], dateType).getTime();
+              var isValid1 = testCondition(self.validators[j].condition[0], timestampValue, timestampParam0);
+              var isValid2 = testCondition(self.validators[j].condition[1], timestampValue, timestampParam1);
+              isValid = (isValid1 && isValid2) ? true : false;
+            }else {
+              // else, 1 param is a simple conditional date check
+              var timestampParam = parseDate(self.validators[j].params[0], dateType).getTime();
+              isValid = testCondition(self.validators[j].condition, timestampValue, timestampParam);
+            }
+          }
+        }
+        // it might be a conditional number checking
+        else if(self.validators[j].type === "conditionalNumber") { 
+          // if 2 params, then it's a between condition
           if(self.validators[j].params.length == 2) {
             // this is typically a "between" condition, a range of number >= and <= 
             var isValid1 = testCondition(self.validators[j].condition[0], parseFloat(strValue), parseFloat(self.validators[j].params[0]));
             var isValid2 = testCondition(self.validators[j].condition[1], parseFloat(strValue), parseFloat(self.validators[j].params[1]));
             isValid = (isValid1 && isValid2) ? true : false;
           }else {
+            // else, 1 param is a simple conditional number check
             isValid = testCondition(self.validators[j].condition, parseFloat(strValue), parseFloat(self.validators[j].params[0]));
           }
-        }else if(self.validators[j].type === "match") {
+        }
+        // it might be a match input checking
+        else if(self.validators[j].type === "match") {
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
           var otherNgModel = self.validators[j].params[0];
           var otherNgModelVal = self.scope.$eval(otherNgModel); 
           isValid = (otherNgModelVal === strValue);
-        }else {
+        }
+        // or finally it might be a regular regex pattern checking
+        else {
           // a 'disabled' element should always be valid, there is no need to validate it
           if(self.elm.prop("disabled")) {
             isValid = true;
@@ -239,6 +273,104 @@ angular
         }
       }
       return null;
+    }
+
+    /** Parse a date from a String and return it as a Date Object to be valid for all browsers following ECMA Specs
+     * Date type ISO (default), US, UK, Europe, etc... Other format could be added in the switch case
+     * @var String dateStr: date String
+     * @var String dateType: date type (ISO, US, etc...)
+     */
+    function parseDate(dateStr, dateType) {
+      // variables declaration
+      var dateSubStr = '', dateSeparator = '-', dateSplit = [], timeSplit = [], year = '', month = '', day = '';
+      
+      // Parse using the date type user selected, (separator could be dot, slash or dash)
+      switch (dateType.toUpperCase()) {
+        case 'EURO_LONG':
+        case 'EURO-LONG': // UK, Europe long format is: dd/mm/yyyy hh:mm:ss 
+          dateSubStr = dateStr.substring(0, 10);
+          dateSeparator = dateStr.substring(2, 3);
+          dateSplit = splitDateString(dateSubStr, dateSeparator);
+          day = dateSplit[0];
+          month = dateSplit[1];
+          year = dateSplit[2];
+          timeSplit = (dateStr.length > 8) ? dateStr.substring(9).split(':') : null;          
+          break;
+        case 'UK':
+        case 'EURO':
+        case 'EURO_SHORT':
+        case 'EURO-SHORT':
+        case 'EUROPE':  // UK, Europe format is: dd/mm/yy hh:mm:ss
+          dateSubStr = dateStr.substring(0, 8);
+          dateSeparator = dateStr.substring(2, 3);
+          dateSplit = splitDateString(dateSubStr, dateSeparator);
+          day = dateSplit[0];
+          month = dateSplit[1];
+          year = (parseInt(dateSplit[2]) < 50) ? ('20' + dateSplit[2]) : ('19' + dateSplit[2]); // below 50 we'll consider that as century 2000's, else in century 1900's
+          timeSplit = (dateStr.length > 8) ? dateStr.substring(9).split(':') : null;          
+          break;
+        case 'US_LONG':
+        case 'US-LONG':    // US long format is: mm/dd/yyyy hh:mm:ss
+          dateSubStr = dateStr.substring(0, 10);
+          dateSeparator = dateStr.substring(2, 3);
+          dateSplit = splitDateString(dateSubStr, dateSeparator);
+          month = dateSplit[0];         
+          day = dateSplit[1];
+          year = dateSplit[2];
+          timeSplit = (dateStr.length > 8) ? dateStr.substring(9).split(':') : null;          
+          break;
+        case 'US':
+        case 'US_SHORT':
+        case 'US-SHORT':    // US short format is: mm/dd/yy hh:mm:ss OR 
+          dateSubStr = dateStr.substring(0, 8);
+          dateSeparator = dateStr.substring(2, 3);
+          dateSplit = splitDateString(dateSubStr, dateSeparator);
+          month = dateSplit[0];         
+          day = dateSplit[1];
+          year = (parseInt(dateSplit[2]) < 50) ? ('20' + dateSplit[2]) : ('19' + dateSplit[2]); // below 50 we'll consider that as century 2000's, else in century 1900's
+          timeSplit = (dateStr.length > 8) ? dateStr.substring(9).split(':') : null;          
+          break;
+        case 'ISO':
+        default:    // ISO format is: yyyy-mm-dd hh:mm:ss (separator could be dot, slash or dash: ".", "/", "-")
+          dateSubStr = dateStr.substring(0, 10);
+          dateSeparator = dateStr.substring(4, 5);
+          dateSplit = splitDateString(dateSubStr, dateSeparator);
+          year = dateSplit[0];
+          month = dateSplit[1];
+          day = dateSplit[2];
+          timeSplit = (dateStr.length > 10) ? dateStr.substring(11).split(':') : null;
+          break;
+      }
+
+      // parse the time if it exist else put them at 0
+      var hour = (!!timeSplit && timeSplit.length === 3) ? timeSplit[0] : 0;
+      var min = (!!timeSplit && timeSplit.length === 3) ? timeSplit[1] : 0;
+      var sec = (!!timeSplit && timeSplit.length === 3) ? timeSplit[2] : 0;
+
+      // Construct a valid Date Object that follows the ECMA Specs
+      // Note that, in JavaScript, months run from 0 to 11, rather than 1 to 12!
+      return new Date(year, month - 1, day, hour, min, sec);
+    }
+
+    /** From a date substring split it and return his array
+     * @param string dateSubStr
+     * @param string dateSeparator
+     * @return array dateSplit
+     */
+    function splitDateString(dateSubStr, dateSeparator) {
+      var dateSplit = [];
+
+      switch (dateSeparator) {
+        case '/':
+          dateSplit = dateSubStr.split('/'); break;
+        case '.':
+          dateSplit = dateSubStr.split('.'); break;
+        case '-':
+        default:
+          dateSplit = dateSubStr.split('-'); break;
+      }
+
+      return dateSplit;
     }
 
     /** Test values with condition, I have created a switch case for all possible conditions.

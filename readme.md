@@ -197,12 +197,32 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value is between a min,max number.
+* `between_date_iso:d1,d2` alias of `between_date_iso`.
+* `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
+* `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
+* `between_date_us_long:d1,d2` alias of `date_us_long_between`.
+* `between_date_us_short:d1,d2` alias of `date_us_short_between`.
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
+* `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) and (d2)
+* `date_iso_max:d` Ensure date follows ISO format and is lower or equal then date (d)
+* `date_iso_min:d` Ensure date follows ISO format and is higher or equal then date (d)
+* `date_euro_long` Ensure date follows the European long format (dd-mm-yyyy) or (dd/mm/yyyy)
+* `date_euro_long_between:d1,d2` Ensure date follows the European long format and is between (d1) and (d2)
+* `date_euro_long_max:d` Ensure date follows European long format and is lower or equal then date (d)
+* `date_euro_long_min:d` Ensure date follows European long format and is higher or equal then date (d)
+* `date_euro_short` Ensure date follows the European short format (dd-mm-yy) or (dd/mm/yy)
+* `date_euro_short_between:d1,d2` Ensure date follows the European short format and is between (d1) and (d2)
+* `date_euro_short_max:d` Ensure date follows European short format and is lower or equal then date (d)
+* `date_euro_short_min:d` Ensure date follows European short format and is higher or equal then date (d)
 * `date_us_long` Ensure date follows the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
+* `date_us_long_between:d1,d2` Ensure date follows the US long format and is between (d1) and (d2)
+* `date_us_long_max:d` Ensure date follows US long format and is lower or equal then date (d)
+* `date_us_long_min:d` Ensure date follows US long format and is higher or equal then date (d)
 * `date_us_short` Ensure date follows the US short format (mm-dd-yy) or (mm/dd/yy)
-* `date_euro_long` Ensure date follows the Europe long format (dd-mm-yyyy) or (dd/mm/yyyy)
-* `date_euro_short` Ensure date follows the Europe short format (dd-mm-yy) or (dd/mm/yy)
+* `date_us_short_between:d1,d2` Ensure date follows the US short format and is between (d1) and (d2)
+* `date_us_short_max:d` Ensure date follows US short format and is lower or equal then date (d)
+* `date_us_short_min:d` Ensure date follows US short format and is higher or equal then date (d)
 * `email` Checks for a valid email address
 * `exact_len:n` Ensures that field length precisely matches the specified length (n).
 * `float` Only a positive floating point value (integer are excluded)
@@ -217,6 +237,16 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
 * `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
 * `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternative text to be displayed in the error message.
+* `max_date_iso` alias of `date_iso_max`.
+* `min_date_iso` alias of `date_iso_min`.
+* `max_date_euro_long` alias of `date_euro_long_max`.
+* `min_date_euro_long` alias of `date_euro_long_min`.
+* `max_date_euro_short` alias of `date_euro_short_max`.
+* `min_date_euro_short` alias of `date_euro_short_min`.
+* `max_date_us_long` alias of `date_us_long_max`.
+* `min_date_us_long` alias of `date_us_long_min`.
+* `max_date_us_short` alias of `date_us_short_max`.
+* `min_date_us_short` alias of `date_us_short_min`.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
@@ -274,3 +304,4 @@ License
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
 * [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
 * [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
+* [1.3.8]() `2015-03-15` Added between/min/max conditional validators on all Date types (ISO, EURO_LONG, EURO_SHORT, US_LONG, US_SHORT)
