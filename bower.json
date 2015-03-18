@@ -25,13 +25,17 @@
     "src/validation-service.js"
   ],
   "ignore": [
-    "/.*",
-    "CNAME",
-    "app.js",
-    "changelog.txt",
-    "index.html",
+    "**/.*",
+    "source",
+    "spec",
+    ".bowerrc",
+    ".gitignore",
+    ".jshintignore",
+    ".jshintrc",
+    "bower.json",
+    "gruntfile.js",
+    "package.json",
     "README.md",
-    "style.css",
     "more-examples",
     "templates",
     "vendors"
