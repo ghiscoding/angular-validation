@@ -1,8 +1,10 @@
 {
-  "author": "Ghislain B.",
   "name": "ghiscoding.angular-validation",
-  "description": "AngularJS Form Validation (Directive / Service).",
   "version": "1.3.8",
+  "authors": [
+    "Ghislain B."
+  ],
+  "description": "AngularJS Form Validation (Directive / Service)",
   "main": [
     "locales/validation/en.js",
     "locales/validation/fr.js",
@@ -11,27 +13,19 @@
     "src/validation-rules.js",
     "src/validation-service.js"
   ],
+  "keywords": [
+    "angular-validation"
+  ],
+  "license": "MIT",
   "ignore": [
     "**/.*",
-    "source",
-    "spec",
-    ".bowerrc",
-    ".gitignore",
-    ".jshintignore",
-    ".jshintrc",
-    "gruntfile.js",
-    "package.json",
-    "README.md",
-    "more-examples",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+  "more-examples",
     "templates",
     "vendors"
-  ],  
-  "keywords": [
-    "angularjs",
-    "angular-validation",
-    "form-validation",
-    "angular-validation-directive",
-    "angular-validation-service"
   ],
   "homepage": "http://github.com/ghiscoding/angular-validation",
   "repository": {
@@ -39,7 +33,7 @@
     "url": "git://github.com/ghiscoding/angular-validation"
   },
   "dependencies": {
-    "angular": ">= 1.2.0",
+  "angular": ">= 1.2.0",
     "angular-route": ">= 1.2.0",
     "angular-translate": ">= 2.4.2",
     "angular-translate-loader-static-files": ">= 2.4.2"
