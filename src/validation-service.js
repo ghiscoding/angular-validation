@@ -118,6 +118,10 @@ angular
      * @param string value: value of the input field
      */
     function attemptToValidate(self, value) { 
+      // pre-validate without any events just to pre-fill our validationSummary with all field errors
+      // passing false as 2nd argument for not showing any errors on screen
+      self.commonObj.validate(value, false);
+      
       // if field is not required and his value is empty, cancel validation and exit out
       if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self);
@@ -131,7 +135,7 @@ angular
 
       // select(options) will be validated on the spot
       if(self.commonObj.elm.prop('tagName').toUpperCase() === "SELECT") {
-        self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value));
+        self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true));
         return value;
       }
 
@@ -143,7 +147,7 @@ angular
         self.commonObj.updateErrorMsg('');
         $timeout.cancel(self.timer);            
         self.timer = $timeout(function() {  
-          self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value) ));
+          self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
         }, self.commonObj.typingLimit);
       }
 

@@ -29,13 +29,22 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
 
 // -- Main Controller for Angular-Validation Directive
 // ---------------------------------------------------
-myApp.controller('Ctrl', ['$location', '$scope', '$translate', function ($location, $scope, $translate) {
+myApp.controller('Ctrl', ['$location', '$route', '$scope', '$timeout', '$translate', function ($location, $route, $scope, $timeout, $translate) {
   $scope.switchLanguage = function (key) {
+    // change the translation language & reload the page for a better handling of the validation translation
+    // the timeout+reload ensures validation translations had time to re-render
     $translate.use(key);
+    $timeout(function() {
+      $route.reload();
+    }, 50);
+    
   };
   $scope.goto = function ( path ) {
     $location.path( path );
   };
+  $scope.showValidationSummary = function () {
+    $scope.displayValidationSummary = true;
+  }  
 }]);
 
 
@@ -86,5 +95,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   $scope.removeInputValidator = function ( elmName ) {
     // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
     myValidation.removeValidator(elmName); 
+
+    $scope.enableRemoveInputValidatorButton = false;
   };
 }]);

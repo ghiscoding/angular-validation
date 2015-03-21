@@ -40,11 +40,14 @@
 			<script src="vendors/angular-translate/angular-translate.min.js"></script>
 			<script src="vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
 
-			<!-- angular-validation, directive and service are totally you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
-			<script type="text/javascript" src="src/validation-directive.js"></script>
-			<script type="text/javascript" src="src/validation-service.js"></script>
-		  	<script type="text/javascript" src="src/validation-common.js"></script>
-		  	<script type="text/javascript" src="src/validation-rules.js"></script>		  			  	
+			<!-- angular-validation, directive and service are totally independant you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
+			<script type="text/javascript" src="dist/validation-directive.min.js"></script>
+			<script type="text/javascript" src="dist/validation-service.min.js"></script>
+		  	<script type="text/javascript" src="dist/validation-common.min.js"></script>
+		  	<script type="text/javascript" src="dist/validation-rules.min.js"></script>	
+
+		  	<!-- You can also load angular-validation with the all in 1 minified file -->
+		  	<!--<script type="text/javascript" src="dist/angular-validation-allin1.min.js"></script>-->
 
 			<!-- my application -->
 		  	<script type="text/javascript" src="app.js"></script>

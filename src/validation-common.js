@@ -11,16 +11,17 @@ angular
 	.module('ghiscoding.validation')
 	.factory('validationCommon', ['$timeout', '$translate', 'validationRules', function ($timeout, $translate, validationRules) {
     // global variables
-    var timer;
     var bFieldRequired = false; // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
-    var validators = [];
-    var validatorAttrs = {};
     var elm;
     var ctrl;
     var scope;
     var value;
-    var TYPING_LIMIT = 1000; 
+    var timer;
     var typingLimit;
+    var TYPING_LIMIT = 1000;     
+    var validators = [];
+    var validatorAttrs = {};
+    var validationSummary = [];
 
     // service constructor
     var validationCommon = function(scope, elm, attrs, ctrl) {
@@ -163,7 +164,7 @@ angular
      *  the error text of the span/div element dedicated for that error display.
      * @param string value: value of the input field
      */
-    function validate(strValue) {
+    function validate(strValue, showError) {
       var self = this;
       var isValid = true;
       var isFieldValid = true;
@@ -254,25 +255,64 @@ angular
         } // end !isValid
       } // end for() loop
 
-      // -- Error Display --//
-      self.updateErrorMsg(message, isFieldValid);
+      // log the invalid message 
+      addToValidationSummary(self, self.elm.attr('name'), $translate.instant(message));
 
+      // -- Error Display --//
+      if(showError) {
+        self.updateErrorMsg(message, isFieldValid);
+      }
+      
       return isFieldValid;
     } // validate()
-
 
 	  //----
 		// Private functions declaration
 		//----------------------------------
 
-    /** Quick function to find an object by it's given field name and value */
-    function arrayObjectSearchByField(source, searchField, searchValue) {
-      for (var i = 0; i < source.length; i++) {
-        if (source[i][searchField] === searchValue) {
-          return source[i];
+    /** Add the error to the validation summary 
+     * @param self
+     * @param string elmName: element name (name attribute)
+     * @param string message: error message
+     */
+    function addToValidationSummary(self, elmName, message) {
+      var index = indexOfObjectInArray(validationSummary, 'field', elmName); // find index of error in our array
+
+      // if message is empty, remove it from the validation summary
+      if(index >= 0 && message === '') {
+        validationSummary.splice(index, 1);        
+      }else if(message !== ''){
+        var errorObj = { field: elmName, message: message};
+        
+        // if error already exist then refresh the error object inside the array, else push it to the array
+        if(index >= 0) {
+          validationSummary[index] = errorObj;
+        }else {
+          validationSummary.push(errorObj);
+        }  
+      }
+
+      // save validation summary 2 variable locations, inside the scope object and also in the form object (if found)
+      self.scope.$validationSummary = validationSummary;
+      var formName = angular.element(document.querySelector('form')).attr('name');
+      if(!!formName) {
+        self.scope[formName].$validationSummary = validationSummary;
+      }
+    }
+
+    /** Quick function to find an object inside an array by it's given field name and value, return the index found or -1 
+     * @param Array sourceArray
+     * @param string searchId: search property id
+     * @param string searchValue: value to search
+     * @return int index position found
+     */
+    function indexOfObjectInArray(sourceArray, searchId, searchValue) {
+      for (var i = 0; i < sourceArray.length; i++) {
+        if (sourceArray[i][searchId] === searchValue) {
+          return i;
         }
       }
-      return null;
+      return -1;
     }
 
     /** Parse a date from a String and return it as a Date Object to be valid for all browsers following ECMA Specs

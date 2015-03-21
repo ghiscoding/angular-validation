@@ -14,7 +14,7 @@
  */
  angular
   .module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', ['$translate', '$timeout', 'validationCommon', 'validationRules', function($translate, $timeout, validationCommon, validationRules) {
+  .directive('validation', ['$timeout', 'validationCommon', 'validationRules', function($timeout, validationCommon, validationRules) {
     return {
       restrict: "A",
       require: "ngModel",
@@ -25,8 +25,8 @@
 
         // construct the functions, it's just to make the code cleaner and put the functions at bottom
         var construct = {
-          cancelValidation : cancelValidation,
-          attemptToValidate: attemptToValidate
+          attemptToValidate: attemptToValidate,
+          cancelValidation : cancelValidation
         }
 
         // attach the attemptToValidate function to the element
@@ -41,7 +41,7 @@
             ctrl.$setValidity('validation', true);
           } else {
             // Re-Validate the input when enabled
-            ctrl.$setValidity('validation', commonObj.validate(ctrl.$viewValue));
+            ctrl.$setValidity('validation', commonObj.validate(ctrl.$viewValue, true));
           }
         });
 
@@ -62,6 +62,10 @@
          * @param string value: value of the input field
          */
         function attemptToValidate(value) { 
+          // pre-validate without any events just to pre-fill our validationSummary with all field errors
+          // passing false as 2nd argument for not showing any errors on screen
+          commonObj.validate(value, false);
+
           // if field is not required and his value is empty, cancel validation and exit out
           if(!commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
@@ -77,13 +81,13 @@
           // onBlur make validation without waiting
           elm.bind('blur', function() {  
             // make the regular validation of the field value
-            scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value) ));
+            scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
             return value;
           });
 
           // select(options) will be validated on the spot
           if(elm.prop('tagName').toUpperCase() === "SELECT") {
-            ctrl.$setValidity('validation', commonObj.validate(value));
+            ctrl.$setValidity('validation', commonObj.validate(value, true));
             return value;
           }
 
@@ -95,7 +99,7 @@
             commonObj.updateErrorMsg('');
             $timeout.cancel(timer);            
             timer = $timeout(function() {  
-              scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value) ));
+              scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
             }, commonObj.typingLimit);
           }
 
