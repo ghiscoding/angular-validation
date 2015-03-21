@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghiscoding.validation']);
+var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
 
 myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', function ($compileProvider, $locationProvider, $routeProvider) {
     $compileProvider.debugInfoEnabled(false);
@@ -30,9 +30,9 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
 // -- Main Controller for Angular-Validation Directive
 // ---------------------------------------------------
 myApp.controller('Ctrl', ['$location', '$route', '$scope', '$timeout', '$translate', function ($location, $route, $scope, $timeout, $translate) {
-  $scope.switchLanguage = function (key) {
-    // change the translation language & reload the page for a better handling of the validation translation
-    // the timeout+reload ensures validation translations had time to re-render
+  // change the translation language & reload the page for a better handling of the validation translation
+  // the timeout+reload ensures validation translations had time to re-render
+  $scope.switchLanguage = function (key) {    
     $translate.use(key);
     $timeout(function() {
       $route.reload();
