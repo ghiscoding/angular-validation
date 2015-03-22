@@ -20,6 +20,48 @@ Huge rewrite to have a better code separation and also adding support to Service
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 
+<a name="install"></a>
+Install
+-----
+Install with Bower
+
+```
+bower install ghiscoding.angular-validation
+```
+
+<a name="project"></a>
+Include it in your app project
+--------------------
+The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
+```javascript
+// include it your app module ( we need both Translate & Validation)
+var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
+
+// include validation languages
+// if you want full localization add it in the suffix
+// For example on Canadian French/English, we could replace the code by `suffix: '-CA.json'`
+myApp.config(function ($translateProvider) {
+  $translateProvider.useStaticFilesLoader({
+    prefix: 'locales/validation/',
+    suffix: '.json'
+  });
+
+  // load English ('en') table on startup
+  $translateProvider.preferredLanguage('en');
+});
+```
+
+```html
+<!-- angular-validation, directive and service are totally independent you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
+<script type="text/javascript" src="dist/validation-directive.min.js"></script>
+<script type="text/javascript" src="dist/validation-service.min.js"></script>
+<script type="text/javascript" src="dist/validation-common.min.js"></script>
+<script type="text/javascript" src="dist/validation-rules.min.js"></script> 
+
+<!-- You could also load angular-validation with the all in 1 minified file -->
+<!--<script type="text/javascript" src="dist/angular-validation-allin1.min.js"></script>-->
+```
+
 ## Requirements
 Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`. 
 
@@ -280,39 +322,6 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `required` Ensures the specified key value exists and is not empty
 * `url` Check for valid URL or subdomain
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
-
-<a name="project"></a>
-Include it in your app project
---------------------
-The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
-```javascript
-// include it your app module ( we need both Translate & Validation)
-var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
-
-// include validation languages
-// if you want full localization add it in the suffix
-// For example on Canadian French/English, we could replace the code by `suffix: '-CA.json'`
-myApp.config(function ($translateProvider) {
-  $translateProvider.useStaticFilesLoader({
-    prefix: 'locales/validation/',
-    suffix: '.json'
-  });
-
-  // load English ('en') table on startup
-  $translateProvider.preferredLanguage('en');
-});
-```
-
-```html
-<!-- angular-validation, directive and service are totally independent you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
-<script type="text/javascript" src="dist/validation-directive.min.js"></script>
-<script type="text/javascript" src="dist/validation-service.min.js"></script>
-<script type="text/javascript" src="dist/validation-common.min.js"></script>
-<script type="text/javascript" src="dist/validation-rules.min.js"></script> 
-
-<!-- You can also load angular-validation with the all in 1 minified file -->
-<!--<script type="text/javascript" src="dist/angular-validation-allin1.min.js"></script>-->
-```
 
 <a name="dependencies"></a>
 Dependencies
