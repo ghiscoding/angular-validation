@@ -14,7 +14,7 @@ Supporting AngularJS 1.3.x
 Now support <b>Service</b> using the same functionality as the <b>Directive</b>.
 Huge rewrite to have a better code separation and also adding support to Service functionality. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
 
-[Validation summary](#validation-summary) was also added recently to easily show all validation errors at same time.
+[Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form.
 
 <a name="plunker"></a>
 ## Live Demo
@@ -118,7 +118,9 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 
 <a name="validation-summary"></a>
 ## Validation Summary
-Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if you html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent form from being submitted when invalid or submit it when it does become valid, I will leave it up to you to code it the way you want.
+Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if your html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). 
+
+*The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent form from being submitted when invalid or submit it when it does become valid, I will leave it up to you to code it the way you want.*
 
 ```html
 <!-- Form Validation Summary -->
@@ -282,7 +284,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 <a name="project"></a>
 Include it in your app project
 --------------------
-The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are also available as 4 individual scripts (same as inside `scr/` but minified) or as an all in 1 file that englobe all of them into 1 minified file. The Directive and/or Service are totally independant and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
+The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independant and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
 ```javascript
 // include it your app module ( we need both Translate & Validation)
 var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
