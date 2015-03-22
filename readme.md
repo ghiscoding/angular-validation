@@ -1,12 +1,12 @@
 #Forms Angular Validation (Directive / Service)
 `Version: 1.3.9` 
-### Form validation after user inactivity of 1sec. (customizable timeout)
+### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
 
-The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available with some extras.
+The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available with few more extras.
 
-For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still typing... though as soon as the user pauses for a certain amount of time, then validation comes into play. It's worth knowing that this inactivity timer is only available while typing, if user focuses away of his input (onBlur) it will then validate instantly.
+For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still typing... though as soon as the user pauses for a certain amount of time, then validation comes into play. It's worth knowing that this inactivity timer is only available while typing, if user focuses away from his input (onBlur) it will then validate instantly.
 
 Supporting AngularJS 1.3.x 
 *current code should work with 1.2.x just the same but is no more verified*
@@ -21,14 +21,14 @@ Huge rewrite to have a better code separation and also adding support to Service
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Requirements
-Angular-Validation requires the element which will use validation to have a `name=""` attribute, so that in the background it can use this name to properly associate a `<span>` right after this input for error displaying. For example: `<input name="input1" ng-model="input1" validation="validator1" />`. 
+Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`. 
 
 *The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. In other words, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
+<a name="examples-directives"></a>
 ## Some Working Examples (Directive)
 Let's start with a simple example and then let's get down to real business.
 
-<a name="examples"></a>
 P.S. For real live sample, see the [live plunker demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
 ```html
 <!-- example 1 -->
@@ -120,7 +120,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 ## Validation Summary
 Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if your html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). 
 
-*The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent form from being submitted when invalid or submit it when it does become valid, I will leave it up to you to code it the way you want.*
+*The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent the Form from being submitted when invalid or submit it when it does become valid. I will leave it up to you to code it the way you want.*
 
 ```html
 <!-- Form Validation Summary -->
@@ -137,7 +137,7 @@ Display a validation summary of all the current form errors. Validation summary 
 
 Bootstrap Input Groups Wrapping - HOWTO
 --------------------
-Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasions, we will add a `<span>` or a `<div>` for displaying the possible error and give the this element an `id="someId"` or a `class="className"` and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` or a `className` and call the `validation-error-to` attribute. This attribute could be called in 3 different ways: with '.' (element error className) or with/without '#' (element error id) We could even do a validation summary with this...just saying hehe.
+Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasions, we will add a `<span>` or a `<div>` for displaying the possible error and give the this element an `id="someId"` or a `class="className"` and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` or a `className` and call the `validation-error-to` attribute. This attribute could be called in 3 different ways: with `'.'` (element error className) or with/without `'#'` (element error id) We could even do a validation summary with this...just saying hehe.
 ```html
 <div class="form-group" ng-hide="trsn.isDividend">
     <label for="input1">Search Input with BS input-groups</label>
@@ -174,7 +174,7 @@ From the example displayed, I introduce the custom regular expression, there is 
 
 Regex validation is divided in 4 specific parts (Step #1-4). 
 
-Let's use the previous [Examples](#examples) #5 and extract the information out of it to see how it works. 
+Let's use the previous [Examples #5](#examples-directives) and extract the information out of it to see how it works. 
 Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
 1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
@@ -211,7 +211,7 @@ $timeout(function() {
 Available Validators
 --------------------
 All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
-##### NOTE: on an `input type="number"`, the "+" sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the "+", then change your input to a `type="text"`.
+##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
 * `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
@@ -248,8 +248,8 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
 * `email` Checks for a valid email address
 * `exact_len:n` Ensures that field length precisely matches the specified length (n).
-* `float` Only a positive floating point value (integer are excluded)
-* `float_signed` Only a floating point value (integer excluded), could be signed (-/+) positive/negative.
+* `float` as to be floating value (excluding integer)
+* `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
 * `iban` Check for a valid IBAN.
 * `int` Only positive integer (alias to `integer`).
 * `integer` Only positive integer.
@@ -284,7 +284,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 <a name="project"></a>
 Include it in your app project
 --------------------
-The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independant and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
+The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
 ```javascript
 // include it your app module ( we need both Translate & Validation)
 var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
@@ -304,7 +304,7 @@ myApp.config(function ($translateProvider) {
 ```
 
 ```html
-<!-- angular-validation, directive and service are totally independant you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
+<!-- angular-validation, directive and service are totally independent you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
 <script type="text/javascript" src="dist/validation-directive.min.js"></script>
 <script type="text/javascript" src="dist/validation-service.min.js"></script>
 <script type="text/javascript" src="dist/validation-common.min.js"></script>
