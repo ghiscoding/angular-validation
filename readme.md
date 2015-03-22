@@ -240,12 +240,12 @@ NOTE: To be fully localized, I should add the country code at the end of my JSON
 // define a key, could be on the fly with a button or a menu link
 var key = 'fr'; 
 
-// change the translation language & reload the page for a better handling of the validation translation
-// the timeout+reload ensures validation translations had time to re-render
-$translate.use(key);
-$timeout(function() {
-  $route.reload();
-}, 50);
+// change the translation language & reload the page to make sure all errors were rendered properly
+$scope.switchLanguage = function (key) {    
+  $translate.use(key).then(function() {
+    $route.reload();
+  });    
+};
 ```	  
 
 *P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*

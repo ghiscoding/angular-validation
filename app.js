@@ -29,15 +29,12 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
 
 // -- Main Controller for Angular-Validation Directive
 // ---------------------------------------------------
-myApp.controller('Ctrl', ['$location', '$route', '$scope', '$timeout', '$translate', function ($location, $route, $scope, $timeout, $translate) {
-  // change the translation language & reload the page for a better handling of the validation translation
-  // the timeout+reload ensures validation translations had time to re-render
+myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', function ($location, $route, $scope, $timeout, $translate) {
+  // change the translation language & reload the page to make sure all errors were rendered properly
   $scope.switchLanguage = function (key) {    
-    $translate.use(key);
-    $timeout(function() {
+    $translate.use(key).then(function() {
       $route.reload();
-    }, 50);
-    
+    });    
   };
   $scope.goto = function ( path ) {
     $location.path( path );
