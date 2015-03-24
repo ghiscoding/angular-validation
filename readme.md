@@ -1,4 +1,4 @@
-#Forms Angular Validation (Directive / Service)
+#Angular Validation (Directive / Service)
 `Version: 1.3.9` 
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
