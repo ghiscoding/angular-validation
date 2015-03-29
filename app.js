@@ -7,7 +7,7 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
     $routeProvider
       .when('/validate-directive', {
         templateUrl: 'templates/testingFormDirective.html',
-        controller: 'Ctrl'
+        controller: 'CtrlValidationDirective'
       })
       .when('/validate-service', {
         templateUrl: 'templates/testingFormService.html',
@@ -15,35 +15,44 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
       })
       .otherwise({
         redirectTo: 'validate-directive',
-      });    
+      });
   }])
 	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
 	    prefix: 'locales/validation/',
 	    suffix: '.json'
 		});
-  
+
   	// load English ('en') table on startup
 		$translateProvider.preferredLanguage('en');
 	}]);
 
-// -- Main Controller for Angular-Validation Directive
+// -- Main page Controller
 // ---------------------------------------------------
 myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', function ($location, $route, $scope, $translate) {
   // change the translation language & reload the page to make sure all errors were rendered properly
-  $scope.switchLanguage = function (key) {    
+  $scope.switchLanguage = function (key) {
     $translate.use(key).then(function() {
       $route.reload();
-    });    
+    });
   };
   $scope.goto = function ( path ) {
     $location.path( path );
   };
-  $scope.showValidationSummary = function () {
-    $scope.displayValidationSummary = true;
-  }  
 }]);
 
+// -- Controller to use Angular-Validation Directive
+// -----------------------------------------------
+myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', function ($scope, validationService) {
+  $scope.submitForm = function() {
+    if(new validationService().checkFormValidity($scope.form1)) {
+      alert('All good, proceed with submit...');
+    }
+  }
+  $scope.showValidationSummary = function () {
+    $scope.displayValidationSummary = true;
+  }
+}]);
 
 // -- Controller to use Angular-Validation Service
 // -----------------------------------------------
@@ -53,7 +62,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   // start by creating the service
   var myValidation = new validationService();
 
-  // you can create indepent call to the validation service  
+  // you can create indepent call to the validation service
   myValidation.addValidator({
     elmName: 'input2',
     debounce: 3000,
@@ -67,7 +76,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   //    #1 .addValidtor('myElementName', 'myRules') ... #2 .addValidator({ elmName: 'inputX', rules: 'myRules'})
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
-    .setGlobalOptions({ debounce: 1500, scope: $scope }) 
+    .setGlobalOptions({ debounce: 1500, scope: $scope })
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
     .addValidator('input5', 'email|required|min_len:6')
@@ -88,11 +97,19 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     .addValidator('input19', 'date_us_short_between:11/28/99,12/31/15|required')
     .addValidator('area1', 'alpha_dash_spaces|min_len:15|required');
 
-  
+  // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
   $scope.removeInputValidator = function ( elmName ) {
-    // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
-    myValidation.removeValidator(elmName); 
-
+    myValidation.removeValidator(elmName);
     $scope.enableRemoveInputValidatorButton = false;
   };
+
+  $scope.showValidationSummary = function () {
+    $scope.displayValidationSummary = true;
+  }
+
+  $scope.submitForm = function() {
+    if(myValidation.checkFormValidity($scope.form1)) {
+      alert('All good, proceed with submit...');
+    }
+  }
 }]);

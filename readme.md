@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.9` 
+`Version: 1.3.10`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -8,13 +8,13 @@ The base concept is not new, it comes from the easy form input validation approa
 
 For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still typing... though as soon as the user pauses for a certain amount of time, then validation comes into play. It's worth knowing that this inactivity timer is only available while typing, if user focuses away from his input (onBlur) it will then validate instantly.
 
-Supporting AngularJS 1.3.x 
+Supporting AngularJS 1.3.x
 *current code should work with 1.2.x just the same but is no more verified*
 
 Now support <b>Service</b> using the same functionality as the <b>Directive</b>.
 Huge rewrite to have a better code separation and also adding support to Service functionality. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
 
-[Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form.
+[Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit](#submit) button.
 
 <a name="plunker"></a>
 ## Live Demo
@@ -32,7 +32,9 @@ bower install ghiscoding.angular-validation
 <a name="project"></a>
 Include it in your app project
 --------------------
-The validation scripts are now available in 2 formats: minified (`dist/*.js`) or uncompressed (`src/*.js`). The minified scripts are available in 4 individual scripts (same as `scr/` but minified) or as an all in 1 file that englobes them all into 1 minified file. The Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files. Also note that `angular-translate` is also a [dependency](#dependencies). 
+The angular-validation scripts are now available in 2 formats: uncompressed (`src/*.js`) or minified (`dist/angular-validation.min.js`). The minified script englobes all uncompressed scripts. Also note that `angular-translate` (3rd party app) is also a [dependency](#dependencies).
+
+*If you use the uncompressed scripts, it is worth to know that the Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files.*
 ```javascript
 // include it your app module ( we need both Translate & Validation)
 var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
@@ -52,18 +54,19 @@ myApp.config(function ($translateProvider) {
 ```
 
 ```html
-<!-- angular-validation, directive and service are totally independent you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
-<script type="text/javascript" src="dist/validation-directive.min.js"></script>
-<script type="text/javascript" src="dist/validation-service.min.js"></script>
-<script type="text/javascript" src="dist/validation-common.min.js"></script>
-<script type="text/javascript" src="dist/validation-rules.min.js"></script> 
+<!-- You could also angular-validation with the all in 1 minified file -->
+<script type="text/javascript" src="dist/angular-validation.min.js"></script>
 
-<!-- You could also load angular-validation with the all in 1 minified file -->
-<!--<script type="text/javascript" src="dist/angular-validation-allin1.min.js"></script>-->
+<!-- OR uncompressed files for development, which are angular-validation, the directive and service are totally independent -->
+<!-- you can load one or the other or use them in parallel. But `-common.js` and `-rules.js` are mandatory. -->
+<script type="text/javascript" src="src/validation-directive.js"></script>
+<script type="text/javascript" src="src/validation-service.js"></script>
+<script type="text/javascript" src="src/validation-common.js"></script>
+<script type="text/javascript" src="src/validation-rules.js"></script>
 ```
 
 ## Requirements
-Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`. 
+Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`.
 
 *The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. In other words, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
@@ -98,14 +101,14 @@ P.S. For real live sample, see the [live plunker demo](#plunker) or download the
 
 <!-- example 5 - with Regular Expression (Date Code of YYWW) -->
 <label for="input5">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
-<input type="text" name="input5" ng-model="form1.input5" 
+<input type="text" name="input5" ng-model="form1.input5"
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 
 <!-- example 6 - required select option (dropdown) -->
 <div class="form-group">
-    <label for="select1">Select Option Required</label>           
+    <label for="select1">Select Option Required</label>
     <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
-        <option value="">...</option>   
+        <option value="">...</option>
         <option value="1">Option #1</option>
         <option value="2">Option #2</option>
     </select>
@@ -131,7 +134,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
   // start by creating the service
   var myValidation = new validationService();
 
-  // you can create indepent call to the validation service  
+  // you can create indepent call to the validation service
   myValidation.addValidator({
     elmName: 'input2',
     debounce: 3000,
@@ -145,7 +148,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
   //    #1 .addValidtor('myElementName', 'myRules') ... #2 .addValidator({ elmName: 'inputX', rules: 'myRules'})
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
-    .setGlobalOptions({ debounce: 1500, scope: $scope }) 
+    .setGlobalOptions({ debounce: 1500, scope: $scope })
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
     .addValidator('input5', 'email|required|min_len:6');
@@ -153,14 +156,36 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
   // you can also remove a Validator with an ngClick or whichever way you prefer by calling .removeValidator()
   $scope.removeInputValidator = function ( elmName ) {
     // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
-    myValidation.removeValidator(elmName); 
+    myValidation.removeValidator(elmName);
   };
 
 ```
 
+<a name="submit"></a>
+## Form Submitting and Validation
+The Angular-Validation concept was first introduced with the use `ngDisabled` on the submit button, but this might not always be the best option so as a another feature we could simply leave the submit button available but run an extra function to check the form validation before proceeding with our submit (that function is available through the ValidationService).
+
+*You could also use the [Validation summary](#validation-summary) for displaying all errors as a header or even a footer*
+```html
+<!-- Option #1 - disable the submit button -->
+<button type="submit" ng-disabled="form1.$invalid">Save</button>
+
+<!-- Option #2 - click on submit button will call a function -->
+<button type="submit" ng-click="submitForm()" ng-click="">Save</button>
+```
+```javascript
+// Option #2 will need to call the `checkFormValidity()` function checking the form before doing a real submit
+$scope.submitForm = function() {
+  var myValidation = new validationService();
+  if(myValidation.checkFormValidity($scope.form1)) {
+    // proceed with submit
+  }
+}
+```
+
 <a name="validation-summary"></a>
 ## Validation Summary
-Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if your html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). 
+Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if your html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`).
 
 *The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent the Form from being submitted when invalid or submit it when it does become valid. I will leave it up to you to code it the way you want.*
 
@@ -170,7 +195,7 @@ Display a validation summary of all the current form errors. Validation summary 
     <ul>
         <li ng-repeat="item in form1.$validationSummary">{{item.field }}: {{item.message}}</li>
     </ul>
-</div> 
+</div>
 
 <form novalidate name="form1" method="POST">
   <button type="submit" ng-click="$scope.displayValidationSummary = true;">Show Validation Summary</button>
@@ -185,8 +210,8 @@ Well let's face it, having the `<span>` for error display right after the elemen
     <label for="input1">Search Input with BS input-groups</label>
     <div class="input-group">
         <span class="input-group-addon">@</span>
-        <input type="text" class="form-control" name="input1" ng-model="form1.input1" 
-          validation="min_len:2|max_len:10|alpha_dash_spaces|required" 
+        <input type="text" class="form-control" name="input1" ng-model="form1.input1"
+          validation="min_len:2|max_len:10|alpha_dash_spaces|required"
           validation-error-to="myErrorId" />
         <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
     </div>
@@ -212,11 +237,11 @@ Well let's face it, having the `<span>` for error display right after the elemen
 <a name="regex"></a>
 Regular Expressions (Regex)
 --------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works... 
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works...
 
-Regex validation is divided in 4 specific parts (Step #1-4). 
+Regex validation is divided in 4 specific parts (Step #1-4).
 
-Let's use the previous [Examples #5](#examples-directives) and extract the information out of it to see how it works. 
+Let's use the previous [Examples #5](#examples-directives) and extract the information out of it to see how it works.
 Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
 1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
@@ -238,15 +263,15 @@ NOTE: To be fully localized, I should add the country code at the end of my JSON
 
 ```javascript
 // define a key, could be on the fly with a button or a menu link
-var key = 'fr'; 
+var key = 'fr';
 
 // change the translation language & reload the page to make sure all errors were rendered properly
-$scope.switchLanguage = function (key) {    
+$scope.switchLanguage = function (key) {
   $translate.use(key).then(function() {
     $route.reload();
-  });    
+  });
 };
-```	  
+```
 
 *P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*
 
@@ -333,9 +358,9 @@ Dependencies
 
 License
 -----
-[MIT License](http://www.opensource.org/licenses/mit-license.php)  
+[MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-# TODO 
+# TODO
 #### Any kind of help is welcome from the TODO list
 * Add more validators...
 * Add more locale languages... I need your help on that one!!!
@@ -347,7 +372,8 @@ License
 * [1.3.3](https://github.com/ghiscoding/angular-validation/commit/7b3043a97006a3d7043b198f89c91f8b6c49476e) `2015-01-04` Added changelog & updated Bootstrap(3.3.1), AngularJS(1.3.7) to latest versions
 * [1.3.4](https://github.com/ghiscoding/angular-validation/commit/ba30d55ddb8bca44a8032fc8253356450bd4e1d4) `2015-01-06` Removed the necessity of creating a `<span>` for displaying the error message, the directive now handles it by itself.
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
-* [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation. 
+* [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation.
 * [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
 * [1.3.8](https://github.com/ghiscoding/angular-validation/commit/492d1060a91fb8b49fc70a0c7a1a581d904e0db0) `2015-03-15` Added between/min/max conditional validators on all Date types (ISO, EURO_LONG, EURO_SHORT, US_LONG, US_SHORT)
 * [1.3.9](https://github.com/ghiscoding/angular-validation/commit/931d3b04a00f0583612aefe28ad0bfcac326a38c) `2015-03-21` Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
+* [1.3.10]() `2015-03-29` Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.

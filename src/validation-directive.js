@@ -3,12 +3,10 @@
  * https://github.com/ghiscoding/angular-validation
  *
  * @author: Ghislain B.
- * @start-date: 2014-02-04
- * @last-update: 2015-02-14
- * @last-version: 1.3.7
+ * @started: 2014-02-04
  *
  * @desc: If a field becomes invalid, the text inside the error <span> or <div> will show up because the error string gets filled
- * Though when the field becomes valid then the error message becomes an empty string, 
+ * Though when the field becomes valid then the error message becomes an empty string,
  * it will be transparent to the user even though the <span> still exist but becomes invisible since the text is empty.
  *
  */
@@ -53,7 +51,7 @@
         function cancelValidation() {
           $timeout.cancel(timer);
           commonObj.updateErrorMsg('');
-          ctrl.$setValidity('validation', true);             
+          ctrl.$setValidity('validation', true);
           elm.unbind('blur'); // unbind onBlur event, if not it will fail when input become dirty & empty
         }
 
@@ -61,7 +59,7 @@
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
          */
-        function attemptToValidate(value) { 
+        function attemptToValidate(value) {
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing false as 2nd argument for not showing any errors on screen
           commonObj.validate(value, false);
@@ -72,14 +70,14 @@
             return value;
           }
 
-          // invalidate field before doing any validation 
-          if(commonObj.isFieldRequired() || !!value) { 
+          // invalidate field before doing any validation
+          if(commonObj.isFieldRequired() || !!value) {
             ctrl.$setValidity('validation', false);
           }
 
           // if field is not required and his value is empty, cancel validation and exit out
           // onBlur make validation without waiting
-          elm.bind('blur', function() {  
+          elm.bind('blur', function() {
             // make the regular validation of the field value
             scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
             return value;
@@ -97,13 +95,13 @@
             // Make the validation only after the user has stopped activity on a field
             // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
             commonObj.updateErrorMsg('');
-            $timeout.cancel(timer);            
-            timer = $timeout(function() {  
+            $timeout.cancel(timer);
+            timer = $timeout(function() {
               scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
             }, commonObj.typingLimit);
           }
 
-          return value;        
+          return value;
         } // attemptToValidate()
       } // link()
     }; // return;

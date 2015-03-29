@@ -1,3 +1,5 @@
+// requires: validation-common.js
+
 /**
  * Angular-Validation Service (ghiscoding)
  * https://github.com/ghiscoding/angular-validation
@@ -10,7 +12,7 @@
 angular
 	.module('ghiscoding.validation')
 	.service('validationService', ['$timeout', 'validationCommon', function ($timeout, validationCommon) {
-    // global variables 
+    // global variables
     var validationAttrs;
     var commonObj;
     var timer;
@@ -23,6 +25,7 @@ angular
 
     // attach the public functions to our service
     validationService.prototype.addValidator = addValidator;
+    validationService.prototype.checkFormValidity = checkFormValidity;
     validationService.prototype.removeValidator = removeValidator;
     validationService.prototype.setGlobalOptions = setGlobalOptions;
 
@@ -32,13 +35,13 @@ angular
 		// Public Functions declaration
 		//----------------------------------
 
-		/** Add a validator on a form element 
+		/** Add a validator on a form element
 		 * @param object attrs: validator attributes
 		 */
 		function addValidator(var1, var2) {
       var self = this;
-
       var attrs = {};
+
       if(typeof var1 === "string" && typeof var2 === "string") {
         attrs.elmName = var1;
         attrs.rules = var2;
@@ -50,29 +53,29 @@ angular
         throw 'Angular-Validation-Service requires at least the following 3 attributes: {elmName, rules, scope}';
       }
 
-      // find the DOM element & make sure it's an filled object before going further
-      // we will exclude disabled/ng-disabled element from being valited
+      // find the DOM element & make sure it's a filled object before going further
+      // we will exclude disabled/ng-disabled element from being validated
       attrs.elm = angular.element(document.querySelector('[name="'+attrs.elmName+'"]:not([disabled]):not([ng-disabled]'));
       if(typeof attrs.elm !== "object" || attrs.elm.length === 0) {
         return self;
       }
 
       // onBlur make validation without waiting
-      attrs.elm.bind('blur', function(event) { 
+      attrs.elm.bind('blur', function(event) {
         // re-initialize to use current element & remove waiting time & validate
-        self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);   
+        self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
         self.commonObj.typingLimit = 0;
         attemptToValidate(self, event.target.value);
       });
 
       // merge both attributes but 2nd object (attrs) as higher priority, so that for example debounce property inside `attrs` as higher priority over `validatorAttrs`
       // so the position inside the mergeObject call is very important
-      attrs = mergeObjects(self.validationAttrs, attrs); 
+      attrs = mergeObjects(self.validationAttrs, attrs);
 
       // watch the element for any value change, validate it once that happen
 			attrs.scope.$watch(attrs.elmName, function (newVal, oldVal) {
         if(newVal === undefined && oldVal !== undefined) {
-          self.commonObj.updateErrorMsg("INVALID_KEY_CHAR", false, true);
+          self.commonObj.updateErrorMsg("INVALID_KEY_CHAR", {valid: false, translate: true});
           return;
         }
         // from the DOM element, find the Angular controller of this element & add value as well to list of attribtues
@@ -86,7 +89,33 @@ angular
       return self;
 		} // addValidator()
 
-    /** Remove a watcher 
+    /** Is the Form all valid? Loop through Validation Summary to get the answer, if any errors are there then display them and return false
+     * @param object Angular Form Object
+     * @return bool isFormValid
+     */
+    function checkFormValidity(form) {
+      var self = this;
+      var ctrl, elm, elmName = '', isValid = true;
+      if(typeof form === "undefined") {
+        throw 'Form validaty checking requires a valid form object passed as argument';
+      }
+
+      // loop through $validationSummary and display errors when found on each field
+      for(var i = 0, ln = form.$validationSummary.length; i < ln; i++) {
+        isValid = false;
+        elmName = form.$validationSummary[i].field;
+        elm = angular.element(document.querySelector('[name="'+elmName+'"]:not([disabled]):not([ng-disabled]'));
+        ctrl = angular.element(elm).controller('ngModel');
+
+        if(!!elm && elm.length > 0) {
+          ctrl.$setTouched(); // make the element as it was touched for CSS
+          self.commonObj.updateErrorMsg(form.$validationSummary[i].message, {valid: false, elm: elm, submitted: true});
+        }
+      }
+      return isValid;
+    }
+
+    /** Remove a watcher
      * @param array/string of element name(s) (name attribute)
      */
     function removeValidator(attrs) {
@@ -94,17 +123,17 @@ angular
 
       if(attrs instanceof Array) {
         for(var i = 0, ln = attrs.length; i < ln; i++) {
-          removeWatcher(self, attrs[i]);          
+          removeWatcher(self, attrs[i]);
         }
       }else {
-        removeWatcher(self, attrs);        
-      }      
+        removeWatcher(self, attrs);
+      }
     }
 
     /** Set and initialize global options used by all validators */
     function setGlobalOptions(attrs) {
       var self = this;
-      self.validationAttrs = attrs; // save in global 
+      self.validationAttrs = attrs; // save in global
 
       return self;
     }
@@ -117,19 +146,19 @@ angular
      *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
      * @param string value: value of the input field
      */
-    function attemptToValidate(self, value) { 
+    function attemptToValidate(self, value) {
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
       self.commonObj.validate(value, false);
-      
+
       // if field is not required and his value is empty, cancel validation and exit out
       if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self);
         return value;
       }
 
-      // invalidate field before doing any validation 
-      if(self.commonObj.isFieldRequired() || !!value) { 
+      // invalidate field before doing any validation
+      if(self.commonObj.isFieldRequired() || !!value) {
         self.commonObj.ctrl.$setValidity('validation', false);
       }
 
@@ -145,20 +174,20 @@ angular
         // Make the validation only after the user has stopped activity on a field
         // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
         self.commonObj.updateErrorMsg('');
-        $timeout.cancel(self.timer);            
-        self.timer = $timeout(function() {  
+        $timeout.cancel(self.timer);
+        self.timer = $timeout(function() {
           self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
         }, self.commonObj.typingLimit);
       }
 
-      return value;        
+      return value;
     } // attemptToValidate()
 
     /** Cancel current validation test and blank any leftover error message */
     function cancelValidation(obj) {
       $timeout.cancel(self.timer);
       obj.commonObj.updateErrorMsg('');
-      obj.commonObj.ctrl.$setValidity('validation', true);             
+      obj.commonObj.ctrl.$setValidity('validation', true);
       obj.commonObj.elm.unbind('blur'); // unbind onBlur event, if not it will fail when input become dirty & empty
     }
 
@@ -175,7 +204,7 @@ angular
       return obj3;
     }
 
-    /** Remove a watcher 
+    /** Remove a watcher
      * @param string elmName: element name (name attribute)
      */
     function removeWatcher(self, elmName) {

@@ -1,3 +1,5 @@
+// requires: validation-common.js
+
 /**
  * angular-validation-rules (ghiscoding)
  * https://github.com/ghiscoding/angular-validation
@@ -23,7 +25,7 @@ angular
 		// Functions declaration
 		//----------------------------------
 
-		/** Get the element active validators and store it inside an array which will be returned 
+		/** Get the element active validators and store it inside an array which will be returned
 		 * @param string rule: rule name
 		 * @param string ruleParam: rule extra parameter
 		 * @param object customUserRegEx: custom Regex defined by the user (*optional)
@@ -41,15 +43,15 @@ angular
             type: "regex"
           };
           break;
-        case "alphaSpaces" :  
-        case "alpha_spaces" :   
+        case "alphaSpaces" :
+        case "alpha_spaces" :
           validator = {
             pattern: "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$",
             message: "INVALID_ALPHA_SPACE",
             type: "regex"
           };
           break;
-        case "alphaNum" :  
+        case "alphaNum" :
         case "alpha_num" :
           validator = {
             pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$",
@@ -92,7 +94,7 @@ angular
             message: "INVALID_BETWEEN_CHAR",
             params: [range[0], range[1]],
             type: "regex"
-          };        
+          };
           break;
         case "betweenNum" :
         case "between_num" :
@@ -122,15 +124,15 @@ angular
             message: "INVALID_DATE_EURO_LONG",
             type: "regex"
           };
-          break; 
+          break;
         case "dateEuroLongBetween" :
         case "date_euro_long_between" :
         case "betweenDateEuroLong" :
-        case "between_date_euro_long" : 
-          var range = ruleParam.split(','); 
+        case "between_date_euro_long" :
+          var range = ruleParam.split(',');
           if (range.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_euro_long:01-01-1990,31-12-2015";
-          }     
+          }
           validator = {
             condition: [">=","<="],
             dateType: "EURO_LONG",
@@ -139,11 +141,11 @@ angular
             message: "INVALID_DATE_EURO_LONG_BETWEEN",
             type: "conditionalDate"
           };
-          break; 
+          break;
         case "dateEuroLongMax" :
         case "date_euro_long_max" :
         case "maxDateEuroLong" :
-        case "max_date_euro_long" :        
+        case "max_date_euro_long" :
           validator = {
             condition: "<=",
             dateType: "EURO_LONG",
@@ -152,11 +154,11 @@ angular
             message: "INVALID_DATE_EURO_LONG_MAX",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateEuroLongMin" :
         case "date_euro_long_min" :
         case "minDateEuroLong" :
-        case "min_date_euro_long" :        
+        case "min_date_euro_long" :
           validator = {
             condition: ">=",
             dateType: "EURO_LONG",
@@ -181,7 +183,7 @@ angular
           var range = ruleParam.split(',');
           if (range.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_euro_short:01-01-90,31-12-15";
-          }      
+          }
           validator = {
             condition: [">=","<="],
             dateType: "EURO_SHORT",
@@ -190,7 +192,7 @@ angular
             message: "INVALID_DATE_EURO_SHORT_BETWEEN",
             type: "conditionalDate"
           };
-          break; 
+          break;
         case "dateEuroShortMax" :
         case "date_euro_short_max" :
         case "maxDateEuroShort" :
@@ -203,7 +205,7 @@ angular
             message: "INVALID_DATE_EURO_SHORT_MAX",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateEuroShortMin" :
         case "date_euro_short_min" :
         case "minDateEuroShort" :
@@ -232,7 +234,7 @@ angular
           var range = ruleParam.split(',');
           if (range.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_iso:1990-01-01,2000-12-31";
-          }      
+          }
           validator = {
             condition: [">=","<="],
             dateType: "ISO",
@@ -241,7 +243,7 @@ angular
             message: "INVALID_DATE_ISO_BETWEEN",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateIsoMax" :
         case "date_iso_max" :
         case "maxDateIso" :
@@ -254,7 +256,7 @@ angular
             message: "INVALID_DATE_ISO_MAX",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateIsoMin" :
         case "date_iso_min" :
         case "minDateIso" :
@@ -283,7 +285,7 @@ angular
           var range = ruleParam.split(',');
           if (range.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_us_long:01/01/1990,12/31/2015";
-          }      
+          }
           validator = {
             condition: [">=","<="],
             dateType: "US_LONG",
@@ -292,7 +294,7 @@ angular
             message: "INVALID_DATE_US_LONG_BETWEEN",
             type: "conditionalDate"
           };
-          break; 
+          break;
         case "dateUsLongMax" :
         case "date_us_long_max" :
         case "maxDateUsLong" :
@@ -305,7 +307,7 @@ angular
             message: "INVALID_DATE_US_LONG_MAX",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateUsLongMin" :
         case "date_us_long_min" :
         case "minDateUsLong" :
@@ -326,7 +328,7 @@ angular
             message: "INVALID_DATE_US_SHORT",
             type: "regex"
           };
-          break;  
+          break;
         case "dateUsShortBetween" :
         case "date_us_short_between" :
         case "betweenDateUsShort" :
@@ -334,7 +336,7 @@ angular
           var range = ruleParam.split(',');
           if (range.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_date_us_short:01/01/90,12/31/15";
-          }      
+          }
           validator = {
             condition: [">=","<="],
             dateType: "US_SHORT",
@@ -343,7 +345,7 @@ angular
             message: "INVALID_DATE_US_SHORT_BETWEEN",
             type: "conditionalDate"
           };
-          break; 
+          break;
         case "dateUsShortMax" :
         case "date_us_short_max" :
         case "maxDateUsShort" :
@@ -356,7 +358,7 @@ angular
             message: "INVALID_DATE_US_SHORT_MAX",
             type: "conditionalDate"
           };
-          break;  
+          break;
         case "dateUsShortMin" :
         case "date_us_short_min" :
         case "minDateUsShort" :
@@ -383,9 +385,9 @@ angular
             pattern: "^.{" + ruleParam + "}$",
             message: "INVALID_EXACT_LEN",
             params: [ruleParam],
-            type: "regex"                  
+            type: "regex"
           };
-          break; 
+          break;
         case "float" :
           validator = {
             pattern: "^\\d*\\.{1}\\d+$",
@@ -407,7 +409,7 @@ angular
             message: "INVALID_IBAN",
             type: "regex"
           };
-          break; 
+          break;
         case "int" :
         case "integer" :
           validator = {
@@ -425,28 +427,28 @@ angular
             message: "INVALID_INTEGER_SIGNED",
             type: "regex"
           };
-          break; 
+          break;
         case "ipv4" :
           validator = {
             pattern: "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$",
             message: "INVALID_IPV4",
             type: "regex"
           };
-          break; 
+          break;
         case "ipv6" :
           validator = {
             pattern: "^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$",
             message: "INVALID_IPV6",
             type: "regex"
           };
-          break; 
+          break;
         case "ipv6_hex" :
           validator = {
             pattern: "^((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)::((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)$",
             message: "INVALID_IPV6_HEX",
             type: "regex"
           };
-          break; 
+          break;
         case "match" :
           var args = ruleParam.split(',');
           validator = {
@@ -490,14 +492,14 @@ angular
             params: [ruleParam],
             type: "conditionalNumber"
           };
-          break; 
+          break;
         case "numeric" :
           validator = {
             pattern: "^\\d*\\.?\\d+$",
             message: "INVALID_NUMERIC",
             type: "regex"
           };
-          break; 
+          break;
         case "numericSigned" :
         case "numeric_signed" :
           validator = {
@@ -536,7 +538,7 @@ angular
             type: "regex"
           };
           break;
-      } // switch() 
+      } // switch()
 
 	    return validator;
 		} // getElementValidators()
