@@ -280,24 +280,24 @@ angular
       return isFieldValid;
     } // validate()
 
-	//----
-	// Private functions declaration
-	//----------------------------------
-	
-	/** Get form within scope (if found)
+    //----
+    // Private functions declaration
+    //----------------------------------
+    
+    /** Get form within scope (if found)
     * @param self
     */
-	function getScopeForm(self) {
-	  var forms = document.querySelectorAll('form');
-	  for (var i = 0; i < forms.length; i++) {
-	    var form = document.querySelectorAll('form')[i];
-	    if (form && form.name && self.scope[form.name]) {
-	      return self.scope[form.name];
-	    }
-	  }
-	  return null;
-	}
-	
+    function getScopeForm(self) {
+      var forms = document.querySelectorAll('form');
+      for (var i = 0; i < forms.length; i++) {
+        var form = document.querySelectorAll('form')[i];
+        if (form && form.name && self.scope[form.name]) {
+          return self.scope[form.name];
+        }
+      }
+      return null;
+    }
+    
     /** Add the error to the validation summary
      * @param self
      * @param string elmName: element name (name attribute)
@@ -323,10 +323,10 @@ angular
 
       // save validation summary 2 variable locations, inside the scope object and also in the form object (if found)
       self.scope.$validationSummary = validationSummary;
-	  var form = getScopeForm(self);
-	  if (form) {
-	    form.$validationSummary = validationSummary;
-	  }
+      var form = getScopeForm(self);
+      if (form) {
+        form.$validationSummary = validationSummary;
+      }
     }
 
     /** Quick function to find an object inside an array by it's given field name and value, return the index found or -1
