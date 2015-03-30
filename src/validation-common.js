@@ -280,21 +280,22 @@ angular
       return isFieldValid;
     } // validate()
 
-	  //----
-		// Private functions declaration
-		//----------------------------------
+	//----
+	// Private functions declaration
+	//----------------------------------
+	
 	/** Get form within scope (if found)
     * @param self
     */
 	function getScopeForm(self) {
-	    var forms = document.querySelectorAll('form');
-	    for (var i = 0; i < forms.length; i++) {
-	        var form = document.querySelectorAll('form')[i];
-	        if (form && form.name && self.scope[form.name]) {
-	            return self.scope[form.name];
-	        }
+	  var forms = document.querySelectorAll('form');
+	  for (var i = 0; i < forms.length; i++) {
+	    var form = document.querySelectorAll('form')[i];
+	    if (form && form.name && self.scope[form.name]) {
+	      return self.scope[form.name];
 	    }
-	    return null;
+	  }
+	  return null;
 	}
 	
     /** Add the error to the validation summary
