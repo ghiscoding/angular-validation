@@ -7,7 +7,7 @@
     "INVALID_ALPHA_DASH_SPACE":         "Unicamente puede contener letras, números, guiones y espacios. ",
     "INVALID_BETWEEN_CHAR":             "El número de caracteres debe de estar entre :param y :param. ",
     "INVALID_BETWEEN_NUM":              "El valor debe ser númerico y estar entre :param y :param. ",
-    "INVALID_BOOLEAN":                  "Unicamente puede contener el texto "verdadero" ó "falso". ",
+    "INVALID_BOOLEAN":                  "Unicamente puede contener el texto verdadero ó falso. ",
     "INVALID_CREDIT_CARD":              "Debe contener un número de tarjeta de crédito valido. ",
     "INVALID_DATE_EURO_LONG":           "Debe contener una fecha valida con formato (dd-mm-yyyy) ó (dd/mm/yyyy). ",
     "INVALID_DATE_EURO_LONG_BETWEEN":   "Debe contener una fecha valida entre :param y :param con formato (dd-mm-yyyy) ó (dd/mm/yyyy). ",
