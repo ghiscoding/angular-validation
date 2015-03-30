@@ -54,10 +54,10 @@ myApp.config(function ($translateProvider) {
 ```
 
 ```html
-<!-- You could also angular-validation with the all in 1 minified file -->
+<!-- You could use the minified version of angular-validation (all in 1 minified file) -->
 <script type="text/javascript" src="dist/angular-validation.min.js"></script>
 
-<!-- OR uncompressed files for development, which are angular-validation, the directive and service are totally independent -->
+<!-- OR use uncompressed files for development, which are angular-validation, the directive and service are totally independent -->
 <!-- you can load one or the other or use them in parallel. But `-common.js` and `-rules.js` are mandatory. -->
 <script type="text/javascript" src="src/validation-directive.js"></script>
 <script type="text/javascript" src="src/validation-service.js"></script>
@@ -162,7 +162,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 ```
 
 <a name="submit"></a>
-## Form Submitting and Validation
+## Form Submit and Validation
 The Angular-Validation concept was first introduced with the use `ngDisabled` on the submit button, but this might not always be the best option so as a another feature we could simply leave the submit button available but run an extra function to check the form validation before proceeding with our submit (that function is available through the ValidationService).
 
 *You could also use the [Validation summary](#validation-summary) for displaying all errors as a header or even a footer*
@@ -266,9 +266,9 @@ Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0
 
 Locales (languages)
 --------------------
-Locales are simply sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly, well of course the error message will be reflected only after field value is re-evaluated. You of course have to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
+Locales are simple sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly (note that the error message will be reflected only after field value is re-evaluated). Make sure to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
 
-NOTE: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but then this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway. If you do want to be fully localized, then see the example in [Include it in your Project](#project)
+NOTE: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway (for example English from UK or US would most probably give similar error messages). If you really do want to be fully localized, then see the example in [Include it in your Project](#project)
 
 ```javascript
 // define a key, could be on the fly with a button or a menu link
@@ -383,6 +383,6 @@ License
 * [1.3.5](https://github.com/ghiscoding/angular-validation/commit/679b24ca4daee8419731c45d1d65d63cb5ca74a5) `2015-01-26` Throw an error message when user did not provide a `name=""` property inside the element to validate.
 * [1.3.6](https://github.com/ghiscoding/angular-validation/commit/e47e91f45f93a3f191ab6849d06163563674e9e2) `2015-02-09` Added `ng-strict-di` for minification, renamed some files and folder lib to `/vendors`, moved directive into new `/src` folder for better separation.
 * [1.3.7](https://github.com/ghiscoding/angular-validation/commit/86c16f720d6687d3b5ca93e49a0a37824027e583) `2015-03-08` Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
-* [1.3.8](https://github.com/ghiscoding/angular-validation/commit/492d1060a91fb8b49fc70a0c7a1a581d904e0db0) `2015-03-15` Added between/min/max conditional validators on all Date types (ISO, EURO_LONG, EURO_SHORT, US_LONG, US_SHORT)
+* [1.3.8](https://github.com/ghiscoding/angular-validation/commit/492d1060a91fb8b49fc70a0c7a1a581d904e0db0) `2015-03-15` Added between/min/max conditional validators on all Date types (iso, euro_long, euro_short, us_long, us_short)
 * [1.3.9](https://github.com/ghiscoding/angular-validation/commit/931d3b04a00f0583612aefe28ad0bfcac326a38c) `2015-03-21` Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
 * [1.3.10](https://github.com/ghiscoding/angular-validation/commit/18765a8dd986856a9fa176fc4835d90d25f663b2) `2015-03-29` Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.

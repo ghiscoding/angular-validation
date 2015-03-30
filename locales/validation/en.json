@@ -52,10 +52,9 @@
     "INVALID_URL":                      "Must be a valid URL. ",
     "INVALID_TIME":                     "Must be a valid time format (hh:mm) OR (hh:mm:ss). ",
 
-
     "AREA1":                            "TextArea: Alphanumeric + Minimum(15) + Required",
     "ERRORS":                           "Errors",
-    "CHANGE_LANGUAGE":                  "Change language.",
+    "CHANGE_LANGUAGE":                  "Change language",
     "INPUT2":                           "Number positive or negative -- input type=\"number\" -- Error on non-numeric characters ",
     "INPUT3":                           "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y ",
     "INPUT4":                           "Multiple Validations + Custom Regex of Date Code (YYWW)",
