@@ -51,6 +51,7 @@
     "INVALID_REQUIRED":                 "Le champ est requis. ",
     "INVALID_URL":                      "Doit être un URL valide. ",
     "INVALID_TIME":                     "Doit être un format de date valide (hh:mm) OU (hh:mm:ss). ",
+    "INVALID_REQUIREDSELECTION":        "Must choose an option",
 
     "AREA1":                            "TextArea: Alphanumérique + Minimum(15) + Required",
     "ERRORS":                           "Erreurs",
