@@ -27,6 +27,7 @@ angular
     validationService.prototype.addValidator = addValidator;
     validationService.prototype.checkFormValidity = checkFormValidity;
     validationService.prototype.removeValidator = removeValidator;
+    validationService.prototype.clearValidationSummary = clearValidationSummary;
     validationService.prototype.setGlobalOptions = setGlobalOptions;
 
     return validationService;
@@ -73,7 +74,7 @@ angular
       attrs = mergeObjects(self.validationAttrs, attrs);
 
       // watch the element for any value change, validate it once that happen
-			attrs.scope.$watch(attrs.elmName, function (newVal, oldVal) {
+      attrs.scope.$watch(attrs.elmName, function (newVal, oldVal) {
         if(newVal === undefined && oldVal !== undefined) {
           self.commonObj.updateErrorMsg("INVALID_KEY_CHAR", {valid: false, translate: true});
           return;
@@ -84,11 +85,17 @@ angular
 
         self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
         attemptToValidate(self, newVal);
-		  }, true); // $watch()
+      }, true); // $watch()
 
       return self;
-		} // addValidator()
+    } // addValidator()
 
+    function clearValidationSummary(obj) {
+      if (typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
+        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+      }
+      obj.$validationSummary = [];
+    }
     /** Is the Form all valid? Loop through Validation Summary to get the answer, if any errors are there then display them and return false
      * @param object Angular Form or Scope Object
      * @return bool isFormValid
@@ -103,13 +110,12 @@ angular
       // loop through $validationSummary and display errors when found on each field
       for(var i = 0, ln = obj.$validationSummary.length; i < ln; i++) {
         isValid = false;
-        elmName = obj.$validationSummary[i].field;
-        elm = angular.element(document.querySelector('[name="'+elmName+'"]:not([disabled]):not([ng-disabled]'));
-        ctrl = angular.element(elm).controller('ngModel');
+        elm = obj.$validationSummary[i].obj.elm;
+        ctrl = obj.$validationSummary[i].obj.ctrl; 
 
         if(!!elm && elm.length > 0) {
           ctrl.$setTouched(); // make the element as it was touched for CSS
-          self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, {valid: false, elm: elm, submitted: true});
+          self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, { valid: false, obj: obj.$validationSummary[i].obj, submitted: true });
         }
       }
       return isValid;

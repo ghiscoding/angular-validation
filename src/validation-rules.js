@@ -538,6 +538,13 @@ angular
             type: "regex"
           };
           break;
+        case "requiredselection":
+          validator = {
+            pattern: "\\S+",
+            message: "INVALID_REQUIREDSELECTION",
+            type: "regex"
+          };
+          break;
       } // switch()
 
 	    return validator;
