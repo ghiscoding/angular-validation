@@ -20,6 +20,23 @@ Huge rewrite to have a better code separation and also adding support to Service
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 
+<a name="index"></a>
+## Index
+* [Plunker Demo](#plunker)
+* [Dependency](#dependencies)
+* [Install](#install)
+* [Include it in your app project](#project)
+* [Requirements](#requirements)
+* [Some Working Examples (Directive)](#examples-directive)
+* [Some Working Examples (Service)](#examples-service)
+* [Form Submit](#submit)
+* [Validation summary](#validation-summary)
+* [Bootstrap Input Groups Wrapping - HOWTO](#input-groups-wrapping)
+* [Regular Expressions (Regex)](#regex)
+* [Locales (languages)](#locales)
+* [Available Validators](#validators)
+* [Changelog](#changelog)
+
 <a name="install"></a>
 Install
 -----
@@ -65,12 +82,13 @@ myApp.config(function ($translateProvider) {
 <script type="text/javascript" src="src/validation-rules.js"></script>
 ```
 
+<a name="requirements"></a>
 ## Requirements
 Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`.
 
 *The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. In other words, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
 
-<a name="examples-directives"></a>
+<a name="examples-directive"></a>
 ## Some Working Examples (Directive)
 Let's start with a simple example and then let's get down to real business.
 
@@ -175,6 +193,9 @@ The Angular-Validation concept was first introduced with the use `ngDisabled` on
 ```
 ```javascript
 // Option #2 will need to call the `checkFormValidity()` function checking the form before doing a real submit
+// $validationSummary can be found in 2 variables (depending if your form as a name or not)
+// you can use `checkFormValidity($scope.form1)` or this `checkFormValidity($scope)`
+// If your form does not have a name attribute, your only choice is `checkFormValidity($scope)`
 $scope.submitForm = function() {
   var myValidation = new validationService();
   if(myValidation.checkFormValidity($scope.form1)) {
@@ -211,6 +232,7 @@ Display a validation summary of all the current form errors. Validation summary 
 </form>
 ```
 
+<a name="input-groups-wrapping"></a>
 Bootstrap Input Groups Wrapping - HOWTO
 --------------------
 Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasions, we will add a `<span>` or a `<div>` for displaying the possible error and give the this element an `id="someId"` or a `class="className"` and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` or a `className` and call the `validation-error-to` attribute. This attribute could be called in 3 different ways: with `'.'` (element error className) or with/without `'#'` (element error id) We could even do a validation summary with this...just saying hehe.
@@ -250,7 +272,7 @@ From the example displayed, I introduce the custom regular expression, there is 
 
 Regex validation is divided in 4 specific parts (Step #1-4).
 
-Let's use the previous [Examples #5](#examples-directives) and extract the information out of it to see how it works.
+Let's use the previous [Examples #5](#examples-directive) and extract the information out of it to see how it works.
 Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
 
 1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
@@ -263,7 +285,7 @@ Step #1-4 are for explanation only, at the end we show the full regex (make sure
 
 Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
 
-
+<a name="locales"></a>
 Locales (languages)
 --------------------
 Locales are simple sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly (note that the error message will be reflected only after field value is re-evaluated). Make sure to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
@@ -281,9 +303,9 @@ $scope.switchLanguage = function (key) {
   });
 };
 ```
-
 *P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*
 
+<a name="validators"></a>
 Available Validators
 --------------------
 All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
@@ -374,6 +396,7 @@ License
 * Add more validators...
 * Add more locale languages... I need your help on that one!!!
 
+<a name="changelog"></a>
 ## CHANGELOG
 * [1.3.0](https://github.com/ghiscoding/angular-validation/commit/d106996926bef86a0457c90fbb65fe6233f3928d) `2014-12-01` Added support to AngularJS 1.3
 * [1.3.1](https://github.com/ghiscoding/angular-validation/commit/44fe9de050504a46bb0eb975c31bc4b0f3b6f516) `2015-01-02` Added Input Match/Confirmation Validator, ex: password confirmation.
