@@ -90,26 +90,26 @@ angular
 		} // addValidator()
 
     /** Is the Form all valid? Loop through Validation Summary to get the answer, if any errors are there then display them and return false
-     * @param object Angular Form Object
+     * @param object Angular Form or Scope Object
      * @return bool isFormValid
      */
-    function checkFormValidity(form) {
+    function checkFormValidity(obj) {
       var self = this;
       var ctrl, elm, elmName = '', isValid = true;
-      if(typeof form === "undefined") {
-        throw 'Form validaty checking requires a valid form object passed as argument';
+      if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
+        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
       }
 
       // loop through $validationSummary and display errors when found on each field
-      for(var i = 0, ln = form.$validationSummary.length; i < ln; i++) {
+      for(var i = 0, ln = obj.$validationSummary.length; i < ln; i++) {
         isValid = false;
-        elmName = form.$validationSummary[i].field;
+        elmName = obj.$validationSummary[i].field;
         elm = angular.element(document.querySelector('[name="'+elmName+'"]:not([disabled]):not([ng-disabled]'));
         ctrl = angular.element(elm).controller('ngModel');
 
         if(!!elm && elm.length > 0) {
           ctrl.$setTouched(); // make the element as it was touched for CSS
-          self.commonObj.updateErrorMsg(form.$validationSummary[i].message, {valid: false, elm: elm, submitted: true});
+          self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, {valid: false, elm: elm, submitted: true});
         }
       }
       return isValid;

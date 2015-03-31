@@ -283,21 +283,7 @@ angular
     //----
     // Private functions declaration
     //----------------------------------
-    
-    /** Get form within scope (if found)
-    * @param self
-    */
-    function getScopeForm(self) {
-      var forms = document.querySelectorAll('form');
-      for (var i = 0; i < forms.length; i++) {
-        var form = document.querySelectorAll('form')[i];
-        if (form && form.name && self.scope[form.name]) {
-          return self.scope[form.name];
-        }
-      }
-      return null;
-    }
-    
+
     /** Add the error to the validation summary
      * @param self
      * @param string elmName: element name (name attribute)
@@ -327,6 +313,20 @@ angular
       if (form) {
         form.$validationSummary = validationSummary;
       }
+    }
+
+    /** Get form within scope (if found)
+    * @param self
+    */
+    function getScopeForm(self) {
+      var forms = document.querySelectorAll('form');
+      for (var i = 0; i < forms.length; i++) {
+        var form = document.querySelectorAll('form')[i];
+        if (form && form.name && self.scope[form.name]) {
+          return self.scope[form.name];
+        }
+      }
+      return null;
     }
 
     /** Quick function to find an object inside an array by it's given field name and value, return the index found or -1
