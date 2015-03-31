@@ -205,6 +205,11 @@ $scope.submitForm = function() {
   if(myValidation.checkFormValidity($scope.form1)) {
     // proceed with submit
   }
+
+  // or without a form name, use the $scope alone
+  if(myValidation.checkFormValidity($scope)) {
+    // proceed with submit
+  }
 }
 
 // Option #3 - You could also use the $validationSummary to be displayed after a Submit
