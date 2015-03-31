@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.10`
+`Version: 1.3.11`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -413,3 +413,4 @@ License
 * [1.3.8](https://github.com/ghiscoding/angular-validation/commit/492d1060a91fb8b49fc70a0c7a1a581d904e0db0) `2015-03-15` Added between/min/max conditional validators on all Date types (iso, euro_long, euro_short, us_long, us_short)
 * [1.3.9](https://github.com/ghiscoding/angular-validation/commit/931d3b04a00f0583612aefe28ad0bfcac326a38c) `2015-03-21` Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
 * [1.3.10](https://github.com/ghiscoding/angular-validation/commit/18765a8dd986856a9fa176fc4835d90d25f663b2) `2015-03-29` Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.
+* [1.3.11](https://github.com/ghiscoding/angular-validation/commit/e807584f0bcdf0f28ef2ef905b6bc4e890926ac1) `2015-03-30` Accepted pull request #15 to fix form without name attribute. Also accepted pull request #18 to add Spanish locales.
