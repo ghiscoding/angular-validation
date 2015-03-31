@@ -255,6 +255,13 @@ angular
         }
         if(!isValid) {
           isFieldValid = false;
+
+          // validationMessage is passed as argument and our field is invalid, we will display only that validationMessage
+          // this will overwrite all other validator messages
+          if(!!self.validatorAttrs && self.validatorAttrs.hasOwnProperty('validationMessage')) {
+            message = self.validatorAttrs.validationMessage;
+            continue;
+          }
           message += $translate.instant(self.validators[j].message);
 
           // replace any error message param(s) that were possibly passed
