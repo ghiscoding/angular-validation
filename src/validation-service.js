@@ -97,7 +97,7 @@ angular
       var self = this;
       var ctrl, elm, elmName = '', isValid = true;
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'Form validaty checking requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
       }
 
       // loop through $validationSummary and display errors when found on each field
