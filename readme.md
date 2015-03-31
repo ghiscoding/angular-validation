@@ -42,7 +42,11 @@ Install
 -----
 Install with Bower
 
-```
+```javascript
+// You can install with
+bower install angular-validation-ghiscoding
+
+// or as another name
 bower install ghiscoding.angular-validation
 ```
 
