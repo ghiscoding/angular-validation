@@ -12,10 +12,10 @@
 angular
 	.module('ghiscoding.validation')
 	.service('validationService', ['$timeout', 'validationCommon', function ($timeout, validationCommon) {
-    // global variables
-    var validationAttrs;
-    var commonObj;
-    var timer;
+    // global variables of our object
+    var validationAttrs;  // Current Validator attributes
+    var commonObj;        // Object of validationCommon service
+    var timer;            // timer of user inactivity time
 
     // service constructor
     var validationService = function() {
@@ -23,11 +23,11 @@ angular
       this.commonObj = new validationCommon();
     }
 
-    // attach the public functions to our service
-    validationService.prototype.addValidator = addValidator;
-    validationService.prototype.checkFormValidity = checkFormValidity;
-    validationService.prototype.removeValidator = removeValidator;
-    validationService.prototype.setGlobalOptions = setGlobalOptions;
+    // list of available published public functions of this object
+    validationService.prototype.addValidator = addValidator;            // add a Validator to current element
+    validationService.prototype.checkFormValidity = checkFormValidity;  // check the form validity (can be called by an empty validationService and used by both Directive/Service)
+    validationService.prototype.removeValidator = removeValidator;      // remove a Validator from an element
+    validationService.prototype.setGlobalOptions = setGlobalOptions;    // set and initialize global options used by all validators
 
     return validationService;
 
@@ -35,13 +35,15 @@ angular
 		// Public Functions declaration
 		//----------------------------------
 
-		/** Add a validator on a form element
-		 * @param object attrs: validator attributes
+		/** Add a validator on a form element, the argument could be passed as 2 string arguments or 1 single object embedding the properties
+     * @param mixed var1: could be a string (element name) or an object representing the validator
+		 * @param mixed var2: could be a string (element name)
 		 */
 		function addValidator(var1, var2) {
       var self = this;
       var attrs = {};
 
+      // find if user provided 2 string arguments else it will be a single object with all properties
       if(typeof var1 === "string" && typeof var2 === "string") {
         attrs.elmName = var1;
         attrs.rules = var2;
@@ -89,7 +91,8 @@ angular
       return self;
 		} // addValidator()
 
-    /** Is the Form all valid? Loop through Validation Summary to get the answer, if any errors are there then display them and return false
+    /** Check the form validity (can be called by an empty validationService and used by both Directive/Service)
+     * Loop through Validation Summary and if any errors found then display them and return false on current function
      * @param object Angular Form or Scope Object
      * @return bool isFormValid
      */
@@ -104,33 +107,47 @@ angular
       for(var i = 0, ln = obj.$validationSummary.length; i < ln; i++) {
         isValid = false;
         elmName = obj.$validationSummary[i].field;
-        elm = angular.element(document.querySelector('[name="'+elmName+'"]:not([disabled]):not([ng-disabled]'));
-        ctrl = angular.element(elm).controller('ngModel');
 
-        if(!!elm && elm.length > 0) {
-          ctrl.$setTouched(); // make the element as it was touched for CSS
-          self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, {valid: false, elm: elm, submitted: true});
+        if(!!elmName) {
+          // get the form element custom object and use it after
+          var formElmObj = self.commonObj.getFormElementByName(elmName);
+
+          if(!!formElmObj.elm && formElmObj.elm.length > 0) {
+            formElmObj.ctrl.$setTouched(); // make the element as it was touched for CSS
+            self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, { isSubmitted: true, isValid: formElmObj.isValid, obj: formElmObj });
+          }
         }
       }
       return isValid;
     }
 
     /** Remove a watcher
+     * @param object Angular Form or Scope Object
      * @param array/string of element name(s) (name attribute)
      */
-    function removeValidator(attrs) {
+    function removeValidator(obj, attrs) {
       var self = this;
+      if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
+        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+      }
 
+      var formElmObj;
       if(attrs instanceof Array) {
+        // when passed as array, loop through all elements to be removed
         for(var i = 0, ln = attrs.length; i < ln; i++) {
-          removeWatcher(self, attrs[i]);
+          formElmObj = self.commonObj.getFormElementByName(attrs[i]);
+          removeWatcher(self, formElmObj, obj.$validationSummary);
         }
       }else {
-        removeWatcher(self, attrs);
+        formElmObj = self.commonObj.getFormElementByName(attrs);
+        removeWatcher(self, formElmObj, obj.$validationSummary);
       }
     }
 
-    /** Set and initialize global options used by all validators */
+    /** Set and initialize global options used by all validators
+     * @param object attrs: global options
+     * @return object self
+     */
     function setGlobalOptions(attrs) {
       var self = this;
       self.validationAttrs = attrs; // save in global
@@ -144,6 +161,7 @@ angular
 
     /** Validator function to attach to the element, this will get call whenever the input field is updated
      *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
+     * @param object self
      * @param string value: value of the input field
      */
     function attemptToValidate(self, value) {
@@ -183,7 +201,9 @@ angular
       return value;
     } // attemptToValidate()
 
-    /** Cancel current validation test and blank any leftover error message */
+    /** Cancel current validation test and blank any leftover error message
+     * @param object obj
+     */
     function cancelValidation(obj) {
       $timeout.cancel(self.timer);
       obj.commonObj.updateErrorMsg('');
@@ -195,28 +215,38 @@ angular
      * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
      * @param obj1
      * @param obj2
-     * @returns obj3 a new object based on obj1 and obj2
+     * @return obj3 a new object based on obj1 and obj2
      */
-    function mergeObjects(obj1,obj2) {
+    function mergeObjects(obj1, obj2) {
       var obj3 = {};
       for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
       for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+
       return obj3;
     }
 
     /** Remove a watcher
-     * @param string elmName: element name (name attribute)
+     * @param object self
+     * @param object formElmObj: form element object
+     * @param object validationSummary
      */
-    function removeWatcher(self, elmName) {
+    function removeWatcher(self, formElmObj, validationSummary) {
       if(typeof self.commonObj.scope === "undefined") {
         return;
       }
       // unbind the $watch
-      var unbindWatcher = self.commonObj.scope.$watch(elmName, function (newVal, oldVal) {}); // $watch()
+      var unbindWatcher = self.commonObj.scope.$watch(formElmObj.fieldName, function (newVal, oldVal) {}); // $watch()
       unbindWatcher();
 
       // also unbind the blur directly applied on element
-      var elm = angular.element(document.querySelector('[name="'+elmName+'"]'));
-      elm.unbind('blur');
+      formElmObj.elm.unbind();
+
+      // now to remove any errors, we need to make the element untouched, pristine and remove the validation
+      // also remove it from the validationSummary list and remove any displayed error
+      formElmObj.ctrl.$setUntouched();
+      formElmObj.ctrl.$setPristine();
+      formElmObj.ctrl.$setValidity('validation', true);
+      self.commonObj.removeFromValidationSummary(validationSummary, formElmObj.fieldName);
+      self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
     }
 }]);

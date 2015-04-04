@@ -17,7 +17,7 @@
       restrict: "A",
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
-        // create an object of the common c
+        // create an object of the common validation
         var commonObj = new validationCommon(scope, elm, attrs, ctrl);
         var timer;
 

@@ -89,7 +89,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     .addValidator('input10', 'date_iso|required')
     .addValidator('input11', 'date_us_long|required')
     .addValidator('input12', 'time')
-    .addValidator('select1', 'required')
+    .addValidator('select1', 'required:alt=' + $translate.instant('CHANGE_LANGUAGE'))
     .addValidator({elmName: 'input13', rules: 'min_len:5|max_len:10|alpha_dash_spaces|required', validationErrorTo: ".validation-input13"})
     .addValidator('input14', 'alpha|required')
     .addValidator('input15', 'alpha|min_len:3|required')
@@ -99,10 +99,10 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     .addValidator('input19', 'date_us_short_between:11/28/99,12/31/15|required')
     .addValidator('area1', 'alpha_dash_spaces|min_len:15|required');
 
-  // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
+  // remove a single element ($scope.form1, string)
+  // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
   $scope.removeInputValidator = function ( elmName ) {
-    myValidation.removeValidator(elmName);
-    $scope.enableRemoveInputValidatorButton = false;
+    myValidation.removeValidator($scope.form1, elmName);
   };
 
   $scope.showValidationSummary = function () {
