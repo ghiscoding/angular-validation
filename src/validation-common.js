@@ -11,7 +11,7 @@
  */
 angular
 	.module('ghiscoding.validation')
-	.factory('validationCommon', ['$timeout', '$translate', 'validationRules', function ($timeout, $translate, validationRules) {
+	.factory('validationCommon', ['$filter', '$timeout', '$translate', 'validationRules', function ($filter, $timeout, $translate, validationRules) {
     // global variables of our object
     var bFieldRequired = false;   // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
     var INACTIVITY_LIMIT = 1000;  // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
@@ -26,6 +26,7 @@ angular
     var validators = [];          // Array of all Form Validators
     var validatorAttrs = {};      // Current Validator attributes
     var validationSummary = [];   // Array Validation Error Summary
+    var $translate = $filter('translate');
 
     // service constructor
     var validationCommon = function(scope, elm, attrs, ctrl) {
@@ -192,7 +193,7 @@ angular
       }
 
       // user might have passed a message to be translated
-      var errorMsg = (!!attrs && !!attrs.translate) ? $translate.instant(message) : message;
+      var errorMsg = (!!attrs && !!attrs.translate) ? $translate(message) : message;
 
       // get the name attribute of current element, make sure to strip dirty characters, for example remove a <input name="options[]"/>, we need to strip the "[]"
       var elmInputName = elmName.replace(/[|&;$%@"<>()+,\[\]\{\}]/g, '');
@@ -292,7 +293,7 @@ angular
           } else {
             // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
             if(typeof strValue === "string" && strValue === "" && self.elm.prop('type').toUpperCase() === "NUMBER") {
-              message = $translate.instant("INVALID_KEY_CHAR");
+              message = $translate("INVALID_KEY_CHAR");
               isValid = false;
             }else {
               // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
@@ -314,7 +315,7 @@ angular
           message += ' ';
           message += (!!self.validators[j].altText && self.validators[j].altText.length > 0)
             ? self.validators[j].altText.replace("alt=", "")
-            : $translate.instant(self.validators[j].message);
+            : $translate(self.validators[j].message);
 
           // replace any error message param(s) that were possibly passed
           if(typeof self.validators[j].params !== "undefined") {
@@ -333,13 +334,13 @@ angular
       message = message.trim();
 
       // only log the invalid message in the $validationSummary
-      addToValidationSummary(self, $translate.instant(message));
+      addToValidationSummary(self, $translate(message));
 
       // change the Form element object boolean flag from the `formElements` variable
       var formElmObj = getFormElementByName(self.elm.attr('name'));
       if(!!formElmObj) {
         formElmObj.isValid = isValid;
-        formElmObj.message = $translate.instant(message);
+        formElmObj.message = $translate(message);
       }
 
       // error Display

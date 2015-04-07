@@ -50,9 +50,7 @@ myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', func
     }
   }
   $scope.showValidationSummary = function () {
-    $translate.then(function() {
-      $scope.displayValidationSummary = true;
-    });
+    $scope.displayValidationSummary = true;
   }
 }]);
 
@@ -106,9 +104,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   };
 
   $scope.showValidationSummary = function () {
-    $translate.then(function() {
-      $scope.displayValidationSummary = true;
-    });
+    $scope.displayValidationSummary = true;
   }
 
   $scope.submitForm = function() {
