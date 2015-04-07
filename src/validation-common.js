@@ -210,7 +210,11 @@ angular
         var firstChar = self.validatorAttrs.validationErrorTo.charAt(0);
         var selector = (firstChar === '.' || firstChar === '#') ? self.validatorAttrs.validationErrorTo : '#'+self.validatorAttrs.validationErrorTo;
         errorElm = angular.element(document.querySelector(selector));
-      }else {
+      }
+      // errorElm can be empty due to:
+      //  1. validationErrorTo has not been set
+      //  2. validationErrorTo has been mistyped, and if mistyped, use regular functionality
+      if(!errorElm || errorElm.length === 0){
         // most common way, let's try to find our <span class="validation-inputName">
         errorElm = angular.element(document.querySelector('.validation-'+elmInputName));
       }
