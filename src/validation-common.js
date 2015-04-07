@@ -56,7 +56,7 @@ angular
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary; // remove an element from the $validationSummary
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                           // update on screen an error message below current form element
     validationCommon.prototype.validate = validate;                                       // validate current element
-
+    validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;  // remove named items from formElements list
 		// return the service object
 		return validationCommon;
 
@@ -180,8 +180,13 @@ angular
       * @param object attributes
       */
     function updateErrorMsg(message, attrs) {
-      // attrs.obj if set should be a commonObj
-      var self  = (!!attrs && attrs.obj) ? attrs.obj : this;
+      var self = this;
+      // attrs.obj if set, should be a commonObj, and can be self.
+      // In addition we need to set validatorAttrs, as they are defined as attrs on obj.
+      if (!!attrs && attrs.obj) {
+        self = attrs.obj;
+        self.validatorAttrs = attrs.obj.attrs;
+      }
 
       // element name could be defined in the `attrs` or in the self object
       var elm = (!!attrs && attrs.elm) ? attrs.elm : self.elm;
@@ -369,6 +374,16 @@ angular
         formElements.push(formElm);
       }
       return formElements;
+    }
+
+    /** Remove objects from FormElement list.
+     * @param elementName to remove
+     */
+    function removeFromFormElementObjectList(elmName) {
+      var index = arrayFindObjectIndex(formElements, 'fieldName', elmName); // find index of object in our array
+      if (index >= 0) {
+        formElements.splice(index, 1);
+      }
     }
 
     /** Add the error to the validation summary
