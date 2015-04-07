@@ -13,3 +13,5 @@ Angular-Validation change logs
 1.3.9 (2015-03-21): Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
 1.3.10 (2015-03-28): Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.
 1.3.11 (2015-03-30): Accepted pull request #15 to fix form without name attribute. Also accepted pull request #18 to add Spanish locales.
+1.3.12 (2015-04-04): Fix issue #16 and added Validators Alternate Text option on all type of validators. Also fixed removeValidator and clean a lot of code.
+1.3.13 (2015-04-07) Fixed $translate delay issue when using external JSON files

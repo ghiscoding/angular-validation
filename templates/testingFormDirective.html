@@ -63,10 +63,11 @@
         </div>
         <div class="form-group">
             <label for="select1">{{ 'SELECT1' | translate }}</label>
-            <select class="form-control" name="select1" ng-model="select1" validation="required">
+            <select class="form-control" name="select1" ng-model="select1" validation="required:alt={{ 'CHANGE_LANGUAGE' | translate }}">
                 <option value="">...</option>
-                <option value="1">Option #1</option>
-                <option value="2">Option #2</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">French</option>
             </select>
         </div>
         <div class="form-group">

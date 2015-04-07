@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.11`
+`Version: 1.3.13`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -22,20 +22,21 @@ Huge rewrite to have a better code separation and also adding support to Service
 
 <a name="index"></a>
 ## Index
-* [Plunker Demo](#plunker)
-* [Dependency](#dependencies)
+* [Alternate Text on Validator](#alternate)
+* [Available Validators](#validators)
+* [Bootstrap Input Groups Wrapping - HOWTO](#input-groups-wrapping)
+* [Changelog](#changelog)
+* [Demo - Plunker](#plunker)
+* [Dependencies](#dependencies)
+* [Form Submit and Validation](#submit)
 * [Install (bower)](#install)
 * [Include it in your app project](#project)
+* [Locales (languages)](#locales)
+* [Regular Expressions (Regex)](#regex)
 * [Requirements](#requirements)
 * [Some Working Examples (Directive)](#examples-directive)
 * [Some Working Examples (Service)](#examples-service)
-* [Form Submit and Validation](#submit)
 * [Validation summary](#validation-summary)
-* [Bootstrap Input Groups Wrapping - HOWTO](#input-groups-wrapping)
-* [Regular Expressions (Regex)](#regex)
-* [Locales (languages)](#locales)
-* [Available Validators](#validators)
-* [Changelog](#changelog)
 
 <a name="install"></a>
 Install
@@ -177,8 +178,11 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 
   // you can also remove a Validator with an ngClick or whichever way you prefer by calling .removeValidator()
   $scope.removeInputValidator = function ( elmName ) {
-    // remove a single element (string) OR you can also remove multiple elements through an array type .removeValidator(['input2','input3'])
-    myValidation.removeValidator(elmName);
+    // 1st argument is the object holding our $validationSummary `$scope.yourFormName`
+    //   If your form does not have a name attribute, your only choice is to use `$scope` as argument
+    // 2nd argument, remove a single element (string)
+    //    OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
+    myValidation.removeValidator($scope.form1, elmName);
   };
 
 ```
@@ -198,7 +202,7 @@ The Angular-Validation concept was first introduced with the use `ngDisabled` on
 ```javascript
 // Option #2 will need to call the `checkFormValidity()` function checking the form before doing a real submit
 // $validationSummary can be found in 2 variables (depending if your form as a name or not)
-// you can use `checkFormValidity($scope.form1)` or this `checkFormValidity($scope)`
+// you can use `checkFormValidity($scope.yourFormName)` or this `checkFormValidity($scope)`
 // If your form does not have a name attribute, your only choice is `checkFormValidity($scope)`
 $scope.submitForm = function() {
   var myValidation = new validationService();
@@ -274,26 +278,6 @@ Well let's face it, having the `<span>` for error display right after the elemen
 <span class="validation-input1 validation text-danger"></span>
 ```
 
-<a name="regex"></a>
-Regular Expressions (Regex)
---------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works...
-
-Regex validation is divided in 4 specific parts (Step #1-4).
-
-Let's use the previous [Examples #5](#examples-directive) and extract the information out of it to see how it works.
-Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
-
-1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
-
-2. Custom error message `YYWW` (what do we want to display to the user, it will be appended to INVALID_PATTERN, refer to the translation file. In english it will display the following:  Must be following this format: YYWW)
-
-3. Followed by a separator which basically says... after `:=` separator comes the regex pattern
-
-4. Custom regex pattern `^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$`
-
-Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
-
 <a name="locales"></a>
 Locales (languages)
 --------------------
@@ -314,24 +298,78 @@ $scope.switchLanguage = function (key) {
 ```
 *P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*
 
+<a name="regex"></a>
+Regular Expressions (Regex)
+--------------------
+From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works...
+
+Regex validation is divided in 4 specific parts (Step #1-4).
+
+Let's use the previous [Examples #5](#examples-directive) and extract the information out of it to see how it works.
+Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
+
+1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
+
+2. Custom error message `YYWW` (what do we want to display to the user, it will be appended to INVALID_PATTERN, refer to the translation file. In english it will display the following:  Must be following this format: YYWW)
+
+3. Followed by a separator which basically says... after `:=` separator comes the regex pattern
+
+4. Custom regex pattern `^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$`
+
+Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
+
+<a name="alternate"></a>
+Alternate Text on Validators
+--------------------
+Validators can now use alternate text instead of the usual defined locale $translate text, for example seeing "Field is Required" on a `<select>` might not always be useful, it might be more useful to see an alternate text that is "Please choose an option". Alternate text works on all type of validators and is defined by adding `:alt=` at the end of any validators, it could be used on 1 or more validators directly inside the `validation=""` attribute. See the examples below.
+```html
+<!-- You can use translate in your HTML -->
+<!-- Example #1 with 1 alternate text on 1 of the 2 validators -->
+<input name="input1" validation="alpha|required:alt=Your Alternate Required Text." />
+
+<!-- Example #2, alternate text on multiple validators -->
+<input name="input1" validation="date_iso_between:2015-03-01,2015-03-30:alt=Booking date must be in April|required:alt=Booking Date is Required" />
+
+<!-- Example #3, use $translate as alternate text -->
+<input name="input1" validation="min_len:5|required:alt={{ 'YOUR_TEXT' | translate }}" />
+```
+
+```javascript
+// When using the Validation Service
+
+myApp.controller('CtrlValidationService', function ($scope, $translate, validationService) {
+  // Example #1 with 1 alternate text on 1 of the 2 validators
+  myValidationService.addValidator('input1', 'alpha|required:alt=Your Alternate Required Text.');
+
+  // Example #2, alternate text on multiple validators
+  myValidationService.addValidator('input1', 'date_iso_between:2015-03-01,2015-03-30:alt=Booking date must be in April|required:alt=Booking Date is Required');
+
+  // Example #3, use $translate as alternate text
+  // you can use the $translate.instant() function
+  myValidationService.addValidator('input1', 'min_len:5|required:alt=' + $translate.instant('YOUR_TEXT'))
+});
+```
+
 <a name="validators"></a>
 Available Validators
 --------------------
-All validators are written as `snake_case` but it's up to the user's taste and could also be written as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
+All validators are written as `snake_case` but it's up to the user's taste and could also be used as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
+
 ##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
+
 * `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
-* `between_len:min,max` Ensures the length of a string is between a min,max length.
-* `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `between_date_iso:d1,d2` alias of `between_date_iso`.
 * `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
 * `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
 * `between_date_us_long:d1,d2` alias of `date_us_long_between`.
 * `between_date_us_short:d1,d2` alias of `date_us_short_between`.
+* `between_len:min,max` Ensures the length of a string is between a min,max length.
+* `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
@@ -366,27 +404,27 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `ipv6` Check for valid IP (IPv6)
 * `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
 * `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
-* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternative text to be displayed in the error message.
+* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](#alternate))
 * `max_date_iso` alias of `date_iso_max`.
-* `min_date_iso` alias of `date_iso_min`.
 * `max_date_euro_long` alias of `date_euro_long_max`.
-* `min_date_euro_long` alias of `date_euro_long_min`.
 * `max_date_euro_short` alias of `date_euro_short_max`.
-* `min_date_euro_short` alias of `date_euro_short_min`.
 * `max_date_us_long` alias of `date_us_long_max`.
-* `min_date_us_long` alias of `date_us_long_min`.
 * `max_date_us_short` alias of `date_us_short_max`.
-* `min_date_us_short` alias of `date_us_short_min`.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
+* `min_date_iso` alias of `date_iso_min`.
+* `min_date_euro_long` alias of `date_euro_long_min`.
+* `min_date_euro_short` alias of `date_euro_short_min`.
+* `min_date_us_long` alias of `date_us_long_min`.
+* `min_date_us_short` alias of `date_us_short_min`.
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
 * `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
 * `required` Ensures the specified key value exists and is not empty
-* `url` Check for valid URL or subdomain
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
+* `url` Check for valid URL or subdomain
 
 <a name="dependencies"></a>
 Dependencies
@@ -419,3 +457,5 @@ License
 * [1.3.9](https://github.com/ghiscoding/angular-validation/commit/931d3b04a00f0583612aefe28ad0bfcac326a38c) `2015-03-21` Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
 * [1.3.10](https://github.com/ghiscoding/angular-validation/commit/18765a8dd986856a9fa176fc4835d90d25f663b2) `2015-03-29` Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.
 * [1.3.11](https://github.com/ghiscoding/angular-validation/commit/e807584f0bcdf0f28ef2ef905b6bc4e890926ac1) `2015-03-30` Accepted pull request #15 to fix form without name attribute. Also accepted pull request #18 to add Spanish locales.
+* [1.3.12](https://github.com/ghiscoding/angular-validation/commit/0af82337a6961923e3b022a19660237d3e6f7184) `2015-04-04` Fix issue #16 and added Validators Alternate Text option on all type of validators. Also fixed removeValidator and clean a lot of code.
+* [1.3.13](https://github.com/ghiscoding/angular-validation/commit/d0440bdd7fc2816e03d28ad3a9c3bd7bee8ac519) `2015-04-07` Fixed $translate delay issue when using external JSON files
