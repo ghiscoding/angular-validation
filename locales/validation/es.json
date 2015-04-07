@@ -51,7 +51,6 @@
     "INVALID_REQUIRED":                 "El campo es requerido. ",
     "INVALID_URL":                      "Debe contener una dirección URL valida. ",
     "INVALID_TIME":                     "Debe contener un formato de tiempo valido (hh:mm) ó (hh:mm:ss). ",
-    "INVALID_REQUIREDSELECTION":        "Must choose an option",
 
     "AREA1":                            "Area de texto: Alfanúmerica + Minimo(15) + Requerido",
     "ERRORS":                           "Errores",
