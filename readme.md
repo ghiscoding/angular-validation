@@ -321,7 +321,7 @@ Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0
 <a name="alternate"></a>
 Alternate Text on Validators
 --------------------
-Validators can now use alternate text instead of the usual defined locale $translate text, for example seeing "Field is Required" on a `<select>` might not always be useful, it might be more useful to see an alternate text that is "Please choose an option". Alternate text works on all type of validators and is defined by adding `:alt=` at the end of any validators, it could be used on 1 or more validators directly inside the `validation=""` attribute. See the examples below.
+Validators can now use alternate text instead of the usual defined locale $translate text, for example it could be useful to see a different text on a `<select>` instead of the usual "Field is Required". This works on all type of validators and is defined by adding `:alt=` at the end of any validators, it could be used on 1 or more validators directly inside the `validation=""` attribute. See the examples below.
 ```html
 <!-- You can use translate in your HTML -->
 <!-- Example #1 with 1 alternate text on 1 of the 2 validators -->
@@ -363,13 +363,13 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
+* `between_len:min,max` Ensures the length of a string is between a min,max length.
+* `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `between_date_iso:d1,d2` alias of `between_date_iso`.
 * `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
 * `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
 * `between_date_us_long:d1,d2` alias of `date_us_long_between`.
 * `between_date_us_short:d1,d2` alias of `date_us_short_between`.
-* `between_len:min,max` Ensures the length of a string is between a min,max length.
-* `between_num:min,max` Ensures the numeric value is between a min,max number.
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
@@ -410,13 +410,13 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `max_date_euro_short` alias of `date_euro_short_max`.
 * `max_date_us_long` alias of `date_us_long_max`.
 * `max_date_us_short` alias of `date_us_short_max`.
-* `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
-* `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_date_iso` alias of `date_iso_min`.
 * `min_date_euro_long` alias of `date_euro_long_min`.
 * `min_date_euro_short` alias of `date_euro_short_min`.
 * `min_date_us_long` alias of `date_us_long_min`.
 * `min_date_us_short` alias of `date_us_short_min`.
+* `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
+* `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).
 * `numeric` Only positive numeric value (float, integer).
