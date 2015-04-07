@@ -53,10 +53,7 @@ angular
     //----
     // Public functions declaration
     //----------------------------------
-    
-	function isValidationRequired(validations) {
-      return validations.indexOf("required") >= 0 || validations.indexOf("requiredselection") >= 0;
-    }
+
     function defineValidation() {
       var self = this;
       var customUserRegEx = {};
@@ -94,7 +91,8 @@ angular
       var validations = rules.split('|');
 
       if(validations) {
-        self.bFieldRequired = isValidationRequired(validations) ? true : false;
+        self.bFieldRequired = (validations.indexOf("required") >= 0) ? true : false;
+
         // loop through all validators of the element
         for(var i = 0, ln = validations.length; i < ln; i++) {
           var params = validations[i].split(':'); // params[0] is the rule, [1] is the rule extra params
@@ -127,8 +125,7 @@ angular
       * @param string message: error message to display
       */
     function updateErrorMsg(message, attrs) {
-      // attrs.obj if set should be a commonObj
-      var self  = (!!attrs && attrs.obj) ? attrs.obj : this;
+      var self = this;
 
       // element name could be defined in the `attrs` or in the self object
       var elm = (!!attrs && attrs.elm) ? attrs.elm : self.elm;
@@ -300,7 +297,7 @@ angular
       if(index >= 0 && message === '') {
         validationSummary.splice(index, 1);
       }else if(message !== '') {
-        var errorObj = { field: elmName, message: message, obj: self};
+        var errorObj = { field: elmName, message: message };
 
         // if error already exist then refresh the error object inside the array, else push it to the array
         if(index >= 0) {
