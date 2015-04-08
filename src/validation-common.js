@@ -56,7 +56,7 @@ angular
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary; // remove an element from the $validationSummary
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                           // update on screen an error message below current form element
     validationCommon.prototype.validate = validate;                                       // validate current element
-
+    validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;  // remove named items from formElements list
 		// return the service object
 		return validationCommon;
 
@@ -180,8 +180,13 @@ angular
       * @param object attributes
       */
     function updateErrorMsg(message, attrs) {
-      // attrs.obj if set should be a commonObj
-      var self  = (!!attrs && attrs.obj) ? attrs.obj : this;
+      var self = this;
+      // attrs.obj if set, should be a commonObj, and can be self.
+      // In addition we need to set validatorAttrs, as they are defined as attrs on obj.
+      if (!!attrs && attrs.obj) {
+        self = attrs.obj;
+        self.validatorAttrs = attrs.obj.attrs;
+      }
 
       // element name could be defined in the `attrs` or in the self object
       var elm = (!!attrs && attrs.elm) ? attrs.elm : self.elm;
@@ -205,7 +210,11 @@ angular
         var firstChar = self.validatorAttrs.validationErrorTo.charAt(0);
         var selector = (firstChar === '.' || firstChar === '#') ? self.validatorAttrs.validationErrorTo : '#'+self.validatorAttrs.validationErrorTo;
         errorElm = angular.element(document.querySelector(selector));
-      }else {
+      }
+      // errorElm can be empty due to:
+      //  1. validationErrorTo has not been set
+      //  2. validationErrorTo has been mistyped, and if mistyped, use regular functionality
+      if(!errorElm || errorElm.length === 0){
         // most common way, let's try to find our <span class="validation-inputName">
         errorElm = angular.element(document.querySelector('.validation-'+elmInputName));
       }
@@ -369,6 +378,16 @@ angular
         formElements.push(formElm);
       }
       return formElements;
+    }
+
+    /** Remove objects from FormElement list.
+     * @param elementName to remove
+     */
+    function removeFromFormElementObjectList(elmName) {
+      var index = arrayFindObjectIndex(formElements, 'fieldName', elmName); // find index of object in our array
+      if (index >= 0) {
+        formElements.splice(index, 1);
+      }
     }
 
     /** Add the error to the validation summary
