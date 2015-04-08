@@ -51,6 +51,7 @@
     "INVALID_REQUIRED":                 "Feltet er påkrevd. ",
     "INVALID_URL":                      "Må være en gyldig URL. ",
     "INVALID_TIME":                     "Må være et gyldig tidsformat (tt:mm) OR (tt:mm:ss). ",
+    "INVALID_CHECKBOX_SELECTED":        "Du må krysse av.",
 
     "AREA1":                            "TextArea: Alfanumerisk + Minimum(15) + Påkrevd",
     "ERRORS":                           "Feil",

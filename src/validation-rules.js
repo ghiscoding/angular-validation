@@ -541,6 +541,13 @@ angular
             type: "regex"
           };
           break;
+        case "checked":
+          validator = {
+            pattern: "^true$",
+            message: "INVALID_CHECKBOX_SELECTED",
+            type: "regex"
+          };
+          break;
       } // switch()
 
       // add the possible alternate text user might have provided
