@@ -460,4 +460,4 @@ License
 * [1.3.12](https://github.com/ghiscoding/angular-validation/commit/0af82337a6961923e3b022a19660237d3e6f7184) `2015-04-04` Fix issue #16 and added Validators Alternate Text option on all type of validators. Also fixed removeValidator and clean a lot of code.
 * [1.3.13](https://github.com/ghiscoding/angular-validation/commit/d0440bdd7fc2816e03d28ad3a9c3bd7bee8ac519) `2015-04-06` Fixed $translate delay issue when using external JSON files
 * [1.3.14](https://github.com/ghiscoding/angular-validation/pull/19) `2015-04-07` Merge pull request #19 Added norwegian translation and changes to allow user to remove invalid validators
-* [1.3.15]() `2015-04-08` Fixed #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
+* [1.3.15](https://github.com/ghiscoding/angular-validation/commit/24037e4b2e22658e7e2011c022ba4cca26f391d9) `2015-04-08` Fixed #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
