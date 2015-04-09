@@ -58,6 +58,8 @@ myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', func
   }
 }]);
 
+// -- Controller to use Angular-Validation Directive with 2 forms
+// ---------------------------------------------------------------
 myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope, validationService) {
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form01)) {

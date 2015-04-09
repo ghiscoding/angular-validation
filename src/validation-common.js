@@ -167,7 +167,7 @@ angular
      * @param object validationSummary
      * @param string elmName: element name
      */
-    function removeFromValidationSummary(validationSummaryObj, elmName) {        
+    function removeFromValidationSummary(validationSummaryObj, elmName) {
       var index = arrayFindObjectIndex(validationSummaryObj, 'field', elmName); // find index of object in our array
       // if message is empty, remove it from the validation summary object
       if(index >= 0) {
