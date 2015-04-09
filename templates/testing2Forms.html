@@ -1,0 +1,66 @@
+<h3>Directive - 2 Forms</h3>
+
+<div class="checkbox text-right" style="margin-top:-25px">
+    <label>
+      <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
+    </label>
+</div>
+
+<hr />
+
+<!-- Angular-Validation saves the summary of errors inside 2 locations: 1- $scope.$validationSummary 2- $scope.formName.$validationSummary (only accessible if you named your form) so it becomes easy to show all errors -->
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+    <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
+    <ul>
+        <li ng-repeat="item in form01.$validationSummary">{{item.field }}: {{item.message}}</li>
+    </ul>
+</div>
+
+<form novalidate name="form01" method="POST">
+    <fieldset>
+        <div class="form-group">
+            <label for="input2">{{ 'INPUT2' | translate }}</label>
+            <input type="number" class="form-control" name="input2" placeholder="numeric_signed|required" ng-model="input2" validation="numeric_signed|required" />
+        </div>
+        <div class="form-group">
+            <label for="input3">{{ 'INPUT3' | translate }}</label>
+            <input type="number" class="form-control" name="input3" placeholder="float_signed|between_num:-0.6,99.5|required" ng-model="input3" validation="float_signed|between_num:-0.6,99.5|required" />
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form01.$invalid" >{{ 'SAVE' | translate }}</button>
+    </div>
+</form>
+
+<hr />
+
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+    <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
+    <ul>
+        <li ng-repeat="item in form02.$validationSummary">{{item.field }}: {{item.message}}</li>
+    </ul>
+</div>
+<form novalidate name="form02" method="POST">
+    <fieldset>
+        <div class="form-group">
+            <label for="select1">{{ 'SELECT1' | translate }}</label>
+            <select class="form-control" name="select1" ng-model="select1" validation="required:alt={{ 'CHANGE_LANGUAGE' | translate }}">
+                <option value="">...</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">French</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="area1">{{ 'AREA1' | translate }}</label>
+            <textarea class="form-control" name="area1" rows="3" placeholder="alpha_dash_spaces|min_len:15|required" validation="alpha_dash_spaces|min_len:15|required" ng-model="area1"></textarea>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form02.$invalid" >{{ 'SAVE' | translate }}</button>
+    </div>
+</form>

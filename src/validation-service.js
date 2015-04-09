@@ -28,8 +28,8 @@ angular
     validationService.prototype.checkFormValidity = checkFormValidity;  // check the form validity (can be called by an empty validationService and used by both Directive/Service)
     validationService.prototype.removeValidator = removeValidator;      // remove a Validator from an element
     validationService.prototype.setGlobalOptions = setGlobalOptions;    // set and initialize global options used by all validators
-     validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary; // clear clearInvalidValidatorsInSummary
-	 
+    validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary; // clear clearInvalidValidatorsInSummary
+
     return validationService;
 
 	  //----
@@ -93,9 +93,9 @@ angular
 		} // addValidator()
 
     /** Remove all objects in validationsummary and matching objects in FormElementList.
-     * This is for use in a wizard type setting, where you 'move back' to a previous page in wizard. 
+     * This is for use in a wizard type setting, where you 'move back' to a previous page in wizard.
      * In this case you need to remove invalid validators that will exist in 'the future'.
-     * @param object Angular Form or Scope Object     
+     * @param object Angular Form or Scope Object
      */
     function clearInvalidValidatorsInSummary(obj) {
       var self = this;

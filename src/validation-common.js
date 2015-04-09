@@ -26,6 +26,7 @@ angular
     var validators = [];          // Array of all Form Validators
     var validatorAttrs = {};      // Current Validator attributes
     var validationSummary = [];   // Array Validation Error Summary
+    var validationSummaries = {}; // Validation Error Summaries separated by Form (could be multiple forms)
     var $translate = $filter('translate');
 
     // service constructor
@@ -396,13 +397,14 @@ angular
      */
     function addToValidationSummary(self, message) {
       var elmName = self.elm.attr('name');
-      var index = arrayFindObjectIndex(validationSummary, 'field', elmName); // find index of object in our array
+      var form = getElementParentForm(self);                                  // find the parent form (only found if it has a name)
+      var index = arrayFindObjectIndex(validationSummary, 'field', elmName);  // find index of object in our array
 
       // if message is empty, remove it from the validation summary
       if(index >= 0 && message === '') {
         validationSummary.splice(index, 1);
       }else if(message !== '') {
-        var errorObj = { field: elmName, message: message };
+        var errorObj = { field: elmName, message: message, formName: (!!form) ? form.$name : null };
 
         // if error already exist then refresh the error object inside the array, else push it to the array
         if(index >= 0) {
@@ -412,11 +414,14 @@ angular
         }
       }
 
-      // save validation summary 2 variable locations, inside the scope object and also in the form object (if found)
+      // save validation summary scope root
       self.scope.$validationSummary = validationSummary;
-      var form = getScopeForm(self);
+
+      // and also save it inside the current scope form (if found)
       if (!!form) {
-        form.$validationSummary = validationSummary;
+        // since validationSummary contain errors of all forms
+        // we need to find only the errors of current form and them into the current scope form object
+        form.$validationSummary = arrayFindObjects(validationSummary, 'formName', form.$name);
       }
     }
 
@@ -435,6 +440,22 @@ angular
       return null;
     }
 
+    /** Quick function to find all object(s) inside an array of objects by it's given field name and value, return array of object found(s) or empty array
+     * @param Array sourceArray
+     * @param string searchId: search property id
+     * @param string searchValue: value to search
+     * @return array of object found from source array
+     */
+    function arrayFindObjects(sourceArray, searchId, searchValue) {
+      var results = [];
+      for (var i = 0; i < sourceArray.length; i++) {
+        if (sourceArray[i][searchId] === searchValue) {
+          results.push(sourceArray[i]);
+        }
+      }
+      return results;
+    }
+
     /** Quick function to find an object inside an array by it's given field name and value, return the index position found or -1
      * @param Array sourceArray
      * @param string searchId: search property id
@@ -448,6 +469,24 @@ angular
         }
       }
       return -1;
+    }
+
+    /** Get the element's parent Angular form (if found)
+     * @param object self
+     * @return object scope form
+     */
+    function getElementParentForm(self) {
+      // from the element passed, get his parent form
+      var elmName = self.elm.attr('name');
+      var forms = document.getElementsByName(elmName);
+
+      for (var i = 0; i < forms.length; i++) {
+        var form = forms[i].form;
+        if (!!form && form.name && self.scope[form.name]) {
+          return self.scope[form.name];
+        }
+      }
+      return null;
     }
 
     /** Get form within scope (if found)

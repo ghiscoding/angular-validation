@@ -16,13 +16,13 @@ myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $
 	    prefix: '../locales/validation/',
 	    suffix: '.json'
 		});
-  
+
   	// load English ('en') table on startup
 		$translateProvider.preferredLanguage('en');
 	}])
   .controller('CtrlDynamic', ['$scope', '$translate', function ($scope, $translate) {
     $scope.form1 = {};
-    
+
     $scope.switchLanguage = function (key) {
       $translate.use(key);
     };
@@ -48,7 +48,7 @@ myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $
             modal: '=',
             validate:'='
         },
-        replace: true,   
+        replace: true,
         template: '<input type="text" class="form-control" ng-model="modal" validation="{{validate}}" />',
         link: function (scope, element, attrs) {}
     }

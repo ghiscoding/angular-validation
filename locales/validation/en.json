@@ -51,7 +51,7 @@
     "INVALID_REQUIRED":                 "Field is required. ",
     "INVALID_URL":                      "Must be a valid URL. ",
     "INVALID_TIME":                     "Must be a valid time format (hh:mm) OR (hh:mm:ss). ",
-    "INVALID_CHECKBOX_SELECTED":        "Checkbox must be selected",
+    "INVALID_CHECKBOX_SELECTED":        "Checkbox must be selected. ",
 
     "AREA1":                            "TextArea: Alphanumeric + Minimum(15) + Required",
     "ERRORS":                           "Errors",
