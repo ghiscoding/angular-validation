@@ -9,6 +9,10 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
         templateUrl: 'templates/testingFormDirective.html',
         controller: 'CtrlValidationDirective'
       })
+      .when('/validate-2forms', {
+        templateUrl: 'templates/testing2Forms.html',
+        controller: 'Ctrl2forms'
+      })
       .when('/validate-service', {
         templateUrl: 'templates/testingFormService.html',
         controller: 'CtrlValidationService'
@@ -46,6 +50,17 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', function ($scope, validationService) {
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
+      alert('All good, proceed with submit...');
+    }
+  }
+  $scope.showValidationSummary = function () {
+    $scope.displayValidationSummary = true;
+  }
+}]);
+
+myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope, validationService) {
+  $scope.submitForm = function() {
+    if(new validationService().checkFormValidity($scope.form01)) {
       alert('All good, proceed with submit...');
     }
   }
