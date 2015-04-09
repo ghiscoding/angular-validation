@@ -167,10 +167,15 @@ angular
      * @param object validationSummary
      * @param string elmName: element name
      */
-    function removeFromValidationSummary(validationSummary, elmName) {
-      var index = arrayFindObjectIndex(validationSummary, 'field', elmName); // find index of object in our array
-      // if message is empty, remove it from the validation summary
+    function removeFromValidationSummary(validationSummaryObj, elmName) {        
+      var index = arrayFindObjectIndex(validationSummaryObj, 'field', elmName); // find index of object in our array
+      // if message is empty, remove it from the validation summary object
       if(index >= 0) {
+        validationSummaryObj.splice(index, 1);
+      }
+     // also remove from 'local' validationSummary
+     index = arrayFindObjectIndex(validationSummary, 'field', elmName); // find index of object in our array
+     if(index >= 0) {
         validationSummary.splice(index, 1);
       }
     }
