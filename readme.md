@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.16`
+`Version: 1.3.17`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -16,6 +16,8 @@ Huge rewrite to have a better code separation and also adding support to Service
 
 [Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit](#submit) button.
 
+For more explanations, see the question answered: [Why Use It?](#whyuseit)
+
 <a name="plunker"></a>
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
@@ -29,6 +31,7 @@ Huge rewrite to have a better code separation and also adding support to Service
 * [Demo - Plunker](#plunker)
 * [Dependencies](#dependencies)
 * [Form Submit and Validation](#submit)
+* [Global Options](#global-options)
 * [Install (bower)](#install)
 * [Include it in your app project](#project)
 * [Locales (languages)](#locales)
@@ -37,6 +40,27 @@ Huge rewrite to have a better code separation and also adding support to Service
 * [Some Working Examples (Directive)](#examples-directive)
 * [Some Working Examples (Service)](#examples-service)
 * [Validation summary](#validation-summary)
+* [Why Use It?](#whyuseit)
+
+<a name="whyuseit"></a>
+Why use angular-validation?
+-----
+Angular-validation was develop with DRY (Don't Repeat Yourself) and simplicity in mind.
+You can transform this:
+```html
+<input type="text" name="username" ng-model="user.username"
+  ng-minlength="3" ng-maxlength="8" required />
+<div ng-show="form.$submitted || form.user.$touched">
+  <span ng-show="userForm.username.$error.minlength" class="help-block">Username is too short.</p>
+  <span ng-show="userForm.username.$error.maxlength" class="help-block">Username is too long.</p>
+</div>
+```
+into this:
+```html
+<input type="text" name="username" ng-model="user.username"
+  validation="min_len:3|max_len:8|required"  />
+```
+The Angular-Validation will create by itself the necessary error message. Now imagine your form with 10 inputs, using the Angular-Validation will end up using 10 lines of code, while on the other hand using the default of Angular will give you 30 lines of code... so what are you waiting for? Use Angular-Validation!!! :)
 
 <a name="install"></a>
 Install
@@ -98,6 +122,8 @@ Angular-Validation requires the element which will use validation to have an htm
 Let's start with a simple example and then let's get down to real business.
 
 P.S. For real live sample, see the [live plunker demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
+
+*To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it on each element `<input debounce="1500"/>*
 ```html
 <!-- example 1 -->
 <!-- change the debounce or typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
@@ -185,6 +211,15 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
     myValidation.removeValidator($scope.form1, elmName);
   };
 
+```
+<a name="global-options"></a>
+## Global Options
+To change default options, you can change the `$scope.$validationOptions`, for now only the `debounce` property is used but this might expend in the future.
+To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it on each element `<input debounce="1500"/>
+```javascript
+myApp.controller('Ctrl', function ($scope) {
+  $scope.$validationOptions = { debounce: 1500 }; // set the debounce globally
+});
 ```
 
 <a name="submit"></a>
@@ -461,4 +496,5 @@ License
 * [1.3.13](https://github.com/ghiscoding/angular-validation/commit/d0440bdd7fc2816e03d28ad3a9c3bd7bee8ac519) `2015-04-06` Fixed $translate delay issue when using external JSON files
 * [1.3.14](https://github.com/ghiscoding/angular-validation/pull/19) `2015-04-07` Merge pull request #19 Added norwegian translation and changes to allow user to remove invalid validators
 * [1.3.15](https://github.com/ghiscoding/angular-validation/commit/24037e4b2e22658e7e2011c022ba4cca26f391d9) `2015-04-08` Fixed #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
-* [1.3.16]() `2015-04-09` Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
+* [1.3.16](https://github.com/ghiscoding/angular-validation/commit/6c419d45bdb00341416d91199003d827259bd5da) `2015-04-09` Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
+* [1.3.17]() `2015-04-11` Added global `$scope.$validationOptions` [Global Options](#global-options) object, for now only has the `debounce` property that be used by both the Directive and Service.

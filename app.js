@@ -48,13 +48,17 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
 myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', function ($scope, validationService) {
+  $scope.$validationOptions = { debounce: 4500 };
+
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
     }
   }
   $scope.showValidationSummary = function () {
-    $scope.displayValidationSummary = true;
+    $translate('SHOW_VALIDATION_SUMMARY').then(function() {
+      $scope.displayValidationSummary = true;
+    });
   }
 }]);
 
@@ -67,7 +71,9 @@ myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope,
     }
   }
   $scope.showValidationSummary = function () {
-    $scope.displayValidationSummary = true;
+    $translate('SHOW_VALIDATION_SUMMARY').then(function() {
+      $scope.displayValidationSummary = true;
+    });
   }
 }]);
 
@@ -121,7 +127,9 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   };
 
   $scope.showValidationSummary = function () {
-    $scope.displayValidationSummary = true;
+    $translate('SHOW_VALIDATION_SUMMARY').then(function() {
+      $scope.displayValidationSummary = true;
+    });
   }
 
   $scope.submitForm = function() {
