@@ -56,6 +56,8 @@ myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', func
     }
   }
   $scope.showValidationSummary = function () {
+    // the $translate call with promise is a hack to make sure translation locales are loaded
+    // you probably not have to do that in your local code
     $translate('SHOW_VALIDATION_SUMMARY').then(function() {
       $scope.displayValidationSummary = true;
     });
@@ -71,6 +73,8 @@ myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope,
     }
   }
   $scope.showValidationSummary = function () {
+    // the $translate call with promise is a hack to make sure translation locales are loaded
+    // you probably not have to do that in your local code
     $translate('SHOW_VALIDATION_SUMMARY').then(function() {
       $scope.displayValidationSummary = true;
     });
@@ -127,6 +131,8 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   };
 
   $scope.showValidationSummary = function () {
+    // the $translate call with promise is a hack to make sure translation locales are loaded
+    // you probably not have to do that in your local code
     $translate('SHOW_VALIDATION_SUMMARY').then(function() {
       $scope.displayValidationSummary = true;
     });

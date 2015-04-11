@@ -214,7 +214,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 ```
 <a name="global-options"></a>
 ## Global Options
-To change default options, you can change the `$scope.$validationOptions`, for now only the `debounce` property is used but this might expend in the future.
+To change default options, you can change the `$scope.$validationOptions`, for now only the `debounce` property is used but this might expand in the future.
 ```javascript
 myApp.controller('Ctrl', function ($scope) {
   $scope.$validationOptions = { debounce: 1500 }; // set the debounce globally
