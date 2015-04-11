@@ -215,7 +215,6 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
 <a name="global-options"></a>
 ## Global Options
 To change default options, you can change the `$scope.$validationOptions`, for now only the `debounce` property is used but this might expend in the future.
-To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it on each element `<input debounce="1500"/>
 ```javascript
 myApp.controller('Ctrl', function ($scope) {
   $scope.$validationOptions = { debounce: 1500 }; // set the debounce globally
@@ -497,4 +496,4 @@ License
 * [1.3.14](https://github.com/ghiscoding/angular-validation/pull/19) `2015-04-07` Merge pull request #19 Added norwegian translation and changes to allow user to remove invalid validators
 * [1.3.15](https://github.com/ghiscoding/angular-validation/commit/24037e4b2e22658e7e2011c022ba4cca26f391d9) `2015-04-08` Fixed #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
 * [1.3.16](https://github.com/ghiscoding/angular-validation/commit/6c419d45bdb00341416d91199003d827259bd5da) `2015-04-09` Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
-* [1.3.17]() `2015-04-11` Added global `$scope.$validationOptions` [Global Options](#global-options) object, for now only has the `debounce` property that be used by both the Directive and Service.
+* [1.3.17](https://github.com/ghiscoding/angular-validation/commit/1283a3a7435c70ec0a355ee273c8479e4b9bdabf) `2015-04-11` Added global `$scope.$validationOptions` [Global Options](#global-options) object, for now only has the `debounce` property that be used by both the Directive and Service.

@@ -48,7 +48,7 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
 myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', function ($scope, validationService) {
-  $scope.$validationOptions = { debounce: 4500 };
+  $scope.$validationOptions = { debounce: 1500 }; // you can change default debounce globally
 
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
