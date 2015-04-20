@@ -28,14 +28,14 @@
         }
 
         // attach the attemptToValidate function to the element
-        ctrl.$parsers.unshift(attemptToValidate);
         ctrl.$formatters.unshift(attemptToValidate);
+        ctrl.$parsers.unshift(attemptToValidate);
 
         // for the case of field that might be ng-disabled, we should skip validation
         // Observe the angular disabled attribute
         attrs.$observe("disabled", function(disabled) {
           if(disabled) {
-            // Turn off validation when disabled
+            // Turn off validation when element is disabled
             ctrl.$setValidity('validation', true);
           } else {
             // Re-Validate the input when enabled
@@ -59,7 +59,7 @@
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
          */
-        function attemptToValidate(value) {
+        function attemptToValidate(value, event) {
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing false as 2nd argument for not showing any errors on screen
           commonObj.validate(value, false);
@@ -71,7 +71,7 @@
           }
 
           // invalidate field before doing any validation
-          if(commonObj.isFieldRequired() || !!value) {
+          if(!!value || commonObj.isFieldRequired()) {
             ctrl.$setValidity('validation', false);
           }
 
@@ -79,9 +79,17 @@
           // onBlur make validation without waiting
           elm.bind('blur', function() {
             // make the regular validation of the field value
-            scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
+            scope.$evalAsync( ctrl.$setValidity('validation', commonObj.validate(value, true)) );
             return value;
           });
+
+          // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
+          // we will still call the `.validate()` function so that it shows also the possible other error messages
+          if((value === "" || typeof value === "undefined") && elm.prop('type').toUpperCase() === "NUMBER") {
+            $timeout.cancel(timer);
+            ctrl.$setValidity('validation', commonObj.validate(value, true));
+            return value;
+          }
 
           // select(options) will be validated on the spot
           if(elm.prop('tagName').toUpperCase() === "SELECT") {
@@ -103,6 +111,7 @@
 
           return value;
         } // attemptToValidate()
+
       } // link()
     }; // return;
   }]); // directive

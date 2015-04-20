@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.17`
+`Version: 1.3.18`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -30,7 +30,7 @@ For more explanations, see the question answered: [Why Use It?](#whyuseit)
 * [Changelog](#changelog)
 * [Demo - Plunker](#plunker)
 * [Dependencies](#dependencies)
-* [Form Submit and Validation](#submit)
+* [Form Submit and Validation - checkFormValidity()](#submit)
 * [Global Options](#global-options)
 * [Install (bower)](#install)
 * [Include it in your app project](#project)
@@ -55,12 +55,14 @@ You can transform this:
   <span ng-show="userForm.username.$error.maxlength" class="help-block">Username is too long.</p>
 </div>
 ```
-into this:
+into this (errors will display in your own locale):
 ```html
 <input type="text" name="username" ng-model="user.username"
   validation="min_len:3|max_len:8|required"  />
 ```
 The Angular-Validation will create by itself the necessary error message. Now imagine your form with 10 inputs, using the Angular-Validation will end up using 10 lines of code, while on the other hand using the default of Angular will give you 30 lines of code... so what are you waiting for? Use Angular-Validation!!! :)
+
+Let's not forget the [Validation summary](#validation-summary) which is also a great and useful way of displaying your errors to the user.
 
 <a name="install"></a>
 Install
@@ -497,3 +499,4 @@ License
 * [1.3.15](https://github.com/ghiscoding/angular-validation/commit/24037e4b2e22658e7e2011c022ba4cca26f391d9) `2015-04-08` Fixed #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
 * [1.3.16](https://github.com/ghiscoding/angular-validation/commit/6c419d45bdb00341416d91199003d827259bd5da) `2015-04-09` Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
 * [1.3.17](https://github.com/ghiscoding/angular-validation/commit/1283a3a7435c70ec0a355ee273c8479e4b9bdabf) `2015-04-11` Added global `$scope.$validationOptions` [Global Options](#global-options) object, for now only has the `debounce` property that be used by both the Directive and Service.
+* [1.3.18]() `2015-04-19` Fixed issue #20 - Error messages shown on submit are non-understandable, this was fixed using $translate promises instead of $translate.instant(). Fixed a few error display on the validationSummary() and checkFormValidity(). Also merged #27 to add Russian
