@@ -20,6 +20,8 @@
         // create an object of the common validation
         var commonObj = new validationCommon(scope, elm, attrs, ctrl);
         var timer;
+        var blurHandler;
+        var isValidationCancelled = false;
 
         // construct the functions, it's just to make the code cleaner and put the functions at bottom
         var construct = {
@@ -49,17 +51,18 @@
 
         /** Cancel current validation test and blank any leftover error message */
         function cancelValidation() {
+          isValidationCancelled = true;
           $timeout.cancel(timer);
           commonObj.updateErrorMsg('');
           ctrl.$setValidity('validation', true);
-          elm.unbind('blur'); // unbind onBlur event, if not it will fail when input become dirty & empty
+          elm.unbind('blur', blurHandler); // unbind onBlur event so that it does not fail on a non-required element that is now dirty & empty
         }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
          */
-        function attemptToValidate(value, event) {
+        function attemptToValidate(value) {
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing false as 2nd argument for not showing any errors on screen
           commonObj.validate(value, false);
@@ -68,6 +71,8 @@
           if(!commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
             return value;
+          }else {
+            isValidationCancelled = false;
           }
 
           // invalidate field before doing any validation
@@ -77,9 +82,13 @@
 
           // if field is not required and his value is empty, cancel validation and exit out
           // onBlur make validation without waiting
-          elm.bind('blur', function() {
-            // make the regular validation of the field value
-            scope.$evalAsync( ctrl.$setValidity('validation', commonObj.validate(value, true)) );
+          elm.bind('blur', blurHandler = function() {
+            if(isValidationCancelled) {
+              return value;
+            }else {
+              // make the regular validation of the field value
+              scope.$evalAsync( ctrl.$setValidity('validation', commonObj.validate(value, true)) );
+            }
             return value;
           });
 

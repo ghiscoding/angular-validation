@@ -16,6 +16,8 @@ angular
     var validationAttrs;  // Current Validator attributes
     var commonObj;        // Object of validationCommon service
     var timer;            // timer of user inactivity time
+    var blurHandler;
+    var isValidationCancelled = false;
 
     // service constructor
     var validationService = function() {
@@ -65,11 +67,15 @@ angular
       }
 
       // onBlur make validation without waiting
-      attrs.elm.bind('blur', function(event) {
-        // re-initialize to use current element & remove waiting time & validate
-        self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
-        self.commonObj.typingLimit = 0;
-        attemptToValidate(self, event.target.value);
+      attrs.elm.bind('blur', blurHandler = function(event) {
+        if(isValidationCancelled) {
+          return;
+        }else {
+          // re-initialize to use current element & remove waiting time & validate
+          self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
+          self.commonObj.typingLimit = 0;
+          attemptToValidate(self, event.target.value);
+        }
       });
 
       // merge both attributes but 2nd object (attrs) as higher priority, so that for example debounce property inside `attrs` as higher priority over `validatorAttrs`
@@ -206,6 +212,8 @@ angular
       if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self);
         return value;
+      }else {
+        isValidationCancelled = false;
       }
 
       // invalidate field before doing any validation
@@ -246,10 +254,11 @@ angular
      * @param object obj
      */
     function cancelValidation(obj) {
+      isValidationCancelled = true;
       $timeout.cancel(self.timer);
       obj.commonObj.updateErrorMsg('');
       obj.commonObj.ctrl.$setValidity('validation', true);
-      obj.commonObj.elm.unbind('blur'); // unbind onBlur event, if not it will fail when input become dirty & empty
+      obj.commonObj.elm.unbind('blur', blurHandler); // unbind onBlur event so that it does not fail on a non-required element that is now dirty & empty
     }
 
     /**
@@ -280,7 +289,7 @@ angular
       unbindWatcher();
 
       // also unbind the blur directly applied on element
-      formElmObj.elm.unbind();
+      //formElmObj.elm.unbind();
 
       // now to remove any errors, we need to make the element untouched, pristine and remove the validation
       // also remove it from the validationSummary list and remove any displayed error
