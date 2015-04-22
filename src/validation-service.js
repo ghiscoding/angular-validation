@@ -66,11 +66,16 @@ angular
         return self;
       }
 
+      // copy the element attributes name to use throughout validationCommon
+      // when using dynamic elements, we might have encounter unparsed or uncompiled data, we need to get Angular result with $interpolate
+      if(new RegExp("{{(.*?)}}").test(attrs.elmName)) {
+        attrs.elmName = $interpolate(attrs.elmName)(attrs.scope);
+      }
+      attrs.name = attrs.elmName;
+
       // onBlur make validation without waiting
       attrs.elm.bind('blur', blurHandler = function(event) {
-        if(isValidationCancelled) {
-          return;
-        }else {
+        if(!isValidationCancelled) {
           // re-initialize to use current element & remove waiting time & validate
           self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
           self.commonObj.typingLimit = 0;
@@ -258,7 +263,11 @@ angular
       $timeout.cancel(self.timer);
       obj.commonObj.updateErrorMsg('');
       obj.commonObj.ctrl.$setValidity('validation', true);
-      obj.commonObj.elm.unbind('blur', blurHandler); // unbind onBlur event so that it does not fail on a non-required element that is now dirty & empty
+
+      // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
+      if(typeof blurHandler !== "undefined") {
+        obj.commonObj.elm.unbind('blur', blurHandler);
+      }
     }
 
     /**

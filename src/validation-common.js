@@ -262,7 +262,12 @@ angular
       var validator;
 
       // get some common variables
-      var elmName = self.elm.attr('name');
+      var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
+        ? self.validatorAttrs.name
+        : (!!self.attrs && !!self.attrs.name)
+          ? self.attrs.name
+          : self.elm.attr('name');
+
       var formElmObj = getFormElementByName(elmName);
       var rules = self.validatorAttrs.hasOwnProperty('rules') ? self.validatorAttrs.rules : self.validatorAttrs.validation;
 
@@ -349,7 +354,7 @@ angular
             addToValidationSummary(self, message.trim());
           }else {
             // run $translate promise, use closures to keep  access to all necessary variables
-            (function(elmName,isValid, validator) {
+            (function(formElmObj, isValid, validator) {
               $translate(validator.message).then(function(translation) {
                 message += ' ' + replaceParams(validator, translation);
                 message = message.trim();
@@ -365,11 +370,13 @@ angular
                 // error Display
                 if(showError && !formElmObj.isValid) {
                   self.updateErrorMsg(message, { isValid: isFieldValid });
-                }else if(formElmObj.isValid) {
+                }else if(!!formElmObj && formElmObj.isValid) {
                   addToValidationSummary(formElmObj, '');
                 }
+              }, function(data) {
+                throw 'Failed to translate' + data;
               });
-            })(elmName,isValid, validator);
+            })(formElmObj, isValid, validator);
           }
         }
       } // for() loop
@@ -400,7 +407,8 @@ angular
      * @param object ctrl
      */
     function addToFormElementObjectList(elm, attrs, ctrl, scope) {
-      var formElm = { fieldName: elm.attr('name'), elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
+      var elmName = (!!attrs.name) ? attrs.name : elm.attr('name');
+      var formElm = { fieldName: elmName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
       var index = arrayFindObjectIndex(formElements, 'fieldName', elm.attr('name')); // find index of object in our array
       if(index >= 0) {
         formElements[index] = formElm;
@@ -415,8 +423,14 @@ angular
      * @param string message: error message
      */
     function addToValidationSummary(self, message) {
-      var elmName = self.elm.attr('name');
-      var form = getElementParentForm(self);                                  // find the parent form (only found if it has a name)
+      // get the element name, whichever we find it
+      var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
+        ? self.validatorAttrs.name
+        : (!!self.attrs && !!self.attrs.name)
+          ? self.attrs.name
+          : self.elm.attr('name');
+
+      var form = getElementParentForm(elmName, self);                                  // find the parent form (only found if it has a name)
       var index = arrayFindObjectIndex(validationSummary, 'field', elmName);  // find index of object in our array
 
       // if message is empty, remove it from the validation summary
@@ -495,29 +509,13 @@ angular
      * @param object self
      * @return object scope form
      */
-    function getElementParentForm(self) {
+    function getElementParentForm(elmName, self) {
       // from the element passed, get his parent form
-      var elmName = self.elm.attr('name');
       var forms = document.getElementsByName(elmName);
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
         if (!!form && form.name && self.scope[form.name]) {
-          return self.scope[form.name];
-        }
-      }
-      return null;
-    }
-
-    /** Get form within scope (if found)
-    * @param object self
-    * @return object scope form
-    */
-    function getScopeForm(self) {
-      var forms = document.querySelectorAll('form');
-      for (var i = 0; i < forms.length; i++) {
-        var form = document.querySelectorAll('form')[i];
-        if (form && form.name && self.scope[form.name]) {
           return self.scope[form.name];
         }
       }

@@ -55,7 +55,11 @@
           $timeout.cancel(timer);
           commonObj.updateErrorMsg('');
           ctrl.$setValidity('validation', true);
-          elm.unbind('blur', blurHandler); // unbind onBlur event so that it does not fail on a non-required element that is now dirty & empty
+
+          // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
+          if(typeof blurHandler !== "undefined") {
+            elm.unbind('blur', blurHandler);
+          }
         }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
@@ -83,13 +87,10 @@
           // if field is not required and his value is empty, cancel validation and exit out
           // onBlur make validation without waiting
           elm.bind('blur', blurHandler = function() {
-            if(isValidationCancelled) {
-              return value;
-            }else {
+            if(!isValidationCancelled) {
               // make the regular validation of the field value
               scope.$evalAsync( ctrl.$setValidity('validation', commonObj.validate(value, true)) );
             }
-            return value;
           });
 
           // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid

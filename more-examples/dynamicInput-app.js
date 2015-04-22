@@ -4,7 +4,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghisc
 
 myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider.when('/dynamic', {
-          templateUrl: 'dynamicForm.html',
+          templateUrl: 'dynamicInputTemplate.html',
           controller: 'CtrlDynamic'
     });
     $routeProvider.otherwise({
@@ -27,19 +27,23 @@ myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $
       $translate.use(key);
     };
 
-    $scope.data = [{
+    $scope.data = [
+      {
         'name': "abc",
         'title': 'first',
         'validate':"required"
-    }, {
+      },
+      {
         'name': "xyz",
         'title': 'second',
         'validate':"max_len:12|required"
-    }, {
+      },
+      {
         'name': "std",
         'title': 'third',
         'validate':"max_len:22|required"
-    }];
+      }
+    ];
   }])
   .directive('dyninp', [ function () {
     return {
