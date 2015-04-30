@@ -1,5 +1,3 @@
-// requires: validation-common.js
-
 /**
  * Angular-Validation Service (ghiscoding)
  * https://github.com/ghiscoding/angular-validation

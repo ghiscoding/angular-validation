@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.20`
+`Version: 1.3.21`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -34,6 +34,7 @@ For more explanations, see the question answered: [Why Use It?](#whyuseit)
 * [Global Options](#global-options)
 * [Install (bower)](#install)
 * [Include it in your app project](#project)
+* [License](#license)
 * [Locales (languages)](#locales)
 * [Regular Expressions (Regex)](#regex)
 * [Requirements](#requirements)
@@ -470,6 +471,7 @@ Dependencies
 2. Bootstrap 3.x *is optional* (http://getbootstrap.com/)
 3. AngularJS 1.2.x / 1.3.x (https://angularjs.org/)
 
+<a name="license"></a>
 License
 -----
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
@@ -501,4 +503,5 @@ License
 * [1.3.17](https://github.com/ghiscoding/angular-validation/commit/1283a3a7435c70ec0a355ee273c8479e4b9bdabf) `2015-04-11` Added global `$scope.$validationOptions` [Global Options](#global-options) object, for now only has the `debounce` property that be used by both the Directive and Service.
 * [1.3.18](https://github.com/ghiscoding/angular-validation/commit/d4b55741b9635cd5654f44c58c146f4d86b2e512) `2015-04-19` Fixed issue #20 - Error messages shown on submit are non-understandable, this was fixed using $translate promises instead of $translate.instant(). Fixed a few error display on the validationSummary() and checkFormValidity(). Also merged #27 to add Russian
 * [1.3.19](https://github.com/ghiscoding/angular-validation/commit/2c1e5d62e434da24c122a5b575b5434e988ff254) `2015-04-20` Fixed issue #28 - unbind all 'blur' in cancelValidation() might affect other modules
-* [1.3.20]() `2015-04-21` Fixed issue #26 - validation of forms inside ng-repeat (added sample `dynamicFormView` in `more-examples` folder). And again issue #28 - unbind all 'blur' in cancelValidation() might affect other modules.
+* [1.3.20](https://github.com/ghiscoding/angular-validation/commit/b1a609573d8059482813ec4131b6b8cb682318cd) `2015-04-21` Fixed issue #26 - validation of forms inside ng-repeat (added sample `dynamicFormView` in `more-examples` folder). And again issue #28 - unbind all 'blur' in cancelValidation() might affect other modules.
+* [1.3.21]() `2015-04-29` Moved the Alternate Text inside the $translate promise as well which removes possible delay of non-translated text appearing as alternate text (this will not affect regular text, or already translated text). Also cleanup code and made my Gulp task even more automated.

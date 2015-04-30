@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html ng-app="plunker">
+    <head>
+        <meta charset="utf-8" />
+        <title>AngularJS Plunker</title>
+        <script>document.write('<base href="' + document.location + '" />');</script>
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+      	<link rel="stylesheet" href="../style.css">
+    </head>
 
-  <head>
-    <meta charset="utf-8" />
-    <title>AngularJS Plunker</title>
-    <script>document.write('<base href="' + document.location + '" />');</script>
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  	<link rel="stylesheet" href="../style.css">
+    <body ng-controller="MainCtrl">
+        <h3>Form Validation (with dynamic form and fields)</h3>
+        <tabset>
+          <tab ng-repeat="tab in items" heading="{{tab.heading}}" >
+             <form name="{{tab.formName}}" novalidate>
+               <div ng-repeat="field in tab.fields" >
+                 <form-field></form-field>
+               </div>
+             </form>
+          </tab>
+        </tabset>
+        <button name="validateForms" value="Validate" ng-click="validate()">Validate</button>
 
-    <!-- external librairies CDN -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
-	<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+        <!-- external librairies CDN -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
+        <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 
-	<!-- angular-translate -->
-	<!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
-	<script src="../vendors/angular-translate/angular-translate.min.js"></script>
-	<script src="../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+        <!-- angular-translate -->
+        <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+        <script src="../vendors/angular-translate/angular-translate.min.js"></script>
+        <script src="../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
 
-    <!-- Angular-Validation -->
-  	<!--<script type="text/javascript" src="../dist/angular-validation.min.js"></script>-->
-  	<script type="text/javascript" src="../src/validation-directive.js"></script>
-	<script type="text/javascript" src="../src/validation-service.js"></script>
-  	<script type="text/javascript" src="../src/validation-common.js"></script>
-  	<script type="text/javascript" src="../src/validation-rules.js"></script>
+        <!-- Angular-Validation -->
+        <script type="text/javascript" src="../dist/angular-validation.min.js"></script>
+        <!--<script type="text/javascript" src="../src/validation-directive.js"></script>
+        <script type="text/javascript" src="../src/validation-service.js"></script>
+        <script type="text/javascript" src="../src/validation-common.js"></script>
+        <script type="text/javascript" src="../src/validation-rules.js"></script>-->
 
-    <script src="dynamicForm-app.js"></script>
-  </head>
-
-  <body ng-controller="MainCtrl">
-    <h3>Form Validation (with dynamic form and fields)</h3>
-    <tabset>
-      <tab ng-repeat="tab in items" heading="{{tab.heading}}" >
-         <form name="{{tab.formName}}" novalidate>
-           <div ng-repeat="field in tab.fields" >
-             <form-field></form-field>
-           </div>
-         </form>
-      </tab>
-    </tabset>
-   <button name="validateForms" value="Validate" ng-click="validate()">Validate</button>
-  </body>
+        <script src="dynamicForm-app.js"></script>
+    </body>
 
 </html>

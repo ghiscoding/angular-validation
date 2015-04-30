@@ -1,10 +1,8 @@
 {
-  "name": "ghiscoding.angular-validation",
-  "version": "1.3.20",
-  "authors": [
-    "Ghislain B."
-  ],
-  "description": "AngularJS Form Validation (Directive / Service)",
+  "name": "angular-validation-ghiscoding",
+  "version": "1.3.21",
+  "author": "Ghislain B.",
+  "description": "Angular-Validation Directive and Service (ghiscoding)",
   "main": [
     "locales/validation/en.js",
     "locales/validation/fr.js",
@@ -35,6 +33,7 @@
     "index.html",
     "gulpfile.js",
     "vendors",
+    "readme.md",
     "README.md"
   ],
   "homepage": "http://github.com/ghiscoding/angular-validation",

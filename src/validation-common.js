@@ -1,5 +1,3 @@
-// requires: validation-directive.js
-
 /**
  * angular-validation-common (ghiscoding)
  * https://github.com/ghiscoding/angular-validation
@@ -230,7 +228,7 @@ angular
       // errorElm can be empty due to:
       //  1. validationErrorTo has not been set
       //  2. validationErrorTo has been mistyped, and if mistyped, use regular functionality
-      if(!errorElm || errorElm.length === 0){
+      if(!errorElm || errorElm.length === 0) {
         // most common way, let's try to find our <span class="validation-inputName">
         errorElm = angular.element(document.querySelector('.validation-'+elmInputName));
       }
@@ -349,37 +347,28 @@ angular
         if(!isValid) {
           isFieldValid = false;
 
-          if(!!validator.altText && validator.altText.length > 0) {
-            message += ' ' + validator.altText.replace("alt=", "");
-            addToValidationSummary(self, message.trim());
-          }else {
-            // run $translate promise, use closures to keep  access to all necessary variables
-            (function(formElmObj, isValid, validator) {
-              $translate(validator.message).then(function(translation) {
-                message += ' ' + replaceParams(validator, translation);
-                message = message.trim();
+          // run $translate promise, use closures to keep  access to all necessary variables
+          (function(formElmObj, isValid, validator) {
+            var msgToTranslate = validator.message;
+            if(!!validator.altText && validator.altText.length > 0) {
+              msgToTranslate = validator.altText.replace("alt=", "");
+            }
 
-                // only log the invalid message in the $validationSummary
-                validationSummary = addToValidationSummary(formElmObj, message);
-
-                // change the Form element object boolean flag from the `formElements` variable, used in the `checkFormValidity()`
-                if(!!formElmObj) {
-                  formElmObj.message = message;
-                }
-
-                // error Display
-                if(showError && !formElmObj.isValid) {
-                  self.updateErrorMsg(message, { isValid: isFieldValid });
-                }else if(!!formElmObj && formElmObj.isValid) {
-                  addToValidationSummary(formElmObj, '');
-                }
-              }, function(data) {
-                throw 'Failed to translate' + data;
-              });
-            })(formElmObj, isValid, validator);
-          }
-        }
-      } // for() loop
+            $translate(msgToTranslate).then(function(translation) {
+              message += ' ' + replaceParams(validator, translation);
+              addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
+            }).catch(function(data) {
+              // error caught:
+              // alternate text might not need translation if the user sent his own custom message or is already translated
+              // so just send it directly into the validation summary.
+              if(!!validator.altText && validator.altText.length > 0) {
+                message += ' ' + msgToTranslate;
+                addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
+              }
+            });
+          })(formElmObj, isValid, validator);
+        } // if(!isValid)
+      }   // for() loop
 
       // only log the invalid message in the $validationSummary
       if(isValid) {
@@ -395,7 +384,6 @@ angular
       }
       return isFieldValid;
     } // validate()
-
 
     //----
     // Private functions declaration
@@ -418,6 +406,32 @@ angular
       return formElements;
     }
 
+    /** Will add error to the validationSummary and also display the error message if requested
+     * @param object self
+     * @param object formElmObj
+     * @param string message: error message
+     * @param bool showError
+     */
+    function addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError) {
+      // trim any white space
+      message = message.trim();
+
+      // log the invalid message in the $validationSummary
+      addToValidationSummary(formElmObj, message);
+
+      // change the Form element object boolean flag from the `formElements` variable, used in the `checkFormValidity()`
+      if(!!formElmObj) {
+        formElmObj.message = message;
+      }
+
+      // error Display
+      if(showError && !formElmObj.isValid) {
+        self.updateErrorMsg(message, { isValid: isFieldValid });
+      }else if(!!formElmObj && formElmObj.isValid) {
+        addToValidationSummary(formElmObj, '');
+      }
+    }
+
     /** Add the error to the validation summary
      * @param object self
      * @param string message: error message
@@ -430,7 +444,7 @@ angular
           ? self.attrs.name
           : self.elm.attr('name');
 
-      var form = getElementParentForm(elmName, self);                                  // find the parent form (only found if it has a name)
+      var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
       var index = arrayFindObjectIndex(validationSummary, 'field', elmName);  // find index of object in our array
 
       // if message is empty, remove it from the validation summary
