@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.21`
+`Version: 1.3.22`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -8,15 +8,16 @@ The base concept is not new, it comes from the easy form input validation approa
 
 For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still typing... though as soon as the user pauses for a certain amount of time, then validation comes into play. It's worth knowing that this inactivity timer is only available while typing, if user focuses away from his input (onBlur) it will then validate instantly.
 
-Supporting AngularJS 1.3.x
-*current code should work with 1.2.x just the same but is no more verified*
+Supporting AngularJS 1.3.x *(current code should work with 1.2.x just the same but is no more verified)*
 
-Now support <b>Service</b> using the same functionality as the <b>Directive</b>.
-Huge rewrite to have a better code separation and also adding support to Service functionality. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
+Now support <b>Service</b> using the same functionalities as the <b>Directive</b>.
+Huge rewrite to have a better code separation and also adding support to Service functionalities. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
 
 [Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit](#submit) button.
 
-For more explanations, see the question answered: [Why Use It?](#whyuseit)
+For more reasons to use it, see the answered question of: [Why Use It?](#whyuseit)
+
+If you do use it, please click on the Star and add it as a favourite. The more star ratings there is, the more chances it could found by other users as a populate trend. That is the only support I ask you... thanks ;)
 
 <a name="plunker"></a>
 ## Live Demo
@@ -32,7 +33,7 @@ For more explanations, see the question answered: [Why Use It?](#whyuseit)
 * [Dependencies](#dependencies)
 * [Form Submit and Validation - checkFormValidity()](#submit)
 * [Global Options](#global-options)
-* [Install (bower)](#install)
+* [Install (Bower/NuGet)](#install)
 * [Include it in your app project](#project)
 * [License](#license)
 * [Locales (languages)](#locales)
@@ -46,7 +47,7 @@ For more explanations, see the question answered: [Why Use It?](#whyuseit)
 <a name="whyuseit"></a>
 Why use angular-validation?
 -----
-Angular-validation was develop with DRY (Don't Repeat Yourself) and simplicity in mind.
+Angular-validation was develop with simplicity and DRY (Don't Repeat Yourself) concept in mind.
 You can transform this:
 ```html
 <input type="text" name="username" ng-model="user.username"
@@ -61,7 +62,7 @@ into this (errors will display in your own locale):
 <input type="text" name="username" ng-model="user.username"
   validation="min_len:3|max_len:8|required"  />
 ```
-The Angular-Validation will create by itself the necessary error message. Now imagine your form with 10 inputs, using the Angular-Validation will end up using 10 lines of code, while on the other hand using the default of Angular will give you 30 lines of code... so what are you waiting for? Use Angular-Validation!!! :)
+The Angular-Validation will create, by itself, the necessary error message. Now imagine your form with 10 inputs, using the Angular-Validation will end up using 10 lines of code, while on the other hand using the default of Angular will give you 30 lines of code... so what are you waiting for? Use Angular-Validation!!! :)
 
 Let's not forget the [Validation summary](#validation-summary) which is also a great and useful way of displaying your errors to the user.
 
@@ -74,8 +75,18 @@ Install with Bower
 // You can install with
 bower install angular-validation-ghiscoding
 
-// or as another name
+// or as another alias
 bower install ghiscoding.angular-validation
+```
+Install with NuGet (see the [NuGet Package Here](http://www.nuget.org/packages/Angular-Validation-Ghiscoding))
+```javascript
+PM> Install-Package Angular-Validation-Ghiscoding
+```
+When used with IIS, you will need to map the JSON type
+```html
+<staticContent>
+    <mimeMap fileExtension=".json" mimeType="application/json" />
+</staticContent>
 ```
 
 <a name="project"></a>
@@ -83,7 +94,7 @@ Include it in your app project
 --------------------
 The angular-validation scripts are now available in 2 formats: uncompressed (`src/*.js`) or minified (`dist/angular-validation.min.js`). The minified script englobes all uncompressed scripts. Also note that `angular-translate` (3rd party app) is also a [dependency](#dependencies).
 
-*If you use the uncompressed scripts, it is worth to know that the Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-rules` and `validation-common` files.*
+*If you use the uncompressed scripts, it is worth to know that the Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-common` and `validation-rules` files.*
 ```javascript
 // include it your app module ( we need both Translate & Validation)
 var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
@@ -97,7 +108,7 @@ myApp.config(function ($translateProvider) {
     suffix: '.json'
   });
 
-  // load English ('en') table on startup
+  // define translation maps you want to use on startup
   $translateProvider.preferredLanguage('en');
 });
 ```
@@ -126,23 +137,28 @@ Let's start with a simple example and then let's get down to real business.
 
 P.S. For real live sample, see the [live plunker demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
 
-*To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it on each element `<input debounce="1500"/>*
+*To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it independently on each element `<input debounce="1500" ... />`*
 ```html
 <!-- example 1 -->
+<!-- optionally add a friendly-name to your elements, will be used in ValidationSummary  -->
+<input type="test" name="input1" friendly-name="{{ FIRST_NAME | translate }}"
+    ng-model="input3" validation="alpha_dash|min_len:2|required" />
+
+<!-- example 2 -->
 <!-- change the debounce or typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
 <label for="input1">Simple Integer -- debounce(5sec)</label>
 <input type="text" name="input1" ng-model="form1.input1" debounce="5000" validation="integer|required" />
 
-<!-- example 2 -->
+<!-- example 3 -->
 <label for="input2">email + min(3) + max(10) + required</label>
 <input type="text" name="input2" ng-model="form1.input2" validation="email|min_len:3|max_len:10|required"  />
 
-<!-- example 3 -->
+<!-- example 4 -->
 <!-- between_num could also be written with 2 conditions of min_num:n|max_num:n ... same goes to between_len -->
 <label for="input3">Float only + between(min,max) + required</label>
 <input type="number" name="input3" ng-model="form1.input3" validation="numeric|between_num:6,99.9|required"  />
 
-<!-- example 4 -->
+<!-- example 5 -->
 <!-- input match confirmation (ex.: password confirmation) -->
 <!-- match validator can use 1 or 2 params (match:field1 ..OR.. match:field1,Text to Display) -->
 <!-- when using 2 params (separated by comma ',') then 2nd param is used as text to display -->
@@ -151,12 +167,12 @@ P.S. For real live sample, see the [live plunker demo](#plunker) or download the
 <label for="input4c">Password Confirmation</label>
 <input type="password" name="input4c" ng-model="form1.input4c" validation="match:form1.input4,Password not match|required"  />
 
-<!-- example 5 - with Regular Expression (Date Code of YYWW) -->
+<!-- example 6 - with Regular Expression (Date Code of YYWW) -->
 <label for="input5">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
 <input type="text" name="input5" ng-model="form1.input5"
 		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
 
-<!-- example 6 - required select option (dropdown) -->
+<!-- example 7 - required select option (dropdown) -->
 <div class="form-group">
     <label for="select1">Select Option Required</label>
     <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
@@ -189,6 +205,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
   // you can create indepent call to the validation service
   myValidation.addValidator({
     elmName: 'input2',
+    // friendlyName: $translate.instant('FIRST_NAME'),
     debounce: 3000,
     scope: $scope,
     rules: 'numeric_signed|required'
@@ -203,7 +220,7 @@ P.S. For real live sample, see the [live demo](#plunker) or download the Github 
     .setGlobalOptions({ debounce: 1500, scope: $scope })
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
-    .addValidator('input5', 'email|required|min_len:6');
+    .addValidator('input5', 'email|required|min_len:6', $translate.instant('EMAIL')); // use 3rd argument for a friendlyName
 
   // you can also remove a Validator with an ngClick or whichever way you prefer by calling .removeValidator()
   $scope.removeInputValidator = function ( elmName ) {
@@ -265,7 +282,7 @@ $scope.submit = function (event) {
 
 <a name="validation-summary"></a>
 ## Validation Summary
-Display a validation summary of all the current form errors. Validation summary can ben called through 2 properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`(the latter will only works if your html Form object has a `name=""` attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`).
+Display a validation summary of all the current form errors. Validation summary can be called through 2 properties `$scope.$validationSummary` or `$scope.formName.$validationSummary`(the latter will only work if your html Form object has a name attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). Each items appearing in the validation summary are holding 3 properties: field (element name, ex.: input1), message (ex.: Field is required), friendlyName (ex.: First Name *but only if you did give your element a `friendly-name="Your Friendly Name"`*). Also note that the `friendly-name` attribute will ONLY be used in the ValidationSummary, so if you do plan to use the ValidationSummary then you would probably want to add a friendly name, otherwise you could skip it.
 
 *The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent the Form from being submitted when invalid or submit it when it does become valid. I will leave it up to you to code it the way you want.*
 
@@ -277,9 +294,26 @@ Display a validation summary of all the current form errors. Validation summary 
     </ul>
 </div>
 
+<!-- or with friendly-name attribute -->
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
+    <ul>
+        <li ng-repeat="item in form1.$validationSummary">{{item.friendlyName }}: {{item.message}}</li>
+    </ul>
+</div>
+
+<!-- or be safer and use both -->
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
+    <ul>
+        <li ng-repeat="item in form1.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+    </ul>
+</div>
+
 <form novalidate name="form1" method="POST">
   <button type="submit" ng-click="$scope.displayValidationSummary = true;">Show Validation Summary</button>
 </form>
+
+<!-- You could also display friendly names -->
+
 ```
 
 <a name="input-groups-wrapping"></a>
@@ -504,4 +538,5 @@ License
 * [1.3.18](https://github.com/ghiscoding/angular-validation/commit/d4b55741b9635cd5654f44c58c146f4d86b2e512) `2015-04-19` Fixed issue #20 - Error messages shown on submit are non-understandable, this was fixed using $translate promises instead of $translate.instant(). Fixed a few error display on the validationSummary() and checkFormValidity(). Also merged #27 to add Russian
 * [1.3.19](https://github.com/ghiscoding/angular-validation/commit/2c1e5d62e434da24c122a5b575b5434e988ff254) `2015-04-20` Fixed issue #28 - unbind all 'blur' in cancelValidation() might affect other modules
 * [1.3.20](https://github.com/ghiscoding/angular-validation/commit/b1a609573d8059482813ec4131b6b8cb682318cd) `2015-04-21` Fixed issue #26 - validation of forms inside ng-repeat (added sample `dynamicFormView` in `more-examples` folder). And again issue #28 - unbind all 'blur' in cancelValidation() might affect other modules.
-* [1.3.21]() `2015-04-29` Moved the Alternate Text inside the $translate promise as well which removes possible delay of non-translated text appearing as alternate text (this will not affect regular text, or already translated text). Also cleanup code and made my Gulp task even more automated.
+* [1.3.21](https://github.com/ghiscoding/angular-validation/commit/4972810eabe66dc0ac24626113982af488c7d3a0) `2015-04-29` Moved the Alternate Text inside the $translate promise as well which removes possible delay of non-translated text appearing as alternate text (this will not affect regular text, or already translated text). Also cleanup code and made my Gulp task even more automated.
+* [1.3.22]() `2015-05-03` Added new element attribute of `friendly-name` which is used ONLY in the ValidationSummary, this friendly name is to give a better element name display, which also support translation, inside the ValidationSummary instead of just "input1" (see ValidationSummary for more details).

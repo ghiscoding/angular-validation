@@ -74,6 +74,8 @@
     "INPUT17":                          "Alphanumeric + Exactly(3) + Required  -- debounce(5sec)",
     "INPUT18":                          "Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01 ",
     "INPUT19":                          "Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15",
+    "FIRST_NAME":                       "First Name",
+    "LAST_NAME":                        "Last Name",
     "SAVE":                             "Save",
     "SELECT1":                          "Required (select) -- validation with (blur) EVENT",
     "SHOW_VALIDATION_SUMMARY":          "Show Validation Summary"

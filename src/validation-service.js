@@ -40,7 +40,7 @@ angular
      * @param mixed var1: could be a string (element name) or an object representing the validator
 		 * @param mixed var2: could be a string (element name)
 		 */
-		function addValidator(var1, var2) {
+		function addValidator(var1, var2, var3) {
       var self = this;
       var attrs = {};
 
@@ -48,6 +48,7 @@ angular
       if(typeof var1 === "string" && typeof var2 === "string") {
         attrs.elmName = var1;
         attrs.rules = var2;
+        attrs.friendlyName = (typeof var3 === "string") ? var3 : '';
       }else {
         attrs = var1;
       }

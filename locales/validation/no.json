@@ -74,6 +74,8 @@
     "INPUT17":                          "Alfanumerisk + Nøyaktig(3) + Påkrevd  -- debounce(5sec)",
     "INPUT18":                          "ISO dato (yyyy-mm-dd) -- minimum >= 2001-01-01 ",
     "INPUT19":                          "US SHORT dato (mm/dd/yy) -- mellom 12/01/99 og 12/31/15",
+    "FIRST_NAME":                       "Fornavn",
+    "LAST_NAME":                        "Etternavn",
     "SAVE":                             "Lagre",
     "SELECT1":                          "Påkrevd (select) -- validering med (blur) EVENT",
     "SHOW_VALIDATION_SUMMARY":          "Vis Valideringsoppsummering"

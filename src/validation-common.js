@@ -396,7 +396,8 @@ angular
      */
     function addToFormElementObjectList(elm, attrs, ctrl, scope) {
       var elmName = (!!attrs.name) ? attrs.name : elm.attr('name');
-      var formElm = { fieldName: elmName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
+      var friendlyName = (!!attrs && !!attrs.friendlyName) ? $translate.instant(attrs.friendlyName) : '';
+      var formElm = { fieldName: elmName, friendlyName: friendlyName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
       var index = arrayFindObjectIndex(formElements, 'fieldName', elm.attr('name')); // find index of object in our array
       if(index >= 0) {
         formElements[index] = formElm;
@@ -451,7 +452,8 @@ angular
       if(index >= 0 && message === '') {
         validationSummary.splice(index, 1);
       }else if(message !== '') {
-        var errorObj = { field: elmName, message: message, formName: (!!form) ? form.$name : null };
+        var friendlyName = (!!self.attrs && !!self.friendlyName) ? $translate.instant(self.friendlyName) : '';
+        var errorObj = { field: elmName, friendlyName: friendlyName, message: message, formName: (!!form) ? form.$name : null };
 
         // if error already exist then refresh the error object inside the array, else push it to the array
         if(index >= 0) {

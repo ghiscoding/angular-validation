@@ -11,7 +11,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form1.$validationSummary">{{item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in form1.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
 
@@ -31,7 +31,7 @@
         </div>
         <div class="form-group">
             <label for="input5">{{ 'INPUT5' | translate }}</label>
-            <input type="text" class="form-control" name="input5" placeholder="email|required|min_len:6" ng-model="input5" validation="email|required|min_len:6" />
+            <input type="text" class="form-control" name="input5" placeholder="email|required|min_len:6" ng-model="input5" validation="email|required|min_len:6" friendly-name="{{ 'INPUT5' | translate }}" />
         </div>
         <div class="form-group">
             <label for="input6">{{ 'INPUT6' | translate }}</label>
@@ -39,11 +39,11 @@
         </div>
         <div class="form-group">
             <label for="input7">{{ 'INPUT7' | translate }}</label>
-            <input type="text" class="form-control" name="input7" placeholder="ipv4|required" ng-model="input7" validation="ipv4|required" />
+            <input type="text" class="form-control" name="input7" placeholder="ipv4|required" ng-model="input7" validation="ipv4|required"  />
         </div>
         <div class="form-group">
             <label for="input8">{{ 'INPUT8' | translate }}</label>
-            <input type="text" class="form-control" name="input8" placeholder="credit_card|required" ng-model="input8" validation="credit_card|required" />
+            <input type="text" class="form-control" name="input8" placeholder="credit_card|required" ng-model="input8" validation="credit_card|required" friendly-name="{{ 'INPUT8' | translate }}" />
         </div>
         <div class="form-group">
             <label for="input9">{{ 'INPUT9' | translate }}</label>

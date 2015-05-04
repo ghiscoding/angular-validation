@@ -16,7 +16,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form1.$validationSummary">{{item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in form1.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
 

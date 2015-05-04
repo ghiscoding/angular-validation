@@ -82,8 +82,10 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   var myValidation = new validationService();
 
   // you can create indepent call to the validation service
+  // also below the multiple properties available
   myValidation.addValidator({
     elmName: 'input2',
+    // friendlyName: $translate.instant('FIRST_NAME'),
     debounce: 3000,
     scope: $scope,
     rules: 'numeric_signed|required'
@@ -91,17 +93,19 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
 
   // you can also chain validation service and add multiple validators at once
   // we optionally start by defining some global options. Note: each validator can overwrite individually these properties (ex.: validatorX can have a `debounce` different than the global set)
-  // there is 2 ways to write a call... #1 with elementName & rules defined as 2 strings arguments ... #2 with 1 object as argument (with defined property names)
-  //    #1 .addValidtor('myElementName', 'myRules') ... #2 .addValidator({ elmName: 'inputX', rules: 'myRules'})
+  // there is 2 ways to write a call... #1-2 with elementName & rules defined as 2 or 3 strings arguments ... #3 with 1 object as argument (with defined property names)
+  //    #1 .addValidtor('myElementName', 'myRules')
+  //    #2 .addValidtor('myElementName', 'myRules', 'myFriendlyName')
+  //    #3 .addValidator({ elmName: 'inputX', rules: 'myRules'})
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
     .setGlobalOptions({ debounce: 1500, scope: $scope })
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
-    .addValidator('input5', 'email|required|min_len:6')
+    .addValidator('input5', 'email|required|min_len:6', $translate.instant('INPUT5')) // 3rd argument being the Friendly name
     .addValidator('input6', 'url|required')
     .addValidator('input7', 'ipv4|required')
-    .addValidator('input8', 'credit_card|required')
+    .addValidator('input8', 'credit_card|required', $translate.instant('INPUT8')) // 3rd argument being the Friendly name
     .addValidator('input9', 'between_len:2,6|required')
     .addValidator('input10', 'date_iso|required')
     .addValidator('input11', 'date_us_long|required')

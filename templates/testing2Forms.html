@@ -13,19 +13,19 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form01.$validationSummary">{{item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in form01.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
 
 <form novalidate name="form01" method="POST">
     <fieldset>
         <div class="form-group">
-            <label for="input2">{{ 'INPUT2' | translate }}</label>
-            <input type="number" class="form-control" name="input2" placeholder="numeric_signed|required" ng-model="input2" validation="numeric_signed|required" />
+            <label for="input2">{{ 'FIRST_NAME' | translate }}</label>
+            <input type="number" class="form-control" name="input2" friendly-name="{{ 'FIRST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="input2" validation="alpha_dash|min_len:2|required" />
         </div>
         <div class="form-group">
-            <label for="input3">{{ 'INPUT3' | translate }}</label>
-            <input type="number" class="form-control" name="input3" placeholder="float_signed|between_num:-0.6,99.5|required" ng-model="input3" validation="float_signed|between_num:-0.6,99.5|required" />
+            <label for="input3">{{ 'LAST_NAME' | translate }}</label>
+            <input type="number" class="form-control" name="input3" friendly-name="{{ 'LAST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="input3" validation="alpha_dash|min_len:2|required" />
         </div>
     </fieldset>
 
@@ -40,7 +40,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form02.$validationSummary">{{item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in form02.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
 <form novalidate name="form02" method="POST">
