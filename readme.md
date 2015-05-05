@@ -57,27 +57,27 @@ Let's not forget the [Validation Summary](/ghiscoding/angular-validation/wiki/Va
 
 
 ## Angular-Validation Wiki
-All the documentation has been moved to the Wiki section, see the [github wiki](/ghiscoding/angular-validation/wiki) for more explanation.
+All the documentation has been moved to the Wiki section, see the [github wiki](https://github.com/ghiscoding/angular-validation/wiki) for more explanation.
 
 **Wiki Contents**
-* [Angular-Validation Wiki](/ghiscoding/angular-validation/wiki)
+* [Angular-Validation Wiki](https://github.com/ghiscoding/angular-validation/wiki)
 * Installation
-    * [Bower/NuGet Packages](/ghiscoding/angular-validation/wiki/Download-and-Install-it)
-    * [Include it in your Angular Application project](/ghiscoding/angular-validation/wiki/Include-it-in-your-Angular-Application)
-    * [Locales (languages)](/ghiscoding/angular-validation/wiki/Locales-(languages))
+    * [Bower/NuGet Packages](https://github.com/ghiscoding/angular-validation/wiki/Download-and-Install-it)
+    * [Include it in your Angular Application project](https://github.com/ghiscoding/angular-validation/wiki/Include-it-in-your-Angular-Application)
+    * [Locales (languages)](https://github.com/ghiscoding/angular-validation/wiki/Locales-(languages))
 * Code Samples
-    * [Directive Examples](/ghiscoding/angular-validation/wiki/Working-Directive-Examples)
-    * [Service Examples](/ghiscoding/angular-validation/wiki/Working-Service-Examples)
-    * [Alternate Text on Validators](/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
-    * [DisplayErrorTo](/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
-    * [Submit and Validation](/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
-    * [Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary)
+    * [Directive Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Directive-Examples)
+    * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
+    * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
+    * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
+    * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
+    * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
 * Validators
-    * [Available Validator Rules](/ghiscoding/angular-validation/wiki/Available-Validators-(rules))
-    * [Regular Expression](/ghiscoding/angular-validation/wiki/Regular-Expressions-(Regex))
+    * [Available Validator Rules](https://github.com/ghiscoding/angular-validation/wiki/Available-Validators-(rules))
+    * [Regular Expression](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expressions-(Regex))
 * Misc
-    * [Changelog](/ghiscoding/angular-validation/wiki/CHANGELOG)
-    * [License](/ghiscoding/angular-validation/wiki/License)
+    * [Changelog](https://github.com/ghiscoding/angular-validation/wiki/CHANGELOG)
+    * [License](https://github.com/ghiscoding/angular-validation/wiki/License)
 
 <a name="install"></a>
 Download and Install it
@@ -101,3 +101,6 @@ When used with IIS, you will need to map the JSON type
     <mimeMap fileExtension=".json" mimeType="application/json" />
 </staticContent>
 ```
+
+###License
+[MIT License](http://www.opensource.org/licenses/mit-license.php)
