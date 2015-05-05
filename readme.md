@@ -13,7 +13,7 @@ Supporting AngularJS 1.3.x *(current code should work with 1.2.x just the same b
 Now support <b>Service</b> using the same functionalities as the <b>Directive</b>.
 Huge rewrite to have a better code separation and also adding support to Service functionalities. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
 
-[Validation summary](#validation-summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit](#submit) button.
+[Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit and Validation](/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation) button.
 
 For more reasons to use it, see the answered question of: [Why Use It?](#whyuseit)
 
@@ -23,26 +23,28 @@ If you do use it, please click on the Star and add it as a favourite. The more s
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 
-<a name="index"></a>
-## Index
-* [Alternate Text on Validator](#alternate)
-* [Available Validators](#validators)
-* [Bootstrap Input Groups Wrapping - HOWTO](#input-groups-wrapping)
-* [Changelog](#changelog)
-* [Demo - Plunker](#plunker)
-* [Dependencies](#dependencies)
-* [Form Submit and Validation - checkFormValidity()](#submit)
-* [Global Options](#global-options)
-* [Install (Bower/NuGet)](#install)
-* [Include it in your app project](#project)
-* [License](#license)
-* [Locales (languages)](#locales)
-* [Regular Expressions (Regex)](#regex)
-* [Requirements](#requirements)
-* [Some Working Examples (Directive)](#examples-directive)
-* [Some Working Examples (Service)](#examples-service)
-* [Validation summary](#validation-summary)
-* [Why Use It?](#whyuseit)
+## Angular-Validation Wiki
+All the documentation has been moved to the Wiki section, see the [github wiki](/ghiscoding/angular-validation/wiki) for more explanation.
+**Wiki Contents**
+
+* [Angular-Validation Wiki](/ghiscoding/angular-validation/wiki)
+* Installation
+    * [Bower/NuGet Packages](/ghiscoding/angular-validation/wiki/Download-It)
+    * [Include it in your Angular Application project](/ghiscoding/angular-validation/wiki/Include-it-in-your-Angular-Application)
+    * [Locales (languages)](/ghiscoding/angular-validation/wiki/Locales-(languages))
+* Code Samples
+    * [Directive Examples](/ghiscoding/angular-validation/wiki/Working-Directive-Examples)
+    * [Service Examples](/ghiscoding/angular-validation/wiki/Working-Service-Examples)
+    * [Alternate Text on Validators](/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
+    * [DisplayErrorTo](/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
+    * [Submit and Validation](/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
+    * [Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary)
+* Validators
+    * [Available Validator Rules](/ghiscoding/angular-validation/wiki/Available-Validators-(rules))
+    * [Regular Expression](/ghiscoding/angular-validation/wiki/Regular-Expressions-(Regex))
+* Misc
+    * [Changelog](/ghiscoding/angular-validation/wiki/CHANGELOG)
+    * [License](/ghiscoding/angular-validation/wiki/License)
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -50,21 +52,31 @@ Why use angular-validation?
 Angular-validation was develop with simplicity and DRY (Don't Repeat Yourself) concept in mind.
 You can transform this:
 ```html
-<input type="text" name="username" ng-model="user.username"
-  ng-minlength="3" ng-maxlength="8" required />
+<input type="text" name="username" ng-model="user.username" ng-minlength="3" ng-maxlength="8" required />
 <div ng-show="form.$submitted || form.user.$touched">
   <span ng-show="userForm.username.$error.minlength" class="help-block">Username is too short.</p>
   <span ng-show="userForm.username.$error.maxlength" class="help-block">Username is too long.</p>
 </div>
+<input type="text" name="firstname" ng-model="user.firstname" ng-minlength="3" ng-maxlength="50" required />
+<div ng-show="form.$submitted || form.user.$touched">
+  <span ng-show="userForm.firstname.$error.minlength" class="help-block">Firstname is too short.</p>
+  <span ng-show="userForm.firstname.$error.maxlength" class="help-block">Firstname is too long.</p>
+</div>
+<input type="text" name="lastname" ng-model="user.lastname" ng-minlength="2" ng-maxlength="50" required />
+<div ng-show="form.$submitted || form.user.$touched">
+  <span ng-show="userForm.lastname.$error.minlength" class="help-block">Lastname is too short.</p>
+  <span ng-show="userForm.lastname.$error.maxlength" class="help-block">Lastname is too long.</p>
+</div>
 ```
-into this (errors will display in your own locale):
+into this (errors will be displayed in your chosen locale translation):
 ```html
-<input type="text" name="username" ng-model="user.username"
-  validation="min_len:3|max_len:8|required"  />
+<input type="text" name="username" ng-model="user.username" validation="min_len:3|max_len:8|required"  />
+<input type="text" name="firstname" ng-model="user.firstname" validation="alpha_dash|min_len:3|max_len:50|required"  />
+<input type="text" name="lastname" ng-model="user.lastname" validation="alpha_dash|min_len:2|max_len:50|required"  />
 ```
 The Angular-Validation will create, by itself, the necessary error message. Now imagine your form with 10 inputs, using the Angular-Validation will end up using 10 lines of code, while on the other hand using the default of Angular will give you 30 lines of code... so what are you waiting for? Use Angular-Validation!!! :)
 
-Let's not forget the [Validation summary](#validation-summary) which is also a great and useful way of displaying your errors to the user.
+Let's not forget the [Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
 
 <a name="install"></a>
 Install
@@ -88,432 +100,6 @@ When used with IIS, you will need to map the JSON type
     <mimeMap fileExtension=".json" mimeType="application/json" />
 </staticContent>
 ```
-
-<a name="project"></a>
-Include it in your app project
---------------------
-The angular-validation scripts are now available in 2 formats: uncompressed (`src/*.js`) or minified (`dist/angular-validation.min.js`). The minified script englobes all uncompressed scripts. Also note that `angular-translate` (3rd party app) is also a [dependency](#dependencies).
-
-*If you use the uncompressed scripts, it is worth to know that the Directive and/or Service are totally independent and could be called together or separately BUT you will still need the `validation-common` and `validation-rules` files.*
-```javascript
-// include it your app module ( we need both Translate & Validation)
-var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
-
-// include validation languages
-// if you want full localization add it in the suffix
-// For example on Canadian French/English, we could replace the code by `suffix: '-CA.json'`
-myApp.config(function ($translateProvider) {
-  $translateProvider.useStaticFilesLoader({
-    prefix: 'locales/validation/',
-    suffix: '.json'
-  });
-
-  // define translation maps you want to use on startup
-  $translateProvider.preferredLanguage('en');
-});
-```
-
-```html
-<!-- You could use the minified version of angular-validation (all in 1 minified file) -->
-<script type="text/javascript" src="dist/angular-validation.min.js"></script>
-
-<!-- OR use uncompressed files for development, which are angular-validation, the directive and service are totally independent -->
-<!-- you can load one or the other or use them in parallel. But `-common.js` and `-rules.js` are mandatory. -->
-<script type="text/javascript" src="src/validation-directive.js"></script>
-<script type="text/javascript" src="src/validation-service.js"></script>
-<script type="text/javascript" src="src/validation-common.js"></script>
-<script type="text/javascript" src="src/validation-rules.js"></script>
-```
-
-<a name="requirements"></a>
-## Requirements
-Angular-Validation requires the element which will use validation to have an html `name=""` attribute, so that in the background it can use this name to create and show an error into a `<span>` which will directly follow your form input. For example: `<input name="input1" ng-model="input1" validation="required" />`.
-
-*The necessity of `name=""` attribute is new since version 1.3.4+, prior to this change we were asking the user to create his own `<span>` for error displaying. In other words, the `<span>` is now optional, but the `name=""` attribute becomes mandatory and will throw an error if omitted*
-
-<a name="examples-directive"></a>
-## Some Working Examples (Directive)
-Let's start with a simple example and then let's get down to real business.
-
-P.S. For real live sample, see the [live plunker demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormDirective.html` for a better separation.
-
-*To define the debounce globally (for all form elements), you could use `$scope.$validationOptions = { debounce: 1500 };` or set it independently on each element `<input debounce="1500" ... />`*
-```html
-<!-- example 1 -->
-<!-- optionally add a friendly-name to your elements, will be used in ValidationSummary  -->
-<input type="test" name="input1" friendly-name="{{ FIRST_NAME | translate }}"
-    ng-model="input3" validation="alpha_dash|min_len:2|required" />
-
-<!-- example 2 -->
-<!-- change the debounce or typing-limit (timer in ms of inactivity) after which will trigger the validation check -->
-<label for="input1">Simple Integer -- debounce(5sec)</label>
-<input type="text" name="input1" ng-model="form1.input1" debounce="5000" validation="integer|required" />
-
-<!-- example 3 -->
-<label for="input2">email + min(3) + max(10) + required</label>
-<input type="text" name="input2" ng-model="form1.input2" validation="email|min_len:3|max_len:10|required"  />
-
-<!-- example 4 -->
-<!-- between_num could also be written with 2 conditions of min_num:n|max_num:n ... same goes to between_len -->
-<label for="input3">Float only + between(min,max) + required</label>
-<input type="number" name="input3" ng-model="form1.input3" validation="numeric|between_num:6,99.9|required"  />
-
-<!-- example 5 -->
-<!-- input match confirmation (ex.: password confirmation) -->
-<!-- match validator can use 1 or 2 params (match:field1 ..OR.. match:field1,Text to Display) -->
-<!-- when using 2 params (separated by comma ',') then 2nd param is used as text to display -->
-<label for="input4">Password</label>
-<input type="password" name="input4" ng-model="form1.input4" validation="alpha|min_len:4|required"  />
-<label for="input4c">Password Confirmation</label>
-<input type="password" name="input4c" ng-model="form1.input4c" validation="match:form1.input4,Password not match|required"  />
-
-<!-- example 6 - with Regular Expression (Date Code of YYWW) -->
-<label for="input5">Multiple Validations + Custom Regex of Date Code (YYWW)</label>
-<input type="text" name="input5" ng-model="form1.input5"
-		validation="exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer"  />
-
-<!-- example 7 - required select option (dropdown) -->
-<div class="form-group">
-    <label for="select1">Select Option Required</label>
-    <select id="stk_type" name="stk_type" class="form-control" ng-model="form1.select1" validation="required">
-        <option value="">...</option>
-        <option value="1">Option #1</option>
-        <option value="2">Option #2</option>
-    </select>
-</div>
-
-<!-- EXPLANATIONS -->
-<!-- <input> need the <validation=""> each validators are separated by a pipe | -->
-<input validation="validator1|validator2|..." />
-
-<!-- Example -->
-<input type="text" name="input1" />
-<!-- The directive will create by itself the following element, with a className of "validation-inputName" to display the error -->
-<!-- You could easily apply styling as you see fit, using the className of "validation" and/or "validation text-danger" -->
-<span class="validation-input1 validation text-danger">error message here</span>
-
-<!-- EXCEPTIONS: We could also use our own custom <span> or <div> element when needed, for example input groups wrapper, see next step -->
-```
-
-<a name="examples-service"></a>
-## Other Working Examples (Service)
-P.S. For real live sample, see the [live demo](#plunker) or download the Github project and run the `index.html` (on the exception of Chrome who doesn't want to run http outside of webserver) while the actual form with validation is inside `templates/testingFormService.html` for a better separation.
-```javascript
-  // start by creating the service
-  var myValidation = new validationService();
-
-  // you can create indepent call to the validation service
-  myValidation.addValidator({
-    elmName: 'input2',
-    // friendlyName: $translate.instant('FIRST_NAME'),
-    debounce: 3000,
-    scope: $scope,
-    rules: 'numeric_signed|required'
-  });
-
-  // you can also chain validation service and add multiple validators at once
-  // we optionally start by defining some global options. Note: each validator can overwrite individually these properties (ex.: validatorX can have a `debounce` different than the global set)
-  // there is 2 ways to write a call... #1 with elementName & rules defined as 2 strings arguments ... #2 with 1 object as argument (with defined property names)
-  //    #1 .addValidtor('myElementName', 'myRules') ... #2 .addValidator({ elmName: 'inputX', rules: 'myRules'})
-  // the available object properties are the exact same set as the directive except that they are camelCase
-  myValidation
-    .setGlobalOptions({ debounce: 1500, scope: $scope })
-    .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
-    .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
-    .addValidator('input5', 'email|required|min_len:6', $translate.instant('EMAIL')); // use 3rd argument for a friendlyName
-
-  // you can also remove a Validator with an ngClick or whichever way you prefer by calling .removeValidator()
-  $scope.removeInputValidator = function ( elmName ) {
-    // 1st argument is the object holding our $validationSummary `$scope.yourFormName`
-    //   If your form does not have a name attribute, your only choice is to use `$scope` as argument
-    // 2nd argument, remove a single element (string)
-    //    OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
-    myValidation.removeValidator($scope.form1, elmName);
-  };
-
-```
-<a name="global-options"></a>
-## Global Options
-To change default options, you can change the `$scope.$validationOptions`, for now only the `debounce` property is used but this might expand in the future.
-```javascript
-myApp.controller('Ctrl', function ($scope) {
-  $scope.$validationOptions = { debounce: 1500 }; // set the debounce globally
-});
-```
-
-<a name="submit"></a>
-## Form Submit and Validation
-The Angular-Validation concept was first introduced with the use `ngDisabled` on the submit button, but this might not always be the best option so as a another feature we could simply leave the submit button available but run an extra function to check the form validation before proceeding with our submit (that function is available through the ValidationService).
-
-*You could also use the [Validation summary](#validation-summary) for displaying all errors as a header or even a footer*
-```html
-<!-- Option #1 - disable the submit button -->
-<button type="submit" ng-disabled="form1.$invalid">Save</button>
-
-<!-- Option #2 - click on submit button will call a function -->
-<button type="submit" ng-click="submitForm()" ng-click="">Save</button>
-```
-```javascript
-// Option #2 will need to call the `checkFormValidity()` function checking the form before doing a real submit
-// $validationSummary can be found in 2 variables (depending if your form as a name or not)
-// you can use `checkFormValidity($scope.yourFormName)` or this `checkFormValidity($scope)`
-// If your form does not have a name attribute, your only choice is `checkFormValidity($scope)`
-$scope.submitForm = function() {
-  var myValidation = new validationService();
-  if(myValidation.checkFormValidity($scope.form1)) {
-    // proceed with submit
-  }
-
-  // or without a form name, use the $scope alone
-  if(myValidation.checkFormValidity($scope)) {
-    // proceed with submit
-  }
-}
-
-// Option #3 - You could also use the $validationSummary to be displayed after a Submit
-// and prevent it from submitting if any errors remain
-$scope.submit = function (event) {
-    if($scope.form1.$invalid) {
-        $scope.displayValidationSummary = true;
-        event.preventDefault();
-    }
-}
-```
-
-<a name="validation-summary"></a>
-## Validation Summary
-Display a validation summary of all the current form errors. Validation summary can be called through 2 properties `$scope.$validationSummary` or `$scope.formName.$validationSummary`(the latter will only work if your html Form object has a name attribute. For example `<form name="form1">` would then have a `$scope.form1.$validationSummary`). Each items appearing in the validation summary are holding 3 properties: field (element name, ex.: input1), message (ex.: Field is required), friendlyName (ex.: First Name *but only if you did give your element a `friendly-name="Your Friendly Name"`*). Also note that the `friendly-name` attribute will ONLY be used in the ValidationSummary, so if you do plan to use the ValidationSummary then you would probably want to add a friendly name, otherwise you could skip it.
-
-*The code sample displayed at the bottom is only meant for showing the Validation Summary but you most probably would want to prevent the Form from being submitted when invalid or submit it when it does become valid. I will leave it up to you to code it the way you want.*
-
-```html
-<!-- Form Validation Summary -->
-<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
-    <ul>
-        <li ng-repeat="item in form1.$validationSummary">{{item.field }}: {{item.message}}</li>
-    </ul>
-</div>
-
-<!-- or with friendly-name attribute -->
-<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
-    <ul>
-        <li ng-repeat="item in form1.$validationSummary">{{item.friendlyName }}: {{item.message}}</li>
-    </ul>
-</div>
-
-<!-- or be safer and use both -->
-<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary">
-    <ul>
-        <li ng-repeat="item in form1.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
-    </ul>
-</div>
-
-<form novalidate name="form1" method="POST">
-  <button type="submit" ng-click="$scope.displayValidationSummary = true;">Show Validation Summary</button>
-</form>
-
-<!-- You could also display friendly names -->
-
-```
-
-<a name="input-groups-wrapping"></a>
-Bootstrap Input Groups Wrapping - HOWTO
---------------------
-Well let's face it, having the `<span>` for error display right after the element to be validated is not always ideal and I encounter the problem myself when using Bootstrap on inputs with `input-group`, it had so much wrapping around the input that the next available element might not be the one we want. In these special occasions, we will add a `<span>` or a `<div>` for displaying the possible error and give the this element an `id="someId"` or a `class="className"` and then reference it inside our input. We could actually move the error element anywhere we want with this method, just don't forget to name it with an `id` or a `className` and call the `validation-error-to` attribute. This attribute could be called in 3 different ways: with `'.'` (element error className) or with/without `'#'` (element error id) We could even do a validation summary with this...just saying hehe.
-```html
-<div class="form-group" ng-hide="trsn.isDividend">
-    <label for="input1">Search Input with BS input-groups</label>
-    <div class="input-group">
-        <span class="input-group-addon">@</span>
-        <input type="text" class="form-control" name="input1" ng-model="form1.input1"
-          validation="min_len:2|max_len:10|alpha_dash_spaces|required"
-          validation-error-to="myErrorId" />
-        <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
-    </div>
-    <span id="myErrorId" class="validation text-danger"></span>
-</div>
-
-<!-- 3 ways of writting it, 2 ways for ID, 1 way for className -->
-<!-- with an ID -->
-<input name="input1" validation="validator1" validation-error-to="myErrorId" />
-<input name="input1" validation="validator1" validation-error-to="#myErrorId" />
-<span id="myErrorId" class="validation text-danger"></span>
-
-<!-- or with a className -->
-<input name="input1" validation="validator1" validation-error-to=".errorClassName" />
-<span class="errorClassName validation text-danger"></span>
-
-<!-- or even better, since this directive use a pattern of className named as "validation-yourInputName" -->
-<!-- you could create only the `<span>` and ommit/skip the `validation-error-to=""` attribute within the input -->
-<input name="input1" validation="validator1" />
-<span class="validation-input1 validation text-danger"></span>
-```
-
-<a name="locales"></a>
-Locales (languages)
---------------------
-Locales are simple sets of language defined in external JSON files, we can easily add any new language as extra files without affecting the behaviour of the angular directive. You could even change displayed language on the fly (note that the error message will be reflected only after field value is re-evaluated). Make sure to include the `angular-translate` library and configure it, see section [Include it in your Project](#project)
-
-NOTE: To be fully localized, I should add the country code at the end of my JSON filename and then change the suffix on the `angular-translate` `loader` method, but this would add an overhead and I prefer to keep it simple as validation messages often looks the same anyway (for example English from UK or US would most probably give similar error messages). If you really do want to be fully localized, then see the example in [Include it in your Project](#project)
-
-```javascript
-// define a key, could be on the fly with a button or a menu link
-var key = 'fr';
-
-// change the translation language & reload the page to make sure all errors were rendered properly
-$scope.switchLanguage = function (key) {
-  $translate.use(key).then(function() {
-    $route.reload();
-  });
-};
-```
-*P.S. If you define a new Language set, please make a pull request and I would be happy to add them in current project... It would be nice to have Spanish, German or even Chinese :) Thank you.*
-
-<a name="regex"></a>
-Regular Expressions (Regex)
---------------------
-From the example displayed, I introduce the custom regular expression, there is no limitation on regex itself and you can even use the pipe " | " within it and without being scared of interfering with the other validation filters BUT you have to follow a specific pattern (a writing pattern that is), and if you don't, well it will simply fail. Let's explain how it works...
-
-Regex validation is divided in 4 specific parts (Step #1-4).
-
-Let's use the previous [Examples #5](#examples-directive) and extract the information out of it to see how it works.
-Step #1-4 are for explanation only, at the end we show the full regex (make sure there is no spaces).
-
-1. Start &amp; end the filter with the following `regex: :regex` which tells the directive where to extract it.
-
-2. Custom error message `YYWW` (what do we want to display to the user, it will be appended to INVALID_PATTERN, refer to the translation file. In english it will display the following:  Must be following this format: YYWW)
-
-3. Followed by a separator which basically says... after `:=` separator comes the regex pattern
-
-4. Custom regex pattern `^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$`
-
-Final code (without spaces): `regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex`
-
-<a name="alternate"></a>
-Alternate Text on Validators
---------------------
-Validators can now use alternate text instead of the usual defined locale $translate text, for example seeing "Field is Required" on a `<select>` might not always be useful, it might be more useful to see an alternate text that is "Please choose an option". Alternate text works on all type of validators and is defined by adding `:alt=` at the end of any validators, it could be used on 1 or more validators directly inside the `validation=""` attribute. See the examples below.
-```html
-<!-- You can use translate in your HTML -->
-<!-- Example #1 with 1 alternate text on 1 of the 2 validators -->
-<input name="input1" validation="alpha|required:alt=Your Alternate Required Text." />
-
-<!-- Example #2, alternate text on multiple validators -->
-<input name="input1" validation="date_iso_between:2015-03-01,2015-03-30:alt=Booking date must be in April|required:alt=Booking Date is Required" />
-
-<!-- Example #3, use $translate as alternate text -->
-<input name="input1" validation="min_len:5|required:alt={{ 'YOUR_TEXT' | translate }}" />
-```
-
-```javascript
-// When using the Validation Service
-
-myApp.controller('CtrlValidationService', function ($scope, $translate, validationService) {
-  // Example #1 with 1 alternate text on 1 of the 2 validators
-  myValidationService.addValidator('input1', 'alpha|required:alt=Your Alternate Required Text.');
-
-  // Example #2, alternate text on multiple validators
-  myValidationService.addValidator('input1', 'date_iso_between:2015-03-01,2015-03-30:alt=Booking date must be in April|required:alt=Booking Date is Required');
-
-  // Example #3, use $translate as alternate text
-  // you can use the $translate.instant() function
-  myValidationService.addValidator('input1', 'min_len:5|required:alt=' + $translate.instant('YOUR_TEXT'))
-});
-```
-
-<a name="validators"></a>
-Available Validators
---------------------
-All validators are written as `snake_case` but it's up to the user's taste and could also be used as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
-
-##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
-
-* `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
-* `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
-* `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
-* `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
-* `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
-* `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
-* `between_date_iso:d1,d2` alias of `between_date_iso`.
-* `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
-* `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
-* `between_date_us_long:d1,d2` alias of `date_us_long_between`.
-* `between_date_us_short:d1,d2` alias of `date_us_short_between`.
-* `between_len:min,max` Ensures the length of a string is between a min,max length.
-* `between_num:min,max` Ensures the numeric value is between a min,max number.
-* `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
-* `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
-* `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
-* `date_iso_max:d` Date must follow ISO format and is lower or equal than date (d)
-* `date_iso_min:d` Date must follow ISO format and is higher or equal than date (d)
-* `date_euro_long` Date must follow the European long format (dd-mm-yyyy) or (dd/mm/yyyy)
-* `date_euro_long_between:d1,d2` Date must follow European long format and is between (d1) &amp; (d2)
-* `date_euro_long_max:d` Date must follow European long format and is lower or equal than date (d)
-* `date_euro_long_min:d` Date must follow European long format and is higher or equal than date (d)
-* `date_euro_short` Date must follow the Euro short format (dd-mm-yy) or (dd/mm/yy)
-* `date_euro_short_between:d1,d2` Date must follow Euro short format and is between (d1) &amp; (d2)
-* `date_euro_short_max:d` Date must follow Euro short format and is lower or equal than date (d)
-* `date_euro_short_min:d` Date must follow Euro short format and is higher or equal than date (d)
-* `date_us_long` Date must follow the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
-* `date_us_long_between:d1,d2` Date must follow the US long format and is between (d1) &amp; (d2)
-* `date_us_long_max:d` Date must follow US long format and is lower or equal than date (d)
-* `date_us_long_min:d` Date must follow US long format and is higher or equal than date (d)
-* `date_us_short` Date must follow the US short format (mm-dd-yy) or (mm/dd/yy)
-* `date_us_short_between:d1,d2` Date must follow the US short format and is between (d1) &amp; (d2)
-* `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
-* `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
-* `email` Checks for a valid email address
-* `exact_len:n` Ensures that field length precisely matches the specified length (n).
-* `float` as to be floating value (excluding integer)
-* `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
-* `iban` Check for a valid IBAN.
-* `int` Only positive integer (alias to `integer`).
-* `integer` Only positive integer.
-* `int_signed` Only integer, could be signed (-/+) positive/negative (alias to `integer_signed`).
-* `integer_signed` Only integer, could be signed (-/+) positive/negative.
-* `ipv4` Check for valid IP (IPv4)
-* `ipv6` Check for valid IP (IPv6)
-* `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
-* `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
-* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](#alternate))
-* `max_date_iso` alias of `date_iso_max`.
-* `max_date_euro_long` alias of `date_euro_long_max`.
-* `max_date_euro_short` alias of `date_euro_short_max`.
-* `max_date_us_long` alias of `date_us_long_max`.
-* `max_date_us_short` alias of `date_us_short_max`.
-* `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
-* `max_num:n` Checks numeric value to be lower or equal than the number (n).
-* `min_date_iso` alias of `date_iso_min`.
-* `min_date_euro_long` alias of `date_euro_long_min`.
-* `min_date_euro_short` alias of `date_euro_short_min`.
-* `min_date_us_long` alias of `date_us_long_min`.
-* `min_date_us_short` alias of `date_us_short_min`.
-* `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
-* `min_num:n` Checks numeric value to be higher or equal than the number (n).
-* `numeric` Only positive numeric value (float, integer).
-* `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
-* `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
-* `required` Ensures the specified key value exists and is not empty
-* `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
-* `url` Check for valid URL or subdomain
-
-<a name="dependencies"></a>
-Dependencies
-------------------
-
-1. Angular-Translate (https://github.com/PascalPrecht/angular-translate)
-2. Bootstrap 3.x *is optional* (http://getbootstrap.com/)
-3. AngularJS 1.2.x / 1.3.x (https://angularjs.org/)
-
-<a name="license"></a>
-License
------
-[MIT License](http://www.opensource.org/licenses/mit-license.php)
-
-# TODO
-#### Any kind of help is welcome from the TODO list
-* Add more validators...
-* Add more locale languages... I need your help on that one!!!
 
 <a name="changelog"></a>
 ## CHANGELOG
