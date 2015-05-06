@@ -1,0 +1,36 @@
+<h3>Directive - ngRepeat</h3>
+
+<div class="checkbox text-right" style="margin-top:-25px">
+    <label>
+      <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
+    </label>
+</div>
+
+<hr />
+
+<!-- Angular-Validation saves the summary of errors inside 2 locations: 1- $scope.$validationSummary 2- $scope.formName.$validationSummary (only accessible if you named your form) so it becomes easy to show all errors -->
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary && form01.$validationSummary.length > 0">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+    <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
+    <ul>
+        <li ng-repeat="item in form01.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+    </ul>
+</div>
+
+<form novalidate name="form01" method="POST">
+  <div class="form-group row" ng-repeat="p in people">
+    <span class="col-md-6">
+      <label for="name_{{$index}}">Name</label>
+      <input class="form-control" type="text" name="name_{{$index}}" ng-model="p.name" validation="required">
+    </span>
+    <span class="col-md-6">
+      <label for="age_{{$index}}">Age</label>
+      <input class="form-control" type="text" name="age_{{$index}}" ng-model="p.age" validation="integer|required">
+    </span>
+</div>
+
+  <div class="form-actions">
+    <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form01.$invalid">{{ 'SAVE' | translate }} (ngDisabled)</button>
+    <button type="submit" name="save_btn" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+  </div>
+</form>

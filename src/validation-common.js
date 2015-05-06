@@ -4,26 +4,35 @@
  *
  * @author: Ghislain B.
  * @desc: angular-validation common functions used by both the Directive & Service
- * From the outside we will define our complete validation through: defineValidation()
  *
  */
 angular
   .module('ghiscoding.validation')
-  .factory('validationCommon', ['$timeout', '$translate', 'validationRules', function ($timeout, $translate, validationRules) {
+  .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
     // global variables of our object
-    var bFieldRequired = false;   // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
-    var INACTIVITY_LIMIT = 1000;  // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
+    var bypassRootScopeReset = false;     // do we want to bypass the watch on the $rootScope? False by default
+    var bDisplayOnlyLastErrorMsg = false; // display only 1 error message at a time, by default it's false since we will display all errors of each element
+    var bFieldRequired = false;           // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
+    var INACTIVITY_LIMIT = 1000;          // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
 
-    var elm;                      // element object of current form element
-    var ctrl;                     // ctrl object of the current form element
-    var scope;                    // scope object of the current form element
-    var value;                    // value of current form element
-    var timer;                    // timer of user inactivity time
-    var typingLimit;              // maximum user inactivity typing limit
-    var formElements = [];        // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
-    var validators = [];          // Array of all Form Validators
-    var validatorAttrs = {};      // Current Validator attributes
-    var validationSummary = [];   // Array Validation Error Summary
+    var elm;                              // element object of current form element
+    var ctrl;                             // ctrl object of the current form element
+    var scope;                            // scope object of the current form element
+    var value;                            // value of current form element
+    var timer;                            // timer of user inactivity time
+    var typingLimit;                      // maximum user inactivity typing limit
+    var formElements = [];                // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
+    var validators = [];                  // Array of all Form Validators
+    var validatorAttrs = {};              // Current Validator attributes
+    var validationSummary = [];           // Array Validation Error Summary
+
+    // watch on route change, then reset some global variables, so that we don't cary over other controller/view validations
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+      if (!bypassRootScopeReset) {
+        formElements = [];        // array containing all form elements, valid or invalid
+        validationSummary = [];   // array containing the list of invalid fields inside a validationSummary
+      }
+    });
 
     // service constructor
     var validationCommon = function(scope, elm, attrs, ctrl) {
@@ -45,15 +54,17 @@ angular
     };
 
     // list of available published public functions of this object
-    validationCommon.prototype.defineValidation = defineValidation;                       // define our validation object
-    validationCommon.prototype.getFormElementByName = getFormElementByName;               // get the form element custom object by it's name
-    validationCommon.prototype.getFormElements = getFormElements;                         // get the array of form elements (custom objects)
-    validationCommon.prototype.isFieldRequired = isFieldRequired;                         // return boolean knowing if the current field is required
-    validationCommon.prototype.initialize = initialize;                                   // initialize current object with passed arguments
-    validationCommon.prototype.updateErrorMsg = updateErrorMsg;                           // update on screen an error message below current form element
-    validationCommon.prototype.validate = validate;                                       // validate current element
-    validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary; // remove an element from the $validationSummary
-    validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;  // remove named items from formElements list
+    validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
+    validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
+    validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
+    validationCommon.prototype.isFieldRequired = isFieldRequired;                                   // return boolean knowing if the current field is required
+    validationCommon.prototype.initialize = initialize;                                             // initialize current object with passed arguments
+    validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary;           // remove an element from the $validationSummary
+    validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;   // remove named items from formElements list
+    validationCommon.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                   // setter on: do we want to bypass the root scope reset?
+    validationCommon.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;             // setter on the behaviour of displaying only the last error message
+    validationCommon.prototype.updateErrorMsg = updateErrorMsg;                                     // update on screen an error message below current form element
+    validationCommon.prototype.validate = validate;                                                 // validate current element
 
     // return the service object
     return validationCommon;
@@ -186,6 +197,23 @@ angular
       if(index >= 0) {
         validationSummary.splice(index, 1);
       }
+    }
+
+    /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.
+     * Explanation: By default a route change will trigger a reset of some global variables (formElements, validationSummary),
+     * so that we don't see validations of previous routes or controllers.
+     * @param boolean value
+     */
+    function setBypassRootScopeReset(boolValue) {
+      bypassRootScopeReset = boolValue;
+    }
+
+    /** Setter on the behaviour of displaying only the last error message of each element.
+     * By default this is false, so the behavior is to display all error messages of each element.
+     * @param boolean value
+     */
+    function setDisplayOnlyLastErrorMsg(boolValue) {
+      bDisplayOnlyLastErrorMsg = boolValue;
     }
 
     /** in general we will display error message at the next element after our input as <span class="validation validation-inputName text-danger">
@@ -354,15 +382,25 @@ angular
               msgToTranslate = validator.altText.replace("alt=", "");
             }
 
-            $translate(msgToTranslate).then(function(translation) {
-              message += ' ' + replaceParams(validator, translation);
+            $translate(msgToTranslate).then(function (translation) {
+              // if user is requesting to see only the last error message
+              if (message.length > 0 && bDisplayOnlyLastErrorMsg) {
+                message = ' ' + replaceParams(validator, translation);
+              } else {
+                message += ' ' + replaceParams(validator, translation);
+              }
               addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
             }).catch(function(data) {
               // error caught:
               // alternate text might not need translation if the user sent his own custom message or is already translated
               // so just send it directly into the validation summary.
-              if(!!validator.altText && validator.altText.length > 0) {
-                message += ' ' + msgToTranslate;
+              if (!!validator.altText && validator.altText.length > 0) {
+                // if user is requesting to see only the last error message
+                if (message.length > 0 && bDisplayOnlyLastErrorMsg) {
+                  message = ' ' + msgToTranslate;
+                } else {
+                  message += ' ' + msgToTranslate;
+                }
                 addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
               }
             });

@@ -24,11 +24,13 @@ angular
     }
 
     // list of available published public functions of this object
-    validationService.prototype.addValidator = addValidator;            // add a Validator to current element
-    validationService.prototype.checkFormValidity = checkFormValidity;  // check the form validity (can be called by an empty validationService and used by both Directive/Service)
-    validationService.prototype.removeValidator = removeValidator;      // remove a Validator from an element
-    validationService.prototype.setGlobalOptions = setGlobalOptions;    // set and initialize global options used by all validators
-    validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary; // clear clearInvalidValidatorsInSummary
+    validationService.prototype.addValidator = addValidator;                                          // add a Validator to current element
+    validationService.prototype.checkFormValidity = checkFormValidity;                                // check the form validity (can be called by an empty validationService and used by both Directive/Service)
+    validationService.prototype.removeValidator = removeValidator;                                    // remove a Validator from an element
+    validationService.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                    // setter on: do we want to bypass the default of root scope variables reset?
+    validationService.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;              // setter on the behaviour of displaying only the last error message
+    validationService.prototype.setGlobalOptions = setGlobalOptions;                                  // set and initialize global options used by all validators
+    validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary;    // clear clearInvalidValidatorsInSummary
 
     return validationService;
 
@@ -144,7 +146,7 @@ angular
     function clearInvalidValidatorsInSummary(obj) {
       var self = this;
       if (typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'clearInvalidValidatorsInSummary() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
       }
       // Get list of names to remove
       var elmName = [];
@@ -185,6 +187,25 @@ angular
       }
 
       return self;
+    }
+
+	  /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.
+     * Explanation: By default a route change will trigger a reset of some global variables (formElements, validationSummary),
+     * so that we don't see validations of previous routes or controllers.
+     * @param boolean
+     */
+    function setBypassRootScopeReset(boolValue) {
+      var self = this;
+      self.commonObj.setBypassRootScopeReset(boolValue);
+    }
+
+	  /** Setter on the behaviour of displaying only the last error message of each element.
+     * By default this is false, so the behavior is to display all error messages of each element.
+     * @param boolean value
+     */
+    function setDisplayOnlyLastErrorMsg(boolValue) {
+      var self = this;
+      self.commonObj.setDisplayOnlyLastErrorMsg(boolValue);
     }
 
     /** Set and initialize global options used by all validators

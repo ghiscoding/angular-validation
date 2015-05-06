@@ -5,21 +5,11 @@ var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascal
 myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', function ($compileProvider, $locationProvider, $routeProvider) {
     $compileProvider.debugInfoEnabled(false);
     $routeProvider
-      .when('/validate-directive', {
-        templateUrl: 'templates/testingFormDirective.html',
-        controller: 'CtrlValidationDirective'
-      })
-      .when('/validate-2forms', {
-        templateUrl: 'templates/testing2Forms.html',
-        controller: 'Ctrl2forms'
-      })
-      .when('/validate-service', {
-        templateUrl: 'templates/testingFormService.html',
-        controller: 'CtrlValidationService'
-      })
-      .otherwise({
-        redirectTo: 'validate-directive',
-      });
+      .when('/validate-directive', { templateUrl: 'templates/testingFormDirective.html', controller: 'CtrlValidationDirective' })
+      .when('/validate-2forms', { templateUrl: 'templates/testing2Forms.html', controller: 'Ctrl2forms' })
+      .when('/validate-ngRepeat', { templateUrl: 'templates/testingFormNgRepeat.html', controller: 'CtrlNgRepeat' })
+      .when('/validate-service', { templateUrl: 'templates/testingFormService.html', controller: 'CtrlValidationService' })
+      .otherwise({ redirectTo: 'validate-directive'  });
   }])
 	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
@@ -134,5 +124,25 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     if(myValidation.checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
     }
+  }
+}]);
+
+// -- Controller to use Angular-Validation with Directive and ngRepeat
+// ---------------------------------------------------------------
+myApp.controller('CtrlNgRepeat', ['$scope', 'validationService', function ($scope, validationService) {
+  // Form data
+  $scope.people = [
+    { name: 'John', age: 20 },
+    { name: 'Jane', age: null },
+    { name: null, age: null }
+  ];
+
+  $scope.submitForm = function() {
+    if(new validationService().checkFormValidity($scope.form01)) {
+      alert('All good, proceed with submit...');
+    }
+  }
+  $scope.showValidationSummary = function () {
+    $scope.displayValidationSummary = true;
   }
 }]);

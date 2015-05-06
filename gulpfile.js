@@ -69,7 +69,7 @@ gulp.task('compress', ['clean'], function() {
     // bump version for js file header
     newVersion = semver.inc(oldVersion, 'patch');
 
-    // bump version in package & bower
+    // bump version for both: package & bower
     gulp.src(['./package.json', './bower.json'])
       .pipe(bump())
       .pipe(gulp.dest('./'));
