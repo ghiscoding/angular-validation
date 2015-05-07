@@ -104,3 +104,77 @@ When used with IIS, you will need to map the JSON type
 
 ###License
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
+
+###Available Validator Rules
+All validators are written as `snake_case` but it's up to the user's taste and could also be used as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
+
+##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
+
+* `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
+* `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
+* `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
+* `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
+* `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
+* `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
+* `between_date_iso:d1,d2` alias of `between_date_iso`.
+* `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
+* `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
+* `between_date_us_long:d1,d2` alias of `date_us_long_between`.
+* `between_date_us_short:d1,d2` alias of `date_us_short_between`.
+* `between_len:min,max` Ensures the length of a string is between a min,max length.
+* `between_num:min,max` Ensures the numeric value is between a min,max number.
+* `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
+* `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
+* `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
+* `date_iso_max:d` Date must follow ISO format and is lower or equal than date (d)
+* `date_iso_min:d` Date must follow ISO format and is higher or equal than date (d)
+* `date_euro_long` Date must follow the European long format (dd-mm-yyyy) or (dd/mm/yyyy)
+* `date_euro_long_between:d1,d2` Date must follow European long format and is between (d1) &amp; (d2)
+* `date_euro_long_max:d` Date must follow European long format and is lower or equal than date (d)
+* `date_euro_long_min:d` Date must follow European long format and is higher or equal than date (d)
+* `date_euro_short` Date must follow the Euro short format (dd-mm-yy) or (dd/mm/yy)
+* `date_euro_short_between:d1,d2` Date must follow Euro short format and is between (d1) &amp; (d2)
+* `date_euro_short_max:d` Date must follow Euro short format and is lower or equal than date (d)
+* `date_euro_short_min:d` Date must follow Euro short format and is higher or equal than date (d)
+* `date_us_long` Date must follow the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
+* `date_us_long_between:d1,d2` Date must follow the US long format and is between (d1) &amp; (d2)
+* `date_us_long_max:d` Date must follow US long format and is lower or equal than date (d)
+* `date_us_long_min:d` Date must follow US long format and is higher or equal than date (d)
+* `date_us_short` Date must follow the US short format (mm-dd-yy) or (mm/dd/yy)
+* `date_us_short_between:d1,d2` Date must follow the US short format and is between (d1) &amp; (d2)
+* `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
+* `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
+* `email` Checks for a valid email address
+* `exact_len:n` Ensures that field length precisely matches the specified length (n).
+* `float` as to be floating value (excluding integer)
+* `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
+* `iban` Check for a valid IBAN.
+* `int` Only positive integer (alias to `integer`).
+* `integer` Only positive integer.
+* `int_signed` Only integer, could be signed (-/+) positive/negative (alias to `integer_signed`).
+* `integer_signed` Only integer, could be signed (-/+) positive/negative.
+* `ipv4` Check for valid IP (IPv4)
+* `ipv6` Check for valid IP (IPv6)
+* `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
+* `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
+* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](#alternate))
+* `max_date_iso` alias of `date_iso_max`.
+* `max_date_euro_long` alias of `date_euro_long_max`.
+* `max_date_euro_short` alias of `date_euro_short_max`.
+* `max_date_us_long` alias of `date_us_long_max`.
+* `max_date_us_short` alias of `date_us_short_max`.
+* `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
+* `max_num:n` Checks numeric value to be lower or equal than the number (n).
+* `min_date_iso` alias of `date_iso_min`.
+* `min_date_euro_long` alias of `date_euro_long_min`.
+* `min_date_euro_short` alias of `date_euro_short_min`.
+* `min_date_us_long` alias of `date_us_long_min`.
+* `min_date_us_short` alias of `date_us_short_min`.
+* `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
+* `min_num:n` Checks numeric value to be higher or equal than the number (n).
+* `numeric` Only positive numeric value (float, integer).
+* `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
+* `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
+* `required` Ensures the specified key value exists and is not empty
+* `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
+* `url` Check for valid URL or subdomain
