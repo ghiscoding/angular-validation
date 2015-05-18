@@ -130,7 +130,10 @@ angular
           var formElmObj = self.commonObj.getFormElementByName(elmName);
 
           if(!!formElmObj.elm && formElmObj.elm.length > 0) {
-            formElmObj.ctrl.$setTouched(); // make the element as it was touched for CSS
+            // make the element as it was touched for CSS, only works in AngularJS 1.3+
+            if (typeof formElmObj.ctrl.$setTouched === "function") {
+              formElmObj.ctrl.$setTouched();
+            }
             self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, { isSubmitted: true, isValid: formElmObj.isValid, obj: formElmObj });
           }
         }
@@ -162,7 +165,7 @@ angular
       }
     }
 
-    /** Remove a watcher
+    /** Remove a validator and also any withstanding error message from that element
      * @param object Angular Form or Scope Object
      * @param array/string of element name(s) (name attribute)
      * @return object self
@@ -172,18 +175,29 @@ angular
       var formElmObj;
 
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
       }
 
-      if(attrs instanceof Array) {
-        // when passed as array, loop through all elements to be removed
-        for(var i = 0, ln = attrs.length; i < ln; i++) {
+      // if element was not defined by the Service but instead by the Directive,
+      // we should find our scope element inside the `self.validationAttrs` we will need the scope object to remove error from $validationSummary
+      if (typeof self.commonObj.scope === "undefined" && typeof self.validationAttrs.scope !== "undefined") {
+        self.commonObj.scope = self.validationAttrs.scope;
+      }
+
+      // Note: removeAttr() will remove validation attribute from the DOM (if defined by Directive), but as no effect when defined by the Service
+      // removeValidator() 2nd argument could be passed an Array or a string of element name(s)
+      //   if it's an Array we will loop through all elements to be removed
+      //   else just remove the 1 element defined as a string
+      if (attrs instanceof Array) {
+        for (var i = 0, ln = attrs.length; i < ln; i++) {
           formElmObj = self.commonObj.getFormElementByName(attrs[i]);
-          removeWatcher(self, formElmObj, obj.$validationSummary);
+          formElmObj.elm.removeAttr('validation');
+          removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
         }
-      }else {
+      } else {
         formElmObj = self.commonObj.getFormElementByName(attrs);
-        removeWatcher(self, formElmObj, obj.$validationSummary);
+        formElmObj.elm.removeAttr('validation');
+        removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
       }
 
       return self;
@@ -196,7 +210,8 @@ angular
      */
     function setBypassRootScopeReset(boolValue) {
       var self = this;
-      self.commonObj.setBypassRootScopeReset(boolValue);
+      var isBypass = (typeof boolValue === "boolean") ? boolValue : true;
+      self.commonObj.setBypassRootScopeReset(isBypass);
     }
 
 	  /** Setter on the behaviour of displaying only the last error message of each element.
@@ -205,7 +220,8 @@ angular
      */
     function setDisplayOnlyLastErrorMsg(boolValue) {
       var self = this;
-      self.commonObj.setDisplayOnlyLastErrorMsg(boolValue);
+      var isDisplaying = (typeof boolValue === "boolean") ? boolValue : true;
+      self.commonObj.setDisplayOnlyLastErrorMsg(isDisplaying);
     }
 
     /** Set and initialize global options used by all validators
@@ -304,12 +320,12 @@ angular
       return obj3;
     }
 
-    /** Remove a watcher
+    /** Remove a watcher and any withstanding error message from the element
      * @param object self
      * @param object formElmObj: form element object
      * @param object validationSummary
      */
-    function removeWatcher(self, formElmObj, validationSummary) {
+    function removeWatcherAndErrorMessage(self, formElmObj, validationSummary) {
       if(typeof self.commonObj.scope === "undefined") {
         return;
       }
@@ -322,7 +338,10 @@ angular
 
       // now to remove any errors, we need to make the element untouched, pristine and remove the validation
       // also remove it from the validationSummary list and remove any displayed error
-      formElmObj.ctrl.$setUntouched();
+      if (typeof formElmObj.ctrl.$setUntouched === "function") {
+        // make the element untouched in CSS, only works in AngularJS 1.3+
+        formElmObj.ctrl.$setUntouched();
+      }
       formElmObj.ctrl.$setPristine();
       formElmObj.ctrl.$setValidity('validation', true);
       self.commonObj.removeFromValidationSummary(validationSummary, formElmObj.fieldName);

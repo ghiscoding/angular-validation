@@ -4,7 +4,7 @@
 	  <meta charset="utf-8">
 	  <title>Angular-Validation (ghiscoding)</title>
 	  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-	  <link rel="stylesheet" href="style.css">
+	  <link rel="stylesheet" href="../style.css">
 	</head>
 
 	<body ng-controller="Ctrl">
@@ -26,10 +26,8 @@
 
 			<span class="text-info" style="margin-left: 20px"><strong>Type: </strong></span>
 			<div class="btn-group btn-group-sm">
-				<button type="button" name="btn_goto_directive" class="btn btn-default" ng-click="goto('/validate-directive')">Directive</button>
-				<button type="button" name="btn_goto_service" class="btn btn-default" ng-click="goto('/validate-service')">Service</button>
-				<button type="button" name="btn_goto_2forms" class="btn btn-default" ng-click="goto('/validate-2forms')">2 Forms</button>
-				<button type="button" name="btn_goto_ngrepeat" class="btn btn-default" ng-click="goto('/validate-ngRepeat')">ngRepeat</button>
+				<button type="button" name="btn_goto_Directive" class="btn btn-default" ng-click="goto('/validate-Directive')">Directive</button>
+				<button type="button" name="btn_goto_Service" class="btn btn-default" ng-click="goto('/validate-Service')">Service</button>
 			</div>
 
 			<br/><hr/>
@@ -42,19 +40,15 @@
 
 			<!-- angular-translate -->
 			<!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
-			<script src="vendors/angular-translate/angular-translate.min.js"></script>
-			<script src="vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+			<script src="../vendors/angular-translate/angular-translate.min.js"></script>
+			<script src="../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
 
-			<!-- You can also load angular-validation with the all in 1 minified file -->
-		  	<script type="text/javascript" src="dist/angular-validation.min.js"></script>
-
-			<!-- angular-validation, directive and service are totally independent you can load one or the other or you can use them in parallel too. But `-common.js` and `-rules.js` are mandatory. -->
-			<!--
-			<script type="text/javascript" src="src/validation-directive.js"></script>
-			<script type="text/javascript" src="src/validation-service.js"></script>
-		  	<script type="text/javascript" src="src/validation-common.js"></script>
-		  	<script type="text/javascript" src="src/validation-rules.js"></script>
-			-->
+			<!-- Angular-Validation -->
+		  	<!--<script type="text/javascript" src="../dist/angular-validation.min.js"></script>-->
+		  	<script type="text/javascript" src="../src/validation-directive.js"></script>
+		  	<script type="text/javascript" src="../src/validation-service.js"></script>
+		  	<script type="text/javascript" src="../src/validation-common.js"></script>
+		  	<script type="text/javascript" src="../src/validation-rules.js"></script>
 
 			<!-- your ng-app file -->
 		  	<script type="text/javascript" src="app.js"></script>

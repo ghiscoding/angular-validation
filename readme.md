@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.23`
+`Version: 1.3.24`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -17,11 +17,14 @@ Huge rewrite to have a better code separation and also adding support to Service
 
 For more reasons to use it, see the answered question of: [Why Use It?](#whyuseit)
 
-If you do use Angular-Validation, please click on the **Star** and add it as a favourite. The more star ratings there is, the more chances it could found by other users inside the popular trend section. That is the only support I ask you... thanks ;)
+If you do use Angular-Validation, please click on the **Star** and add it as a favourite. The more star ratings there is, the more chances it could be found by other users inside the popular trend section. That is the only support I ask you... thanks ;)
 
 <a name="plunker"></a>
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
+
+## Tested with Protractor
+Angular-validation is now fully tested with Protractor End-to-End test suite, there is over 1000+ assertions, it starts by testing the original live demo page and then goes with a complete and full tests of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -123,6 +126,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `between_date_us_short:d1,d2` alias of `date_us_short_between`.
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value is between a min,max number.
+* `boolean` Ensures the value is `True` or `False` (0 or 1 is also valid).
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
@@ -155,7 +159,6 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
-* `ipv6_hex` Check for valid IP (IPv6 Hexadecimal)
 * `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
 * `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](#alternate))
 * `max_date_iso` alias of `date_iso_max`.

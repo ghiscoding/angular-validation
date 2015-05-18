@@ -26,9 +26,10 @@ angular
     var validatorAttrs = {};              // Current Validator attributes
     var validationSummary = [];           // Array Validation Error Summary
 
-    // watch on route change, then reset some global variables, so that we don't cary over other controller/view validations
+    // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       if (!bypassRootScopeReset) {
+        bDisplayOnlyLastErrorMsg = false;
         formElements = [];        // array containing all form elements, valid or invalid
         validationSummary = [];   // array containing the list of invalid fields inside a validationSummary
       }
@@ -65,6 +66,11 @@ angular
     validationCommon.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;             // setter on the behaviour of displaying only the last error message
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                                     // update on screen an error message below current form element
     validationCommon.prototype.validate = validate;                                                 // validate current element
+
+    // override some default String functions
+    String.prototype.trim = stringPrototypeTrim;
+    String.prototype.format = stringPrototypeFormat;
+    String.format = stringFormat;
 
     // return the service object
     return validationCommon;
@@ -287,6 +293,12 @@ angular
       var regex;
       var validator;
 
+      // to make proper validation, our element value cannot be an undefined variable (we will at minimum make it an empty string)
+      // For example, in some particular cases "undefined" returns always True on regex.test() which is incorrect especiall on max_len:x
+      if(typeof strValue === "undefined") {
+        strValue = '';
+      }
+
       // get some common variables
       var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
         ? self.validatorAttrs.name
@@ -305,7 +317,7 @@ angular
           // 1- we first need to validate that the Date input is well formed through regex
           // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
           regex = new RegExp(validator.pattern, 'i');
-          isValid = (validator.pattern === "\\S+" && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
+          isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
 
           // 2- date is valid, then we can do our conditional date check
           if(isValid) {
@@ -347,7 +359,7 @@ angular
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
           var otherNgModel = validator.params[0];
           var otherNgModelVal = self.scope.$eval(otherNgModel);
-          isValid = (otherNgModelVal === strValue);
+          isValid = (otherNgModelVal === strValue && !!strValue);
         }
         // or finally it might be a regular regex pattern checking
         else {
@@ -358,11 +370,11 @@ angular
             // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
             if(typeof strValue === "string" && strValue === "" && self.elm.prop('type').toUpperCase() === "NUMBER") {
               isValid = false;
-              message = $translate.instant("INVALID_KEY_CHAR");
+              //message = $translate.instant("INVALID_KEY_CHAR");
             }else {
               // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
               regex = new RegExp(validator.pattern, 'i');
-              isValid = ((validator.pattern === "\\S+" || (!!rules && rules.indexOf("required") >= 0)) && (typeof strValue === "undefined" || strValue === null)) ? false : regex.test(strValue);
+              isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
             }
           }
         }
@@ -383,11 +395,12 @@ angular
             }
 
             $translate(msgToTranslate).then(function (translation) {
-              // if user is requesting to see only the last error message
+              // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
+              // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
               if (message.length > 0 && bDisplayOnlyLastErrorMsg) {
-                message = ' ' + replaceParams(validator, translation);
+                message = ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               } else {
-                message += ' ' + replaceParams(validator, translation);
+                message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               }
               addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
             }).catch(function(data) {
@@ -654,27 +667,6 @@ angular
       return new Date(year, month - 1, day, hour, min, sec);
     }
 
-    /**
-     * Replace all the :param that were possibly inserted in the translation message,
-     * the text to replace is included in the 'params' property of the validator object
-     * @param object validator
-     * @param string message
-     * @return message
-     */
-    function replaceParams(validator, message) {
-      // replace any error message param(s) that were possibly passed
-      if(!!validator && !!validator.params) {
-        for(var k = 0, kln = validator.params.length; k < kln; k++) {
-          // if validation type is "match" and includes more than 1 param, our real text is in param[1], so we need to skip index[0]
-          if(validator.type === "match" && kln > 1 && k === 0) {
-            continue;
-          }
-          message = message.replace((':param'), validator.params[k]);
-        }
-      }
-      return message
-    }
-
     /** From a date substring split it by a given separator and return a split array
      * @param string dateSubStr
      * @param string dateSeparator
@@ -720,8 +712,41 @@ angular
     }
 
     /** Override javascript trim() function so that it works accross all browser platforms */
-    String.prototype.trim = function() {
+    function stringPrototypeTrim() {
       return this.replace(/^\s+|\s+$/g, '');
+    }
+
+    /** Override javascript format() function to be the same as the effect as the C# String.Format
+     * Input: "Some {0} are showing {1}".format("inputs", "invalid");
+     * Output: "Some inputs are showing invalid"
+     * @param string
+     * @param replacements
+      */
+    function stringPrototypeFormat() {
+      var args = (Array.isArray(arguments[0])) ? arguments[0] : arguments;
+      return this.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+      });
+    }
+
+    /** Override javascript String.format() function to be the same as the effect as the C# String.Format
+     * Input: String.format("Some {0} are showing {1}", "inputs", "invalid");
+     * Output: "Some inputs are showing invalid"
+     * @param string
+     * @param replacements
+      */
+    function stringFormat(format) {
+      var args = (Array.isArray(arguments[1])) ? arguments[1] : Array.prototype.slice.call(arguments, 1);
+
+      return format.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+      });
     }
 
 }]); // validationCommon service

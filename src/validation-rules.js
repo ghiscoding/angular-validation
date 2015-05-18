@@ -110,6 +110,20 @@ angular
             type: "conditionalNumber"
           };
           break;
+        case "boolean":
+          validator = {
+            pattern: "^(true|True|false|False|0|1)$",
+            message: "INVALID_BOOLEAN",
+            type: "regex"
+          };
+          break;
+        case "checked":
+          validator = {
+            pattern: "^true$",
+            message: "INVALID_CHECKBOX_SELECTED",
+            type: "regex"
+          };
+          break;
         case "creditCard" :
         case "credit_card" :
           validator = {
@@ -406,7 +420,7 @@ angular
           break;
         case "iban" :
           validator = {
-            pattern: "[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}",
+            pattern: "^[a-zA-Z]{2}\\d{2}\\s?([0-9a-zA-Z]{4}\\s?){4}[0-9a-zA-Z]{2}$",
             message: "INVALID_IBAN",
             type: "regex"
           };
@@ -440,13 +454,6 @@ angular
           validator = {
             pattern: "^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$",
             message: "INVALID_IPV6",
-            type: "regex"
-          };
-          break;
-        case "ipv6_hex" :
-          validator = {
-            pattern: "^((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)::((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)$",
-            message: "INVALID_IPV6_HEX",
             type: "regex"
           };
           break;
@@ -536,13 +543,6 @@ angular
           validator = {
             pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
             message: "INVALID_TIME",
-            type: "regex"
-          };
-          break;
-        case "checked":
-          validator = {
-            pattern: "^true$",
-            message: "INVALID_CHECKBOX_SELECTED",
             type: "regex"
           };
           break;

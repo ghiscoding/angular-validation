@@ -94,14 +94,14 @@
         </div>
         <div class="form-group">
             <label for="input17">{{ 'INPUT17' | translate }}</label>
-            <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3|required" ng-model="input17" validation="alpha_spaces|exact_len:3|required" debounce="5000" />
+            <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3|required" ng-model="input17" validation="alpha_spaces|exact_len:3|required" debounce="3000" />
         </div>
         <div class="form-group">
-            <label for="input17">{{ 'INPUT18' | translate }}</label>
+            <label for="input18">{{ 'INPUT18' | translate }}</label>
             <input type="text" class="form-control" name="input18" placeholder="date_iso_min:2001-01-01|required" ng-model="input18" validation="date_iso_min:2001-01-01|required" />
         </div>
         <div class="form-group">
-            <label for="input17">{{ 'INPUT19' | translate }}</label>
+            <label for="input19">{{ 'INPUT19' | translate }}</label>
             <input type="text" class="form-control" name="input19" placeholder="date_us_short_between:11/28/99,12/31/15|required" ng-model="input19" validation="date_us_short_between:11/28/99,12/31/15|required" />
         </div>
         <div class="form-group">
@@ -111,8 +111,8 @@
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
-        <button type="submit" name="save_btn" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
+        <button type="submit" name="btn_ngDisabled" class="btn btn-primary" ng-disabled="form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
+        <button type="submit" name="btn_ngSubmit" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+        <button type="submit" name="btn_showValidation" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
     </div>
 </form>

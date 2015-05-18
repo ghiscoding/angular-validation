@@ -1,0 +1,491 @@
+<h3>Service</h3>
+
+<div class="checkbox text-right" style="margin-top:-25px">
+    <label>
+      <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
+    </label>
+</div>
+
+<hr />
+
+<!-- Angular-Validation saves the summary of errors inside 2 locations: 1- $scope.$validationSummary 2- $scope.formName.$validationSummary (only accessible if you named your form) so it becomes easy to show all errors -->
+<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary && form01.$validationSummary.length > 0">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+    <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
+    <ul>
+        <li ng-repeat="item in form01.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+    </ul>
+</div>
+
+<form novalidate name="form01" method="POST">
+  <fieldset>
+    <div class="form-group row">
+        <label for="input0">input0</label>
+        <input class="form-control" type="text" name="input0" ng-model="input0">
+    </div>
+    <div class="form-group row">
+        <label for="input1">input1</label>
+        <input class="form-control" type="text" name="input1" ng-model="input1">
+    </div>
+    <div class="form-group row">
+        <label for="input2">input2</label>
+        <input class="form-control" type="text" name="input2" ng-model="input2">
+    </div>
+    <div class="form-group row">
+        <label for="input3">input3</label>
+        <input class="form-control" type="text" name="input3" ng-model="input3">
+    </div>
+    <div class="form-group row">
+        <label for="input4">input4</label>
+        <input class="form-control" type="text" name="input4" ng-model="input4">
+    </div>
+    <div class="form-group row">
+        <label for="input5">input5</label>
+        <input class="form-control" type="text" name="input5" ng-model="input5">
+    </div>
+    <div class="form-group row">
+        <label for="input6">input6</label>
+        <input class="form-control" type="text" name="input6" ng-model="input6">
+    </div>
+    <div class="form-group row">
+        <label for="input7">input7</label>
+        <input class="form-control" type="text" name="input7" ng-model="input7">
+    </div>
+    <div class="form-group row">
+        <label for="input8">input8</label>
+        <input class="form-control" type="text" name="input8" ng-model="input8">
+    </div>
+    <div class="form-group row">
+        <label for="input9">input9</label>
+        <input class="form-control" type="text" name="input9" ng-model="input9">
+    </div>
+    <div class="form-group row">
+        <label for="input10">input10</label>
+        <input class="form-control" type="text" name="input10" ng-model="input10">
+    </div>
+    <div class="form-group row">
+        <label for="input11">input11</label>
+        <input class="form-control" type="text" name="input11" ng-model="input11">
+    </div>
+    <div class="form-group row">
+        <label for="input12">input12</label>
+        <input class="form-control" type="text" name="input12" ng-model="input12">
+    </div>
+    <div class="form-group row">
+        <label for="input13">input13</label>
+        <input class="form-control" type="text" name="input13" ng-model="input13">
+    </div>
+    <div class="form-group row">
+        <label for="input14">input14</label>
+        <input class="form-control" type="text" name="input14" ng-model="input14">
+    </div>
+    <div class="form-group row">
+        <label for="input15">input15</label>
+        <input class="form-control" type="text" name="input15" ng-model="input15">
+    </div>
+    <div class="form-group row">
+        <label for="input16">input16</label>
+        <input class="form-control" type="text" name="input16" ng-model="input16">
+    </div>
+    <div class="form-group row">
+        <label for="input17">input17</label>
+        <input class="form-control" type="text" name="input17" ng-model="input17">
+    </div>
+    <div class="form-group row">
+        <label for="input18">input18</label>
+        <input class="form-control" type="text" name="input18" ng-model="input18">
+    </div>
+    <div class="form-group row">
+        <label for="input19">input19</label>
+        <input class="form-control" type="text" name="input19" ng-model="input19">
+    </div>
+    <div class="form-group row">
+        <label for="input20">input20</label>
+        <input class="form-control" type="text" name="input20" ng-model="input20">
+    </div>
+    <div class="form-group row">
+        <label for="input21">input21</label>
+        <input class="form-control" type="text" name="input21" ng-model="input21">
+    </div>
+    <div class="form-group row">
+        <label for="input22">input22</label>
+        <input class="form-control" type="text" name="input22" ng-model="input22">
+    </div>
+    <div class="form-group row">
+        <label for="input23">input23</label>
+        <input class="form-control" type="text" name="input23" ng-model="input23">
+    </div>
+    <div class="form-group row">
+        <label for="input24">input24</label>
+        <input class="form-control" type="text" name="input24" ng-model="input24">
+    </div>
+    <div class="form-group row">
+        <label for="input25">input25</label>
+        <input class="form-control" type="text" name="input25" ng-model="input25">
+    </div>
+    <div class="form-group row">
+        <label for="input26">input26</label>
+        <input class="form-control" type="text" name="input26" ng-model="input26">
+    </div>
+    <div class="form-group row">
+        <label for="input27">input27</label>
+        <input class="form-control" type="text" name="input27" ng-model="input27">
+    </div>
+    <div class="form-group row">
+        <label for="input28">input28</label>
+        <input class="form-control" type="text" name="input28" ng-model="input28">
+    </div>
+    <div class="form-group row">
+        <label for="input29">input29</label>
+        <input class="form-control" type="text" name="input29" ng-model="input29">
+    </div>
+    <div class="form-group row">
+        <label for="input30">input30</label>
+        <input class="form-control" type="text" name="input30" ng-model="input30">
+    </div>
+    <div class="form-group row">
+        <label for="input31">input31</label>
+        <input class="form-control" type="text" name="input31" ng-model="input31">
+    </div>
+    <div class="form-group row">
+        <label for="input32">input32</label>
+        <input class="form-control" type="text" name="input32" ng-model="input32">
+    </div>
+    <div class="form-group row">
+        <label for="input33">input33</label>
+        <input class="form-control" type="text" name="input33" ng-model="input33">
+    </div>
+    <div class="form-group row">
+        <label for="input34">input34</label>
+        <input class="form-control" type="text" name="input34" ng-model="input34">
+    </div>
+    <div class="form-group row">
+        <label for="input35">input35</label>
+        <input class="form-control" type="text" name="input35" ng-model="input35">
+    </div>
+    <div class="form-group row">
+        <label for="input36">input36</label>
+        <input class="form-control" type="text" name="input36" ng-model="input36">
+    </div>
+    <div class="form-group row">
+        <label for="input37">input37</label>
+        <input class="form-control" type="text" name="input37" ng-model="input37">
+    </div>
+    <div class="form-group row">
+        <label for="input38">input38</label>
+        <input class="form-control" type="text" name="input38" ng-model="input38">
+    </div>
+    <div class="form-group row">
+        <label for="input39">input39</label>
+        <input class="form-control" type="text" name="input39" ng-model="input39">
+    </div>
+    <div class="form-group row">
+        <label for="input40">input40</label>
+        <input class="form-control" type="text" name="input40" ng-model="input40">
+    </div>
+    <div class="form-group row">
+        <label for="input41">input41</label>
+        <input class="form-control" type="text" name="input41" ng-model="input41">
+    </div>
+    <div class="form-group row">
+        <label for="input42">input42</label>
+        <input class="form-control" type="text" name="input42" ng-model="input42">
+    </div>
+    <div class="form-group row">
+        <label for="input43">input43</label>
+        <input class="form-control" type="text" name="input43" ng-model="input43">
+    </div>
+    <div class="form-group row">
+        <label for="input44">input44</label>
+        <input class="form-control" type="text" name="input44" ng-model="input44">
+    </div>
+    <div class="form-group row">
+        <label for="input45">input45</label>
+        <input class="form-control" type="text" name="input45" ng-model="input45">
+    </div>
+    <div class="form-group row">
+        <label for="input46">input46</label>
+        <input class="form-control" type="text" name="input46" ng-model="input46">
+    </div>
+    <div class="form-group row">
+        <label for="input47">input47</label>
+        <input class="form-control" type="text" name="input47" ng-model="input47">
+    </div>
+    <div class="form-group row">
+        <label for="input48">input48</label>
+        <input class="form-control" type="text" name="input48" ng-model="input48">
+    </div>
+    <div class="form-group row">
+        <label for="input49">input49</label>
+        <input class="form-control" type="text" name="input49" ng-model="input49">
+    </div>
+    <div class="form-group row">
+        <label for="input50">input50</label>
+        <input class="form-control" type="text" name="input50" ng-model="input50">
+    </div>
+    <div class="form-group row">
+        <label for="input51">input51</label>
+        <input class="form-control" type="text" name="input51" ng-model="input51">
+    </div>
+    <div class="form-group row">
+        <label for="input52">input52</label>
+        <input class="form-control" type="text" name="input52" ng-model="input52">
+    </div>
+    <div class="form-group row">
+        <label for="input53">input53</label>
+        <input class="form-control" type="text" name="input53" ng-model="input53">
+    </div>
+    <div class="form-group row">
+        <label for="input54">input54</label>
+        <input class="form-control" type="text" name="input54" ng-model="input54">
+    </div>
+    <div class="form-group row">
+        <label for="input55">input55</label>
+        <input class="form-control" type="text" name="input55" ng-model="input55">
+    </div>
+    <div class="form-group row">
+        <label for="input56">input56</label>
+        <input class="form-control" type="text" name="input56" ng-model="input56">
+    </div>
+    <div class="form-group row">
+        <label for="input57">input57</label>
+        <input class="form-control" type="text" name="input57" ng-model="input57">
+    </div>
+    <div class="form-group row">
+        <label for="input58">input58</label>
+        <input class="form-control" type="text" name="input58" ng-model="input58">
+    </div>
+    <div class="form-group row">
+        <label for="input59">input59</label>
+        <input class="form-control" type="text" name="input59" ng-model="input59">
+    </div>
+    <div class="form-group row">
+        <label for="input60">input60</label>
+        <input class="form-control" type="text" name="input60" ng-model="input60">
+    </div>
+    <div class="form-group row">
+        <label for="input61">input61</label>
+        <input class="form-control" type="text" name="input61" ng-model="input61">
+    </div>
+    <div class="form-group row">
+        <label for="input62">input62</label>
+        <input class="form-control" type="text" name="input62" ng-model="input62">
+    </div>
+    <div class="form-group row">
+        <label for="input63">input63</label>
+        <input class="form-control" type="text" name="input63" ng-model="input63">
+    </div>
+    <div class="form-group row">
+        <label for="input64">input64</label>
+        <input class="form-control" type="text" name="input64" ng-model="input64">
+    </div>
+    <div class="form-group row">
+        <label for="input65">input65</label>
+        <input class="form-control" type="text" name="input65" ng-model="input65">
+    </div>
+    <div class="form-group row">
+        <label for="input66">input66</label>
+        <input class="form-control" type="text" name="input66" ng-model="input66">
+    </div>
+    <div class="form-group row">
+        <label for="input67">input67</label>
+        <input class="form-control" type="text" name="input67" ng-model="input67">
+    </div>
+    <div class="form-group row">
+        <label for="input68">input68</label>
+        <input class="form-control" type="text" name="input68" ng-model="input68">
+    </div>
+    <div class="form-group row">
+        <label for="input69">input69</label>
+        <input class="form-control" type="text" name="input69" ng-model="input69">
+    </div>
+    <div class="form-group row">
+        <label for="input70">input70</label>
+        <input class="form-control" type="text" name="input70" ng-model="input70">
+    </div>
+    <div class="form-group row">
+        <label for="input71">input71</label>
+        <input class="form-control" type="text" name="input71" ng-model="input71">
+    </div>
+    <div class="form-group row">
+        <label for="input72">input72</label>
+        <input class="form-control" type="text" name="input72" ng-model="input72">
+    </div>
+    <div class="form-group row">
+        <label for="input73">input73</label>
+        <input class="form-control" type="text" name="input73" ng-model="input73">
+    </div>
+    <div class="form-group row">
+        <label for="input74">input74</label>
+        <input class="form-control" type="text" name="input74" ng-model="input74">
+    </div>
+    <div class="form-group row">
+        <label for="input75">input75</label>
+        <input class="form-control" type="text" name="input75" ng-model="input75">
+    </div>
+    <div class="form-group row">
+        <label for="input76">input76</label>
+        <input class="form-control" type="text" name="input76" ng-model="input76">
+    </div>
+    <div class="form-group row">
+        <label for="input77">input77</label>
+        <input class="form-control" type="text" name="input77" ng-model="input77">
+    </div>
+    <div class="form-group row">
+        <label for="input78">input78</label>
+        <input class="form-control" type="text" name="input78" ng-model="input78">
+    </div>
+    <div class="form-group row">
+        <label for="input79">input79</label>
+        <input class="form-control" type="text" name="input79" ng-model="input79">
+    </div>
+  <div class="form-group row">
+        <label for="input80">input80</label>
+        <input class="form-control" type="text" name="input80" ng-model="input80">
+    </div>
+    <div class="form-group row">
+        <label for="input81">input81</label>
+        <input class="form-control" type="text" name="input81" ng-model="input81">
+    </div>
+    <div class="form-group row">
+        <label for="input82">input82</label>
+        <input class="form-control" type="text" name="input82" ng-model="input82">
+    </div>
+    <div class="form-group row">
+        <label for="input83">input83</label>
+        <input class="form-control" type="text" name="input83" ng-model="input83">
+    </div>
+    <div class="form-group row">
+        <label for="input84">input84</label>
+        <input class="form-control" type="text" name="input84" ng-model="input84">
+    </div>
+    <div class="form-group row">
+        <label for="input85">input85</label>
+        <input class="form-control" type="text" name="input85" ng-model="input85">
+    </div>
+    <div class="form-group row">
+        <label for="input86">input86</label>
+        <input class="form-control" type="text" name="input86" ng-model="input86">
+    </div>
+    <div class="form-group row">
+        <label for="input87">input87</label>
+        <input class="form-control" type="text" name="input87" ng-model="input87">
+    </div>
+    <div class="form-group row">
+        <label for="input88">input88</label>
+        <input class="form-control" type="text" name="input88" ng-model="input88">
+    </div>
+    <div class="form-group row">
+        <label for="input89">input89</label>
+        <input class="form-control" type="text" name="input89" ng-model="input89">
+    </div>
+    <div class="form-group row">
+        <label for="input90">input90</label>
+        <input class="form-control" type="text" name="input90" ng-model="input90">
+    </div>
+    <div class="form-group row">
+        <label for="input91">input91</label>
+        <input class="form-control" type="text" name="input91" ng-model="input91">
+    </div>
+    <div class="form-group row">
+        <label for="input92">input92</label>
+        <input class="form-control" type="text" name="input92" ng-model="input92">
+    </div>
+    <div class="form-group row">
+        <label for="input93">input93</label>
+        <input class="form-control" type="text" name="input93" ng-model="input93">
+    </div>
+    <div class="form-group row">
+        <label for="input94">input94</label>
+        <input class="form-control" type="text" name="input94" ng-model="input94">
+    </div>
+    <div class="form-group row">
+        <label for="input95">input95</label>
+        <input class="form-control" type="text" name="input95" ng-model="input95">
+    </div>
+    <div class="form-group row">
+        <label for="input96">input96</label>
+        <input class="form-control" type="text" name="input96" ng-model="input96">
+    </div>
+    <div class="form-group row">
+        <label for="input97">input97</label>
+        <input class="form-control" type="text" name="input97" ng-model="input97">
+    </div>
+    <div class="form-group row">
+        <label for="input98">input98</label>
+        <input class="form-control" type="text" name="input98" ng-model="input98">
+    </div>
+    <div class="form-group row">
+        <label for="input99">input99</label>
+        <input class="form-control" type="text" name="input99" ng-model="input99">
+    </div>
+    <div class="form-group row">
+        <label for="input100">input100</label>
+        <input class="form-control" type="text" name="input100" ng-model="input100">
+    </div>
+    <div class="form-group row">
+        <label for="input101">input101</label>
+        <input class="form-control" type="text" name="input101" ng-model="input101">
+    </div>
+    <div class="form-group row">
+        <label for="input102">input102</label>
+        <input class="form-control" type="text" name="input102" ng-model="input102">
+    </div>
+    <div class="form-group row">
+        <label for="input103">input103</label>
+        <input class="form-control" type="text" name="input103" ng-model="input103">
+    </div>
+    <div class="form-group row">
+        <label for="input104">input104</label>
+        <input class="form-control" type="text" name="input104" ng-model="input104">
+    </div>
+    <div class="form-group row">
+        <label for="input105">input105</label>
+        <input class="form-control" type="text" name="input105" ng-model="input105">
+    </div>
+    <div class="form-group row">
+        <label for="input106">input106</label>
+        <input class="form-control" type="text" name="input106" ng-model="input106">
+    </div>
+    <div class="form-group row">
+        <label for="input107">input107</label>
+        <input class="form-control" type="text" name="input107" ng-model="input107">
+    </div>
+    <div class="form-group row">
+        <label for="input108">input108</label>
+        <input class="form-control" type="text" name="input108" ng-model="input108">
+    </div>
+    <div class="form-group row">
+        <label for="input109">input109</label>
+        <input class="form-control" type="text" name="input109" ng-model="input109">
+    </div>
+    <div class="form-group row">
+        <label for="input110">input110</label>
+        <input class="form-control" type="text" name="input110" ng-model="input110">
+    </div>
+    <div class="form-group row">
+        <label for="input111">input111</label>
+        <input class="form-control" type="text" name="input111" ng-model="input111">
+    </div>
+    <div class="form-group row">
+        <label for="input112">input112</label>
+        <input class="form-control" type="text" name="input112" ng-model="input112">
+    </div>
+    <div class="form-group row">
+        <label for="input113">input113</label>
+        <input class="form-control" type="text" name="input113" ng-model="input113">
+    </div>
+    <div class="form-group row">
+        <label for="input114">input114</label>
+        <input class="form-control" type="text" name="input114" ng-model="input114">
+    </div>
+    <div class="form-group row">
+        <label for="input115">input115</label>
+        <input class="form-control" type="text" name="input115" ng-model="input115">
+    </div>
+    <div class="form-group row">
+        <label for="input116">input116</label>
+        <input class="form-control" type="text" name="input116" ng-model="input116">
+    </div>
+  </fieldset>
+</form>

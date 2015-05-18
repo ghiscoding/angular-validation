@@ -1,18 +1,14 @@
 {
   "name": "angular-validation-ghiscoding",
-  "version": "1.3.23",
+  "version": "1.3.24",
   "author": "Ghislain B.",
   "description": "Angular-Validation Directive and Service (ghiscoding)",
   "main": [
     "locales/validation/en.js",
     "locales/validation/fr.js",
-    "dist/angular-validation-allin1.min.js",
-    "dist/validation-common.min.js",
-    "dist/validation-directive.min.js",
-    "dist/validation-rules.min.js",
-    "dist/validation-service.min.js",
-    "src/validation-common.js",
+    "dist/angular-validation.min.js",
     "src/validation-directive.js",
+    "src/validation-common.js",
     "src/validation-rules.js",
     "src/validation-service.js"
   ],

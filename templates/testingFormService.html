@@ -2,7 +2,7 @@
 
 <div class="checkbox text-right" style="margin-top:-25px">
     <span class="text-right">
-        <button class="btn btn-warning btn-xs text-right" ng-click="removeInputValidator('input2'); isValidator2removed=true;" ng-disabled="isValidator2removed">
+        <button name="btn_RemoveValidator2" class="btn btn-warning btn-xs text-right" ng-click="removeInputValidator('input2'); isValidator2removed=true;" ng-disabled="isValidator2removed">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Input2 Validator
         </button>
     </span>
@@ -101,11 +101,11 @@
             <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3" ng-model="input17" />
         </div>
         <div class="form-group">
-            <label for="input17">{{ 'INPUT18' | translate }}</label>
+            <label for="input18">{{ 'INPUT18' | translate }}</label>
             <input type="text" class="form-control" name="input18" placeholder="date_iso_min:2001-01-01|required" ng-model="input18" />
         </div>
         <div class="form-group">
-            <label for="input17">{{ 'INPUT19' | translate }}</label>
+            <label for="input19">{{ 'INPUT19' | translate }}</label>
             <input type="text" class="form-control" name="input19" placeholder="date_us_short_between:12/01/99,12/31/15|required" ng-model="input19" />
         </div>
         <div class="form-group">
@@ -115,8 +115,8 @@
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
-        <button type="submit" name="save_btn" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
+        <button type="submit" name="btn_ngDisabled" class="btn btn-primary" ng-disabled="form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
+        <button type="submit" name="btn_ngSubmit" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+        <button type="submit" name="btn_showValidation" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
     </div>
 </form>
