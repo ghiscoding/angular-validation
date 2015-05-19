@@ -361,6 +361,50 @@ angular
           var otherNgModelVal = self.scope.$eval(otherNgModel);
           isValid = (otherNgModelVal === strValue && !!strValue);
         }
+        // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+        else if(validator.type === "remote" && strValue !== '') {
+          //isValid = false;              // make sure to invalidate the field so that the Directive/Service itself does not make it as true even though Remote might not be finished.
+          self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
+
+          var fname = validator.params[0];
+          var fn = self.scope[fname];
+          var promise = (typeof fn === "function") ? fn() : null;
+
+          if(!!promise && typeof promise.then === "function") {
+            self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
+
+            // process the promise
+            (function(altText) {
+              promise.then(function (result) {
+                self.ctrl.$processing = false; // finished resolving, no more pending
+                var errorMsg = message + ' '; // use the global error message
+
+                if (typeof result === "boolean") {
+                  isValid = (!!result) ? true : false;
+                }else if(typeof result === "object") {
+                  isValid = (!!result.isValid) ? true : false;
+                }
+
+                if(isValid === false) {
+                  formElmObj.isValid = false;
+                  errorMsg += (!!result.message) ? result.message : altText;
+
+                  // is field is invalid and we have an error message given, then add it to validationSummary and display error
+                  addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
+                }
+                if(isValid === true && isFieldValid === true) {
+                  // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
+                  // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
+                  formElmObj.isValid = true;
+                  self.ctrl.$setValidity('remote', true);
+                  addToValidationAndDisplayError(self, formElmObj, '', true, showError);
+                }
+              });
+            })(validator.altText);
+          }else {
+            throw 'Remote Validation requires a declared function (in your Controller) which also returns a promise, please review your code.'
+          }
+        }
         // or finally it might be a regular regex pattern checking
         else {
           // a 'disabled' element should always be valid, there is no need to validate it

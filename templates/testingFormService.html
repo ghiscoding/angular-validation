@@ -23,6 +23,10 @@
 <form name="form1" novalidate method="POST">
     <fieldset>
         <div class="form-group">
+            <label for="input1">{{ 'INPUT1' | translate }}</label>
+            <input type="text" class="form-control" name="input1" placeholder="alpha|min_len:2|remote:customRemoteValidationCall|required" ng-model="input1" />
+        </div>
+        <div class="form-group">
             <label for="input2">{{ 'INPUT2' | translate }}</label>
             <input type="number" class="form-control" name="input2" placeholder="numeric_signed|required" ng-model="input2" />
         </div>

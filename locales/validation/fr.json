@@ -56,6 +56,7 @@
     "AREA1":                            "TextArea: Alphanumérique + Minimum(15) + Required",
     "ERRORS":                           "Erreurs",
     "CHANGE_LANGUAGE":                  "Changer de langue",
+    "INPUT1":                           "Validation à Distance - Taper \"abc\" pour une réponse valide ",
     "INPUT2":                           "Nombre positif ou négatif -- input type=\"number\" -- Erreur sur caractères non-numérique",
     "INPUT3":                           "Intervalle de Nombre Flottant (entier exclu) -- between_num:x,y OU min_num:x|max_num:y",
     "INPUT4":                           "Multiple Validations + Regex Personnalisé d'un Code Date (AASS)",

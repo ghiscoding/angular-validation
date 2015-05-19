@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.24`
+`Version: 1.3.25`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -24,7 +24,7 @@ If you do use Angular-Validation, please click on the **Star** and add it as a f
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation is now fully tested with Protractor End-to-End test suite, there is over 1000+ assertions, it starts by testing the original live demo page and then goes with a complete and full tests of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation is now has a full set of End-to-End tests with Protractor, there is over 1000+ assertions, it starts by testing the original live demo page and then goes with a complete and full test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -73,6 +73,8 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
     * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
     * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
+    * [Remote Validation](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation)
+    * [Remove a Validator](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
     * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
     * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
 * Validators

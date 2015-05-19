@@ -56,6 +56,7 @@
     "AREA1":                            "Area de texto: Alfanúmerica + Minimo(15) + Requerido",
     "ERRORS":                           "Errores",
     "CHANGE_LANGUAGE":                  "Cambiar idioma",
+    "INPUT1":                           "Validación Remota - Escriba \"abc\" para una respuesta válida ",
     "INPUT2":                           "Número positivo o negativo -- input type=\"number\" -- Error o caracteres no númericos ",
     "INPUT3":                           "Rango decimal (Los números enteros no son validos) -- between_num:x,y ó min_num:x|max_num:y ",
     "INPUT4":                           "Multiples validaciones + Código de fecha personalizado (YYWW)",

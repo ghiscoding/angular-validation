@@ -525,6 +525,13 @@ angular
             type: "regex"
           };
           break;
+        case "remote" :
+          validator = {
+            message: '', // there is no error message defined on this one since user will provide his own error message via remote response or `alt=`
+            params: [ruleParams],
+            type: "remote"
+          };
+          break;
         case "required" :
           validator = {
             pattern: "\\S+",

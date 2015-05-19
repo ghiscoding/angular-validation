@@ -37,7 +37,7 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
-myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', function ($scope, validationService) {
+myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService', function ($q, $scope, validationService) {
   $scope.$validationOptions = { debounce: 1500 }; // you can change default debounce globally
 
   $scope.submitForm = function() {
@@ -47,6 +47,20 @@ myApp.controller('CtrlValidationDirective', ['$scope', 'validationService', func
   }
   $scope.showValidationSummary = function () {
     $scope.displayValidationSummary = true;
+  }
+  $scope.customRemoteValidationCall = function() {
+    var deferred = $q.defer();
+    setTimeout(function() {
+      var isValid = ($scope.input1 === "abc") ? true : false;
+
+      // you can return a boolean for isValid
+      //deferred.resolve(isValid);
+
+      // or you can return an object as { isValid: bool, message: msg }
+      deferred.resolve({ isValid: isValid, message: 'Returned error from promise.'});
+    }, 1000);
+
+    return deferred.promise;
   }
 }]);
 
@@ -67,18 +81,18 @@ myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope,
 // -----------------------------------------------
 
 // exact same testing form used except that all validators are programmatically added inside controller via Angular-Validation Service
-myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationService', function ($scope, $translate, validationService) {
+myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'validationService', function ($q, $scope, $translate, validationService) {
   // start by creating the service
   var myValidation = new validationService();
 
   // you can create indepent call to the validation service
   // also below the multiple properties available
   myValidation.addValidator({
-    elmName: 'input2',
+    elmName: 'input1',
     // friendlyName: $translate.instant('FIRST_NAME'),
-    debounce: 3000,
+    debounce: 1000,
     scope: $scope,
-    rules: 'numeric_signed|required'
+    rules: 'alpha|min_len:2|remote:customRemoteValidationCall|required'
   });
 
   // you can also chain validation service and add multiple validators at once
@@ -90,6 +104,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
     .setGlobalOptions({ debounce: 1500, scope: $scope })
+    .addValidator({ elmName: 'input2', debounce: 3000, rules: 'numeric_signed|required'})
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
     .addValidator('input5', 'email|required|min_len:6', $translate.instant('INPUT5')) // 3rd argument being the Friendly name
@@ -124,6 +139,15 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     if(myValidation.checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
     }
+  }
+  $scope.customRemoteValidationCall = function() {
+    var deferred = $q.defer();
+    setTimeout(function() {
+      var isValid = ($scope.input1 === "abc") ? true : false;
+      deferred.resolve({ isValid: isValid, message: 'Returned error from promise.'});
+    }, 1000);
+
+    return deferred.promise;
   }
 }]);
 

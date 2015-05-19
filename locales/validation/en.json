@@ -56,6 +56,7 @@
     "AREA1":                            "TextArea: Alphanumeric + Minimum(15) + Required",
     "ERRORS":                           "Errors",
     "CHANGE_LANGUAGE":                  "Change language",
+    "INPUT1":                           "Remote validation - Type \"abc\" for a valid answer ",
     "INPUT2":                           "Number positive or negative -- input type=\"number\" -- Error on non-numeric characters ",
     "INPUT3":                           "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y ",
     "INPUT4":                           "Multiple Validations + Custom Regex of Date Code (YYWW)",

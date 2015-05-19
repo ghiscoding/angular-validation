@@ -105,9 +105,9 @@
           }
         }, 420000);
 
-      }); // describe: When clicking on top menu ...
-    })(types, k);
-  } // for()
+      });         // describe: When clicking on top menu ...
+    })(types, k); // closure
+  }               // for()
 
 });
 
