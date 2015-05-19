@@ -24,7 +24,7 @@ If you do use Angular-Validation, please click on the **Star** and add it as a f
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation is now has a full set of End-to-End tests with Protractor, there is over 1000+ assertions, it starts by testing the original live demo page and then goes with a complete and full test suite of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation now has a full set of End-to-End tests with Protractor, there is over 1300+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -73,6 +73,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
     * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
     * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
+    * [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX))
     * [Remove a Validator](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
     * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
     * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
