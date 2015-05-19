@@ -73,7 +73,6 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
     * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
     * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
-    * [Remote Validation](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation)
     * [Remove a Validator](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
     * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
     * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
