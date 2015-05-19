@@ -25,6 +25,9 @@
         <div class="form-group">
             <label for="input1">{{ 'INPUT1' | translate }}</label>
             <input type="text" class="form-control" name="input1" placeholder="alpha|min_len:2|remote:customRemoteValidationCall|required" ng-model="input1" />
+            <div ng-if="form1.input1.$processing">
+              <span class="glyphicon glyphicon-cog spinning"></span>
+            </div>
         </div>
         <div class="form-group">
             <label for="input2">{{ 'INPUT2' | translate }}</label>
