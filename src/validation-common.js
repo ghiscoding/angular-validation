@@ -242,7 +242,8 @@ angular
 
       // Make sure that element has a name="" attribute else it will not work
       if(typeof elmName === "undefined" || elmName === null) {
-        throw 'Angular-Validation Service requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + elm.attr('ng-model') + '"';
+        var ngModelName = (!!elm) ? elm.attr('ng-model') : 'unknown';
+        throw 'Angular-Validation Service requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + ngModelName + '"';
       }
 
       // user might have passed a message to be translated
@@ -520,8 +521,17 @@ angular
         formElmObj.message = message;
       }
 
+      // if user is pre-validating all form elements, display error right away
+      if(self.validatorAttrs.preValidateFormElements || (!!self.scope.$validationOptions && self.scope.$validationOptions.hasOwnProperty('preValidateFormElements'))) {
+        // make the element as it was touched for CSS, only works in AngularJS 1.3+
+        if (!!formElmObj && typeof self.ctrl.$setTouched === "function") {
+          formElmObj.ctrl.$setTouched();
+        }
+        updateErrorMsg(message, { isSubmitted: true, isValid: isFieldValid, obj: formElmObj });
+      }
+
       // error Display
-      if(showError && !formElmObj.isValid) {
+      if(showError && !!formElmObj && !formElmObj.isValid) {
         self.updateErrorMsg(message, { isValid: isFieldValid });
       }else if(!!formElmObj && formElmObj.isValid) {
         addToValidationSummary(formElmObj, '');
@@ -533,6 +543,10 @@ angular
      * @param string message: error message
      */
     function addToValidationSummary(self, message) {
+      if(typeof self === "undefined" || self == null) {
+        return;
+      }
+
       // get the element name, whichever we find it
       var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
         ? self.validatorAttrs.name

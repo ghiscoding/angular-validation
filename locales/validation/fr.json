@@ -50,7 +50,7 @@
     "INVALID_PATTERN":                  "Doit suivre le format: {0}. ",
     "INVALID_REQUIRED":                 "Le champ est requis. ",
     "INVALID_URL":                      "Doit être un URL valide. ",
-    "INVALID_TIME":                     "Doit être un format de date valide (hh:mm) OU (hh:mm:ss). ",
+    "INVALID_TIME":                     "Doit être un format de temps valide (hh:mm) OU (hh:mm:ss). ",
     "INVALID_CHECKBOX_SELECTED":        "La case à cocher doit être sélectionnée. ",
 
     "AREA1":                            "TextArea: Alphanumérique + Minimum(15) + Required",
