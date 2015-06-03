@@ -48,15 +48,17 @@ You can transform this:
   <span ng-show="userForm.lastname.$error.maxlength" class="help-block">Lastname is too long.</p>
 </div>
 ```
-into the following (errors will be displayed in your chosen locale translation):
+into the following (errors will automatically be displayed in your chosen locale translation):
 ```html
 <input type="text" name="username" ng-model="user.username" validation="min_len:3|max_len:8|required"  />
 <input type="text" name="firstname" ng-model="user.firstname" validation="alpha_dash|min_len:3|max_len:50|required"  />
 <input type="text" name="lastname" ng-model="user.lastname" validation="alpha_dash|min_len:2|max_len:50|required"  />
 ```
-The Angular-Validation will create, by itself, the necessary error message. Now imagine your form having 10 inputs, using the documented Angular way will end up being 30 lines of code, while on the other hand `Angular-Validation` will stay with 10 lines of code, no more... so what are you waiting for? Use Angular-Validation!!!  Don't forget to add it to your favorite, click on the **Star** :)
+The Angular-Validation will create, by itself, the necessary error message. Now imagine your form having 10 inputs, using the documented Angular way will end up being 30 lines of code, while on the other hand `Angular-Validation` will stay with 10 lines of code, no more... so what are you waiting for? Use Angular-Validation!!!  Don't forget to add it to your favorite, click on the **Star** on top :)
 
 Let's not forget the [Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
+
+Another awesome feature recently added is the [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX)) which is so convenient.
 
 
 ## Angular-Validation Wiki
