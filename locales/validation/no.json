@@ -56,6 +56,7 @@
     "AREA1":                            "TextArea: Alfanumerisk + Minimum(15) + Påkrevd",
     "ERRORS":                           "Feil",
     "CHANGE_LANGUAGE":                  "Endre språk.",
+    "FORM_PREVALIDATED":                "Form er pre-godkjent",
     "INPUT1":                           "Ekstern Validering - Type \"abc\" for et gyldig svar ",
     "INPUT2":                           "Positivt eller negativt nummer -- input type=\"number\" -- Feil på ikke-numeriske tegn ",
     "INPUT3":                           "Flyttalssutvalg (heltall ekskludert) -- between_num:x,y eller min_num:x|max_num:y ",

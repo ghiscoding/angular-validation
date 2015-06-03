@@ -70,6 +70,22 @@
   ];
   var types = ['Directive', 'Service'];
 
+  // variables used on 2Forms web page
+  var formElement2FormsNames = ['input2', 'input3', 'select1', 'area1'];
+  var formElement2FormsSummaryNames = ['First Name', 'Last Name', 'area1', 'select1'];
+  var errorMessages2Forms = [
+    'May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.',
+    'May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.',
+    'Change language',
+    'May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required.'
+  ];
+  var validInput2FormsTexts = [
+    'John',
+    'Doe',
+    'en',
+    'This is a great tool'
+  ];
+
   for(var k = 0, kln = types.length; k < kln; k++) {
     // because we are dealing with promises, we better use closures to pass certain variables
     (function(types, k) {
@@ -241,4 +257,87 @@
       });         // Directive()
     })(types, k); // closure
   }               // for()
+
+  describe('When clicking on top menu Angular-Validation >> 2 Forms', function () {
+    it('Should navigate to Angular-Validation home page', function () {
+      browser.get('http://localhost/Github/angular-validation');
+
+      // Find the title element
+      var titleElement = element(by.css('h1'));
+
+      // Assert that the text element has the expected value.
+      // Protractor patches 'expect' to understand promises.
+      expect(titleElement.getText()).toEqual('Angular-Validation Directive|Service (ghiscoding)');
+    });
+
+    it('Should navigate to TestingForm 2Forms page', function () {
+      browser.get('http://localhost/Github/angular-validation');
+
+      var anchorLink = $('[name=btn_goto_2forms]');
+      anchorLink.click();
+      browser.waitForAngular();
+
+      // Find the sub-title element
+      var titleElement = element(by.css('h3'));
+
+      // Assert that the text element has the expected value.
+      // Protractor patches 'expect' to understand promises.
+      expect(titleElement.getText()).toEqual('Directive - 2 Forms');
+    });
+
+    it('Should show ValidationSummary and contain all error messages', function () {
+      // showValidation checkbox should false at first but true after
+      var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      expect(elmCheckboxShowSummary.isSelected()).toBeFalsy();
+
+      var btnShowSummary = $('button[name=btn_showValidation]');
+      btnShowSummary.click();
+      browser.waitForAngular();
+
+      elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
+
+      // scroll back to top
+      browser.executeScript('window.scrollTo(0,0);').then(function () {
+        var itemRows = element.all(by.binding('message'));
+        var inputName;
+
+        for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
+          // since field after input13 is part of errorMessages and is empty string, we need to skip that one
+          if (formElement2FormsNames[i] === 'input13') {
+            j++;
+          }
+          expect(itemRows.get(i).getText()).toEqual(formElement2FormsSummaryNames[i] + ': ' + errorMessages2Forms[j++]);
+        }
+      });
+    });
+
+    it('Should enter valid text and make error go away', function () {
+      for (var i = 0, ln = formElement2FormsNames.length; i < ln; i++) {
+        // some fields are not required or disabled so no error will show up, continue to next ones
+        if (formElement2FormsNames[i] === 'input12' || formElement2FormsNames[i] === 'input14') {
+          continue;
+        }
+        var elmInput = $('[name=' + formElement2FormsNames[i] + ']');
+        elmInput.click();
+        elmInput.sendKeys(validInput2FormsTexts[i]);
+
+        if (formElement2FormsNames[i] === 'select1') {
+          element(by.cssContainingText('option', validInput2FormsTexts[i])).click(); // click on good option
+          elmInput.sendKeys(protractor.Key.TAB);
+        }
+
+        var elmError = $('.validation-' + formElement2FormsNames[i]);
+        expect(elmError.getText()).toEqual('');
+      }
+    });
+
+    it('Should check that both submit button are now enabled', function() {
+      var elmSubmit1 = $('[name=save_btn1]');
+      expect(elmSubmit1.isEnabled()).toBe(true);
+
+      var elmSubmit2 = $('[name=save_btn2]');
+      expect(elmSubmit2.isEnabled()).toBe(true);
+    });
+  });
 });

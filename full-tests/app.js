@@ -8,6 +8,9 @@ myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $
       .when('/validate-Service', { templateUrl: 'Service.html', controller: 'CtrlValidationService' })
       .otherwise({ redirectTo: 'validate-Directive'  });
   }])
+  .config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }])
 	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
 	    prefix: '../locales/validation/',

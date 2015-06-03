@@ -557,7 +557,7 @@ function loadData() {
       {
         'validator': 'email',
         'invalid_data': ['g$g.com', 'g@g,com', 'g@g.'],
-        'valid_data': ['g@g.com', 'someone@hotmail.com'],
+        'valid_data': ['someone@hotmail.com', 'nickname@zone', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф'],
         'error_message': {
           'en': "Must be a valid email address.",
           'es': "Debe contener una dirección de correo electronico valida.",
@@ -610,7 +610,7 @@ function loadData() {
         'invalid_data': ['ABC1234567890', 'DEABCD12500105170648489890'],
         'valid_data': ['DE12500105170648489890', 'AB12500105170648489890'],
         'error_message': {
-          'en': "Must a valid IBAN.",
+          'en': "Must be a valid IBAN.",
           'es': "Debe contener un IBAN valido.",
           'fr': "Doit être un IBAN valide.",
           'no': "Må være en gyldig IBAN.",
@@ -779,7 +779,7 @@ function loadData() {
         'error_message': {
           'en': "Must be a valid time format (hh:mm) OR (hh:mm:ss).",
           'es': "Debe contener un formato de tiempo valido (hh:mm) ó (hh:mm:ss).",
-          'fr': "Doit être un format de date valide (hh:mm) OU (hh:mm:ss).",
+          'fr': "Doit être un format de temps valide (hh:mm) OU (hh:mm:ss).",
           'no': "Må være et gyldig tidsformat (tt:mm) OR (tt:mm:ss).",
           'ru': "Должно быть допустимым форматом времени (hh:mm) или (hh:mm:ss)."
         }

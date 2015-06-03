@@ -74,13 +74,24 @@ angular
       }
       attrs.name = attrs.elmName;
 
+      // get the scope from the validator or from the global options (validationAttrs)
+      var scope = (!!attrs.scope) ? attrs.scope : self.validationAttrs.scope;
+
+      // user could pass his own scope, useful in a case of an isolate scope
+      if (!!self.validationAttrs.isolatedScope) {
+        var tempValidationOptions = scope.$validationOptions || null; // keep global validationOptions
+        scope = self.validationAttrs.isolatedScope;                                  // rewrite original scope
+        if(!!tempValidationOptions) {
+          scope.$validationOptions = tempValidationOptions;           // reuse the validationOption from original scope
+        }
+      }
+
       // onBlur make validation without waiting
       attrs.elm.bind('blur', blurHandler = function(event) {
         if(!isValidationCancelled) {
-          // re-initialize to use current element & remove waiting time & validate
-          self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
-          self.commonObj.typingLimit = 0;
-          attemptToValidate(self, event.target.value);
+          // re-initialize to use current element & validate without delay
+          self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
+          attemptToValidate(self, event.target.value, 0);
         }
       });
 
@@ -89,7 +100,7 @@ angular
       attrs = mergeObjects(self.validationAttrs, attrs);
 
       // watch the element for any value change, validate it once that happen
-			attrs.scope.$watch(attrs.elmName, function (newVal, oldVal) {
+			scope.$watch(attrs.elmName, function (newVal, oldVal) {
         // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
         // we will still call the `.validate()` function so that it shows also the possible other error messages
         if(newVal === undefined && oldVal !== undefined) {
@@ -101,7 +112,7 @@ angular
         attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
         attrs.value = newVal;
 
-        self.commonObj.initialize(attrs.scope, attrs.elm, attrs, attrs.ctrl);
+        self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
         attemptToValidate(self, newVal);
 		  }, true); // $watch()
 
@@ -244,7 +255,10 @@ angular
      * @param object self
      * @param string value: value of the input field
      */
-    function attemptToValidate(self, value) {
+    function attemptToValidate(self, value, typingLimit) {
+      // get the waiting delay time if passed as argument or get it from common Object
+      var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : self.commonObj.typingLimit;
+
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
       self.commonObj.validate(value, false);
@@ -285,7 +299,7 @@ angular
         $timeout.cancel(self.timer);
         self.timer = $timeout(function() {
           self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
-        }, self.commonObj.typingLimit);
+        }, waitingLimit);
       }
 
       return value;

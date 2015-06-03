@@ -38,7 +38,7 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
 myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService', function ($q, $scope, validationService) {
-  $scope.$validationOptions = { debounce: 1500 }; // you can change default debounce globally
+  $scope.$validationOptions = { debounce: 1500, preValidateFormElements: false }; // you can change default debounce globally
 
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
@@ -67,6 +67,9 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
 // -- Controller to use Angular-Validation Directive with 2 forms
 // ---------------------------------------------------------------
 myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope, validationService) {
+  // on this page we will pre-validate the form and show all errors on page load
+  $scope.$validationOptions = { debounce: 500, preValidateFormElements: true };
+
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form01)) {
       alert('All good, proceed with submit...');
@@ -103,7 +106,7 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
   //    #3 .addValidator({ elmName: 'inputX', rules: 'myRules'})
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
-    .setGlobalOptions({ debounce: 1500, scope: $scope })
+    .setGlobalOptions({ debounce: 1500, scope: $scope, isolatedScope: $scope, preValidateFormElements: false })
     .addValidator({ elmName: 'input2', debounce: 3000, rules: 'numeric_signed|required'})
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')

@@ -20,7 +20,7 @@
   },
 
   // Spec patterns are relative to the current working directory when protractor is called
-  specs: ['mixed_validation_spec.js', 'full_tests_spec.js'],
+  specs: ['mixed_validation_spec.js', 'dynamic_spec.js', 'full_tests_spec.js'],
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 550000
@@ -30,6 +30,8 @@
 
   // format the output when tests are run with Team City
   onPrepare: function () {
+    browser.driver.manage().window().setPosition(0, 0);
+    browser.driver.manage().window().setSize(1024, 1045);
     if (process.env.TEAMCITY_VERSION) {
       require('jasmine-reporters');
       jasmine.getEnv().addReporter(new jasmine.TeamcityReporter());

@@ -1,3 +1,9 @@
+<div class="alert alert-info alert-dismissable">
+    {{ 'FORM_PREVALIDATED' | translate }} <br/>
+    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    <a href="https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load)">Wiki - PreValidate Form (on page load)</a>
+</div>
+
 <h3>Directive - 2 Forms</h3>
 
 <div class="checkbox text-right" style="margin-top:-25px">
@@ -5,6 +11,7 @@
       <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
     </label>
 </div>
+
 
 <hr />
 
@@ -30,7 +37,7 @@
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form01.$invalid" >{{ 'SAVE' | translate }}</button>
+        <button type="submit" name="save_btn1" class="btn btn-primary" ng-disabled="form01.$invalid" >{{ 'SAVE' | translate }}</button>
     </div>
 </form>
 
@@ -61,6 +68,8 @@
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="form02.$invalid" >{{ 'SAVE' | translate }}</button>
+        <button type="submit" name="save_btn2" class="btn btn-primary" ng-disabled="form02.$invalid" >{{ 'SAVE' | translate }}</button>
     </div>
 </form>
+<br/>
+<button type="submit" name="btn_showValidation" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>

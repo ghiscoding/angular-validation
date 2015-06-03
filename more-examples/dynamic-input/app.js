@@ -4,7 +4,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'pascalprecht.translate', 'ghisc
 
 myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     $routeProvider.when('/dynamic', {
-          templateUrl: 'dynamicInputTemplate.html',
+          templateUrl: 'template.html',
           controller: 'CtrlDynamic'
     });
     $routeProvider.otherwise({
@@ -13,7 +13,7 @@ myApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $
   }])
 	.config(['$translateProvider', function ($translateProvider) {
 	  $translateProvider.useStaticFilesLoader({
-	    prefix: '../locales/validation/',
+	    prefix: '../../locales/validation/',
 	    suffix: '.json'
 		});
 

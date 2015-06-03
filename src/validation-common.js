@@ -22,6 +22,7 @@ angular
     var timer;                            // timer of user inactivity time
     var typingLimit;                      // maximum user inactivity typing limit
     var formElements = [];                // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
+    var remotePromises = [];              // keep track of promises called and running when using the Remote validator
     var validators = [];                  // Array of all Form Validators
     var validatorAttrs = {};              // Current Validator attributes
     var validationSummary = [];           // Array Validation Error Summary
@@ -46,10 +47,16 @@ angular
       this.ctrl = ctrl;
       this.validatorAttrs = attrs;
 
+      // user could pass his own scope, useful in a case of an isolate scope
+      if (!!scope && !!scope.$validationOptions && scope.$validationOptions.hasOwnProperty('isolatedScope')) {
+        this.scope = scope.$validationOptions.isolatedScope;              // rewrite original scope
+        this.scope.$validationOptions = scope.$validationOptions; // reuse the validationOption from original scope
+      }
+
       // only the angular-validation Directive can possibly reach this condition with all properties filled
       // on the other hand the angular-validation Service will `initialize()` function to initialize the same set of variables
-      if(!!scope && !!elm && !!attrs && !!ctrl) {
-        addToFormElementObjectList(elm, attrs, ctrl, scope);
+      if (!!this.elm && !!this.validatorAttrs && !!this.ctrl && !!this.scope) {
+        addToFormElementObjectList(this.elm, this.validatorAttrs, this.ctrl, this.scope);
         this.defineValidation();
       }
     };
@@ -363,13 +370,34 @@ angular
           isValid = (otherNgModelVal === strValue && !!strValue);
         }
         // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
-        else if(validator.type === "remote" && strValue !== '') {
-          //isValid = false;              // make sure to invalidate the field so that the Directive/Service itself does not make it as true even though Remote might not be finished.
+        else if(validator.type === "remote" && strValue !== '' && showError === true) {
           self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
 
+          var fct = null;
           var fname = validator.params[0];
-          var fn = self.scope[fname];
-          var promise = (typeof fn === "function") ? fn() : null;
+          if (fname.indexOf(".") === -1) {
+            fct = self.scope[fname];
+          } else {
+            // function name might also be declared with the Controller As alias, for example: vm.customRemote()
+            // split the name and flatten it to find it inside the scope
+            var split = fname.split('.');
+            fct = self.scope;
+            for (var k = 0, kln = split.length; k < kln; k++) {
+              fct = fct[split[k]];
+            }
+          }
+          var promise = (typeof fct === "function") ? fct() : null;
+
+          // if we already have previous promises running, we might want to abort them (if user specified an abort function)
+          if (remotePromises.length > 1) {
+            while (remotePromises.length > 0) {
+              var previousPromise = remotePromises.pop();
+              if (typeof previousPromise.abort === "function") {
+                previousPromise.abort(); // run the abort if user declared it
+              }
+            }
+          }
+          remotePromises.push(promise); // always add to beginning of array list of promises
 
           if(!!promise && typeof promise.then === "function") {
             self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
@@ -377,8 +405,11 @@ angular
             // process the promise
             (function(altText) {
               promise.then(function (result) {
-                self.ctrl.$processing = false; // finished resolving, no more pending
-                var errorMsg = message + ' '; // use the global error message
+                result = result.data || result;
+                remotePromises.pop();                 // remove the last promise from array list of promises
+
+                self.ctrl.$processing = false;  // finished resolving, no more pending
+                var errorMsg = message + ' ';   // use the global error message
 
                 if (typeof result === "boolean") {
                   isValid = (!!result) ? true : false;
@@ -403,7 +434,7 @@ angular
               });
             })(validator.altText);
           }else {
-            throw 'Remote Validation requires a declared function (in your Controller) which also returns a promise, please review your code.'
+            throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
           }
         }
         // or finally it might be a regular regex pattern checking
@@ -432,7 +463,7 @@ angular
         if(!isValid) {
           isFieldValid = false;
 
-          // run $translate promise, use closures to keep  access to all necessary variables
+          // run $translate promise, use closures to keep access to all necessary variables
           (function(formElmObj, isValid, validator) {
             var msgToTranslate = validator.message;
             if(!!validator.altText && validator.altText.length > 0) {
@@ -522,12 +553,15 @@ angular
       }
 
       // if user is pre-validating all form elements, display error right away
-      if(self.validatorAttrs.preValidateFormElements || (!!self.scope.$validationOptions && self.scope.$validationOptions.hasOwnProperty('preValidateFormElements'))) {
+      if (!!self.validatorAttrs.preValidateFormElements || (!!self.scope.$validationOptions && !!self.scope.$validationOptions.preValidateFormElements)) {
         // make the element as it was touched for CSS, only works in AngularJS 1.3+
         if (!!formElmObj && typeof self.ctrl.$setTouched === "function") {
           formElmObj.ctrl.$setTouched();
         }
-        updateErrorMsg(message, { isSubmitted: true, isValid: isFieldValid, obj: formElmObj });
+        // only display errors on page load, when elements are not yet dirty
+        if(self.ctrl.$dirty === false) {
+          updateErrorMsg(message, { isSubmitted: true, isValid: isFieldValid, obj: formElmObj });
+        }
       }
 
       // error Display
@@ -637,12 +671,23 @@ angular
     function getElementParentForm(elmName, self) {
       // from the element passed, get his parent form
       var forms = document.getElementsByName(elmName);
+      var parentForm = null;
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
         if (!!form && form.name && self.scope[form.name]) {
-          return self.scope[form.name];
+          parentForm = self.scope[form.name];
+          if(typeof parentForm.$name === "undefined") {
+            parentForm.$name = form.name; // make sure it has a $name, since we use that variable later on
+          }
+          return parentForm;
         }
+      }
+
+      // falling here with a form name but without a form object found in the scope is often due to isolate scope
+      // we can hack it and define our own form inside this isolate scope, in that way we can still use something like: isolateScope.form1.$validationSummary
+      if(!!form && !!form.name) {
+        return self.scope[form.name] = { $name: form.name, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
       }
       return null;
     }

@@ -45,6 +45,14 @@
           }
         });
 
+        // onBlur make validation without waiting
+        elm.bind('blur', blurHandler = function(event) {
+          if(!isValidationCancelled) {
+            // validate without delay
+            attemptToValidate(event.target.value, 0);
+          }
+        });
+
         //----
         // Private functions declaration
         //----------------------------------
@@ -66,7 +74,10 @@
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
          */
-        function attemptToValidate(value) {
+        function attemptToValidate(value, typingLimit) {
+          // get the waiting delay time if passed as argument or get it from common Object
+          var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : commonObj.typingLimit;
+
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing false as 2nd argument for not showing any errors on screen
           commonObj.validate(value, false);
@@ -83,15 +94,6 @@
           if(!!value || commonObj.isFieldRequired()) {
             ctrl.$setValidity('validation', false);
           }
-
-          // if field is not required and his value is empty, cancel validation and exit out
-          // onBlur make validation without waiting
-          elm.bind('blur', blurHandler = function() {
-            if(!isValidationCancelled) {
-              // make the regular validation of the field value
-              scope.$evalAsync( ctrl.$setValidity('validation', commonObj.validate(value, true)) );
-            }
-          });
 
           // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
           // we will still call the `.validate()` function so that it shows also the possible other error messages
@@ -116,7 +118,7 @@
             $timeout.cancel(timer);
             timer = $timeout(function() {
               scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
-            }, commonObj.typingLimit);
+            }, waitingLimit);
           }
 
           return value;
