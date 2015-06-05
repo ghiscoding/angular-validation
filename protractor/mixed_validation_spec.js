@@ -22,7 +22,8 @@
     'Alphanumeric + Exactly(3) + Required -- debounce(3sec)',
     'Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01',
     'Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15',
-    'TextArea: Alphanumeric + Minimum(15) + Required'
+    'TextArea: Alphanumeric + Minimum(15) + Required',
+    'Input20 - ngDisabled =>'
   ];
   var errorMessages = [
     'Must be a positive or negative number. Field is required.',
@@ -71,17 +72,19 @@
   var types = ['Directive', 'Service'];
 
   // variables used on 2Forms web page
-  var formElement2FormsNames = ['input2', 'input3', 'select1', 'area1'];
-  var formElement2FormsSummaryNames = ['First Name', 'Last Name', 'area1', 'select1'];
+  var formElement2FormsNames = ['input2', 'input3', 'input4', 'select1', 'area1'];
+  var formElement2FormsSummaryNames = ['First Name', 'Last Name', 'input4', 'area1', 'select1'];
   var errorMessages2Forms = [
     'May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.',
     'May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.',
     'Change language',
     'May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required.'
   ];
+  var errorMessages2FormsExtra = 'Field is required.';
   var validInput2FormsTexts = [
     'John',
     'Doe',
+    'abc',
     'en',
     'This is a great tool'
   ];
@@ -303,8 +306,8 @@
         var inputName;
 
         for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
-          // since field after input13 is part of errorMessages and is empty string, we need to skip that one
-          if (formElement2FormsNames[i] === 'input13') {
+          // since field after input4 is part of errorMessages and is empty string, we need to skip that one
+          if (formElement2FormsNames[i] === 'input4') {
             j++;
           }
           expect(itemRows.get(i).getText()).toEqual(formElement2FormsSummaryNames[i] + ': ' + errorMessages2Forms[j++]);
@@ -314,10 +317,11 @@
 
     it('Should enter valid text and make error go away', function () {
       for (var i = 0, ln = formElement2FormsNames.length; i < ln; i++) {
-        // some fields are not required or disabled so no error will show up, continue to next ones
-        if (formElement2FormsNames[i] === 'input12' || formElement2FormsNames[i] === 'input14') {
+        // since field after input4 is part of errorMessages and is empty string, we need to skip that one
+        if (formElement2FormsNames[i] === 'input4') {
           continue;
         }
+
         var elmInput = $('[name=' + formElement2FormsNames[i] + ']');
         elmInput.click();
         elmInput.sendKeys(validInput2FormsTexts[i]);
@@ -332,7 +336,61 @@
       }
     });
 
-    it('Should check that both submit button are now enabled', function() {
+    it('Should check that both submit buttons are now enabled', function() {
+      var elmSubmit1 = $('[name=save_btn1]');
+      expect(elmSubmit1.isEnabled()).toBe(true);
+
+      var elmSubmit2 = $('[name=save_btn2]');
+      expect(elmSubmit2.isEnabled()).toBe(true);
+    });
+
+    it('Should make input4 editable & error should show on input4', function() {
+      // click on the radio button OFF, that will make the input editable
+      element(by.id('radioDisableInput4_off')).click();
+
+      // error should appear
+      var elmError = $('.validation-input4');
+      expect(elmError.getText()).toEqual(errorMessages2FormsExtra);
+
+      // Save button should become disable
+      var elmSubmit1 = $('[name=save_btn1]');
+      expect(elmSubmit1.isEnabled()).toBe(false);
+    });
+
+    it('Should show input4 error in ValidationSummary', function () {
+      var btnShowSummary = $('button[name=btn_showValidation]');
+      btnShowSummary.click();
+      browser.waitForAngular();
+
+      // showValidation checkbox should false at first but true after
+      var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
+
+      // scroll back to top
+      browser.executeScript('window.scrollTo(0,0);').then(function () {
+        var itemRows = element.all(by.binding('message'));
+        var inputName;
+
+        for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
+          expect(itemRows.get(i).getText()).toEqual('input4: Field is required.');
+        }
+      });
+    });
+
+    it('Should disable input4, error go away from input & validation summary', function() {
+      // click on the radio button OFF, that will make the input editable
+      element(by.id('radioDisableInput4_on')).click();
+
+      // error should appear
+      var elmError = $('.validation-input4');
+      expect(elmError.getText()).toEqual('');
+
+      // validation summary should become empty
+      var itemRows = element.all(by.binding('message'));
+      expect(itemRows.count()).toBe(0);
+    });
+
+    it('Should check that both submit buttons are now enabled', function() {
       var elmSubmit1 = $('[name=save_btn1]');
       expect(elmSubmit1.isEnabled()).toBe(true);
 

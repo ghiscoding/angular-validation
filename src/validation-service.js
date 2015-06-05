@@ -10,17 +10,15 @@
 angular
 	.module('ghiscoding.validation')
 	.service('validationService', ['$timeout', 'validationCommon', function ($timeout, validationCommon) {
-    // global variables of our object
-    var validationAttrs;  // Current Validator attributes
-    var commonObj;        // Object of validationCommon service
-    var timer;            // timer of user inactivity time
-    var blurHandler;
-    var isValidationCancelled = false;
+    // global variables of our object (start with _var)
+	  var _blurHandler;
 
     // service constructor
-    var validationService = function() {
-      this.validationAttrs = {};
-      this.commonObj = new validationCommon();
+    var validationService = function () {
+      this.isValidationCancelled = false;       // is the validation cancelled?
+      this.timer = null;                        // timer of user inactivity time
+      this.validationAttrs = {};                // Current Validator attributes
+      this.commonObj = new validationCommon();  // Object of validationCommon service
     }
 
     // list of available published public functions of this object
@@ -87,8 +85,8 @@ angular
       }
 
       // onBlur make validation without waiting
-      attrs.elm.bind('blur', blurHandler = function(event) {
-        if(!isValidationCancelled) {
+      attrs.elm.bind('blur', _blurHandler = function(event) {
+        if (!self.isValidationCancelled) {
           // re-initialize to use current element & validate without delay
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
           attemptToValidate(self, event.target.value, 0);
@@ -97,7 +95,7 @@ angular
 
       // merge both attributes but 2nd object (attrs) as higher priority, so that for example debounce property inside `attrs` as higher priority over `validatorAttrs`
       // so the position inside the mergeObject call is very important
-      attrs = mergeObjects(self.validationAttrs, attrs);
+      attrs = self.commonObj.mergeObjects(self.validationAttrs, attrs);
 
       // watch the element for any value change, validate it once that happen
 			scope.$watch(attrs.elmName, function (newVal, oldVal) {
@@ -171,7 +169,7 @@ angular
       for (i = 0, ln = elmName.length; i < ln; i++) {
         if (!!elmName[i]) {
           self.commonObj.removeFromFormElementObjectList(elmName[i]);
-          self.commonObj.removeFromValidationSummary(obj.$validationSummary, elmName[i]);
+          self.commonObj.removeFromValidationSummary(elmName[i], obj.$validationSummary);
         }
       }
     }
@@ -239,9 +237,10 @@ angular
      * @param object attrs: global options
      * @return object self
      */
-    function setGlobalOptions(attrs) {
+    function setGlobalOptions(options) {
       var self = this;
-      self.validationAttrs = attrs; // save in global
+      self.validationAttrs = options; // save in global
+      self.commonObj.setGlobalOptions(options);
 
       return self;
     }
@@ -268,7 +267,7 @@ angular
         cancelValidation(self);
         return value;
       }else {
-        isValidationCancelled = false;
+        self.isValidationCancelled = false;
       }
 
       // invalidate field before doing any validation
@@ -309,29 +308,15 @@ angular
      * @param object obj
      */
     function cancelValidation(obj) {
-      isValidationCancelled = true;
       $timeout.cancel(self.timer);
+      obj.isValidationCancelled = true;
       obj.commonObj.updateErrorMsg('');
       obj.commonObj.ctrl.$setValidity('validation', true);
 
       // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-      if(typeof blurHandler !== "undefined") {
-        obj.commonObj.elm.unbind('blur', blurHandler);
+      if(typeof _blurHandler !== "undefined") {
+        obj.commonObj.elm.unbind('blur', _blurHandler);
       }
-    }
-
-    /**
-     * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
-     * @param obj1
-     * @param obj2
-     * @return obj3 a new object based on obj1 and obj2
-     */
-    function mergeObjects(obj1, obj2) {
-      var obj3 = {};
-      for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
-      for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
-
-      return obj3;
     }
 
     /** Remove a watcher and any withstanding error message from the element
@@ -358,7 +343,7 @@ angular
       }
       formElmObj.ctrl.$setPristine();
       formElmObj.ctrl.$setValidity('validation', true);
-      self.commonObj.removeFromValidationSummary(validationSummary, formElmObj.fieldName);
+      self.commonObj.removeFromValidationSummary(formElmObj.fieldName, validationSummary);
       self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
     }
 

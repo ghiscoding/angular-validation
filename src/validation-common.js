@@ -9,48 +9,43 @@
 angular
   .module('ghiscoding.validation')
   .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
-    // global variables of our object
-    var bypassRootScopeReset = false;     // do we want to bypass the watch on the $rootScope? False by default
-    var bDisplayOnlyLastErrorMsg = false; // display only 1 error message at a time, by default it's false since we will display all errors of each element
-    var bFieldRequired = false;           // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
-    var INACTIVITY_LIMIT = 1000;          // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
+    // global variables of our object (start with _var)
+    var _bypassRootScopeReset = false;     // do we want to bypass the watch on the $rootScope? False by default
+    var _bFieldRequired = false;           // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
+    var _INACTIVITY_LIMIT = 1000;          // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
 
-    var elm;                              // element object of current form element
-    var ctrl;                             // ctrl object of the current form element
-    var scope;                            // scope object of the current form element
-    var value;                            // value of current form element
-    var timer;                            // timer of user inactivity time
-    var typingLimit;                      // maximum user inactivity typing limit
-    var formElements = [];                // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
-    var remotePromises = [];              // keep track of promises called and running when using the Remote validator
-    var validators = [];                  // Array of all Form Validators
-    var validatorAttrs = {};              // Current Validator attributes
-    var validationSummary = [];           // Array Validation Error Summary
+    var _formElements = [];                // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
+    var _globalOptions = {};               // Angular-Validation global options, could be define by scope.$validationOptions or by validationService.setGlobalOptions()
+    var _remotePromises = [];              // keep track of promises called and running when using the Remote validator
+    var _validationSummary = [];           // Array Validation Error Summary
 
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
-      if (!bypassRootScopeReset) {
-        bDisplayOnlyLastErrorMsg = false;
-        formElements = [];        // array containing all form elements, valid or invalid
-        validationSummary = [];   // array containing the list of invalid fields inside a validationSummary
+      if (!_bypassRootScopeReset) {
+        _globalOptions.displayOnlyLastErrorMsg = false;
+        _formElements = [];        // array containing all form elements, valid or invalid
+        _validationSummary = [];   // array containing the list of invalid fields inside a validationSummary
       }
     });
 
     // service constructor
-    var validationCommon = function(scope, elm, attrs, ctrl) {
-      this.timer = null;
+    var validationCommon = function (scope, elm, attrs, ctrl) {
       this.bFieldRequired = false; // by default we'll consider our field as not required, if validation attribute calls it, then we'll start validating
       this.validators = [];
-      this.typingLimit = INACTIVITY_LIMIT;
+      this.typingLimit = _INACTIVITY_LIMIT;
       this.scope = scope;
       this.elm = elm;
       this.ctrl = ctrl;
       this.validatorAttrs = attrs;
 
+      if(!!scope && !!scope.$validationOptions) {
+        _globalOptions = scope.$validationOptions; // save the global options
+      }
+
       // user could pass his own scope, useful in a case of an isolate scope
-      if (!!scope && !!scope.$validationOptions && scope.$validationOptions.hasOwnProperty('isolatedScope')) {
-        this.scope = scope.$validationOptions.isolatedScope;              // rewrite original scope
-        this.scope.$validationOptions = scope.$validationOptions; // reuse the validationOption from original scope
+      if (!!scope && (!!_globalOptions.isolatedScope || !!_globalOptions.scope)) {
+        this.scope = (!!_globalOptions.isolatedScope) ? _globalOptions.isolatedScope : _globalOptions.scope;  // overwrite original scope (isolatedScope/scope are equivalent arguments)
+        _globalOptions = mergeObjects(scope.$validationOptions, _globalOptions);                              // reuse the validationOption from original scope
       }
 
       // only the angular-validation Directive can possibly reach this condition with all properties filled
@@ -67,10 +62,12 @@ angular
     validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
     validationCommon.prototype.isFieldRequired = isFieldRequired;                                   // return boolean knowing if the current field is required
     validationCommon.prototype.initialize = initialize;                                             // initialize current object with passed arguments
+    validationCommon.prototype.mergeObjects = mergeObjects;                                         // merge 2 javascript objects, Overwrites obj1's values with obj2's (basically Object2 as higher priority over Object1)
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary;           // remove an element from the $validationSummary
     validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;   // remove named items from formElements list
     validationCommon.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                   // setter on: do we want to bypass the root scope reset?
     validationCommon.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;             // setter on the behaviour of displaying only the last error message
+    validationCommon.prototype.setGlobalOptions = setGlobalOptions;                                 // set global options used by all validators (usually called by the validationService)
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                                     // update on screen an error message below current form element
     validationCommon.prototype.validate = validate;                                                 // validate current element
 
@@ -95,22 +92,22 @@ angular
       self.validators = [];        // reset the global validators
 
       // debounce (alias of typingLimit) timeout after user stop typing and validation comes in play
-      self.typingLimit = INACTIVITY_LIMIT;
-      if(self.validatorAttrs.hasOwnProperty('debounce')) {
+      self.typingLimit = _INACTIVITY_LIMIT;
+      if (self.validatorAttrs.hasOwnProperty('debounce')) {
         self.typingLimit = parseInt(self.validatorAttrs.debounce, 10);
-      }else if(self.validatorAttrs.hasOwnProperty('typingLimit')) {
+      } else if (self.validatorAttrs.hasOwnProperty('typingLimit')) {
         self.typingLimit = parseInt(self.validatorAttrs.typingLimit, 10);
-      }else if(!!self.scope.$validationOptions && self.scope.$validationOptions.hasOwnProperty('debounce')) {
-        self.typingLimit = parseInt(self.scope.$validationOptions.debounce, 10);
+      } else if (!!_globalOptions && _globalOptions.hasOwnProperty('debounce')) {
+        self.typingLimit = parseInt(_globalOptions.debounce, 10);
       }
 
       // We first need to see if the validation holds a custom user regex, if it does treat it first
       // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
       // Return string will have the complete regex pattern removed but we will keep ':regex' so that we can still loop over it
       var rules = (self.validatorAttrs.hasOwnProperty('rules')) ? self.validatorAttrs.rules : self.validatorAttrs.validation; // inside directive(validation), inside service(rules)
-      if(rules.indexOf("regex:") >= 0) {
+      if (rules.indexOf("regex:") >= 0) {
         var matches = rules.match("regex:(.*?):regex");
-        if(matches.length < 2) {
+        if (matches.length < 2) {
           throw 'Regex validator within the validation needs to be define with an opening "regex:" and a closing ":regex", please review your validator.';
         }
         var regAttrs = matches[1].split(':=');
@@ -127,11 +124,11 @@ angular
       // at this point it's safe to split with pipe (since regex was previously stripped out)
       var validations = rules.split('|');
 
-      if(validations) {
+      if (validations) {
         self.bFieldRequired = (rules.indexOf("required") >= 0) ? true : false;
 
         // loop through all validators of the element
-        for(var i = 0, ln = validations.length; i < ln; i++) {
+        for (var i = 0, ln = validations.length; i < ln; i++) {
           // params split will be:: [0]=rule, [1]=ruleExtraParams OR altText, [2] altText
           var params = validations[i].split(':');
 
@@ -153,14 +150,14 @@ angular
      * @return array object elements
      */
     function getFormElementByName(elmName) {
-      return arrayFindObject(formElements, 'fieldName', elmName);
+      return arrayFindObject(_formElements, 'fieldName', elmName);
     }
 
     /** Return all Form elements
      * @return array object elements
      */
     function getFormElements() {
-      return formElements;
+      return _formElements;
     }
 
     /** Initialize the common object
@@ -185,13 +182,28 @@ angular
       return self.bFieldRequired;
     }
 
+    /**
+     * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+     * When both object have the same property, the Object2 will higher priority over Object1 (basically that property will be overwritten inside Object1)
+     * @param obj1
+     * @param obj2
+     * @return obj3 a new object based on obj1 and obj2
+     */
+    function mergeObjects(obj1, obj2) {
+      var obj3 = {};
+      for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+      for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+
+      return obj3;
+    }
+
     /** Remove objects from FormElement list.
      * @param elementName to remove
      */
     function removeFromFormElementObjectList(elmName) {
-      var index = arrayFindObjectIndex(formElements, 'fieldName', elmName); // find index of object in our array
+      var index = arrayFindObjectIndex(_formElements, 'fieldName', elmName); // find index of object in our array
       if (index >= 0) {
-        formElements.splice(index, 1);
+        _formElements.splice(index, 1);
       }
     }
 
@@ -199,17 +211,31 @@ angular
      * @param object validationSummary
      * @param string elmName: element name
      */
-    function removeFromValidationSummary(validationSummaryObj, elmName) {
-      var index = arrayFindObjectIndex(validationSummaryObj, 'field', elmName); // find index of object in our array
+    function removeFromValidationSummary(elmName, validationSummaryObj) {
+      var form = getElementParentForm(elmName, this);                         // find the parent form (only found if it has a name)
+      var vsObj = (!!validationSummaryObj) ? validationSummaryObj : _validationSummary;
+
+      var index = arrayFindObjectIndex(vsObj, 'field', elmName); // find index of object in our array
       // if message is empty, remove it from the validation summary object
-      if(index >= 0) {
-        validationSummaryObj.splice(index, 1);
+      if (index >= 0) {
+        vsObj.splice(index, 1);
       }
       // also remove from 'local' validationSummary
-      index = arrayFindObjectIndex(validationSummary, 'field', elmName); // find index of object in our array
-      if(index >= 0) {
-        validationSummary.splice(index, 1);
+      index = arrayFindObjectIndex(_validationSummary, 'field', elmName); // find index of object in our array
+      if (index >= 0) {
+        _validationSummary.splice(index, 1);
       }
+
+      this.scope.$validationSummary = _validationSummary;
+
+      // and also save it inside the current scope form (if found)
+      if (!!form) {
+        // since validationSummary contain errors of all forms
+        // we need to find only the errors of current form and them into the current scope form object
+        form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+      }
+
+      return _validationSummary;
     }
 
     /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.
@@ -218,7 +244,7 @@ angular
      * @param boolean value
      */
     function setBypassRootScopeReset(boolValue) {
-      bypassRootScopeReset = boolValue;
+      _bypassRootScopeReset = boolValue;
     }
 
     /** Setter on the behaviour of displaying only the last error message of each element.
@@ -226,7 +252,21 @@ angular
      * @param boolean value
      */
     function setDisplayOnlyLastErrorMsg(boolValue) {
-      bDisplayOnlyLastErrorMsg = boolValue;
+      _globalOptions.displayOnlyLastErrorMsg = boolValue;
+    }
+
+    /** Set and initialize global options used by all validators
+     * @param object attrs: global options
+     * @return object self
+     */
+    function setGlobalOptions(options) {
+      var self = this;
+
+      // merge both attributes but 2nd object (attrs) as higher priority, so that for example debounce property inside `attrs` as higher priority over `validatorAttrs`
+      // so the position inside the mergeObject call is very important
+      _globalOptions = mergeObjects(_globalOptions, options); // save in global
+
+      return self;
     }
 
     /** in general we will display error message at the next element after our input as <span class="validation validation-inputName text-danger">
@@ -248,7 +288,7 @@ angular
       var elmName = (!!elm && elm.attr('name')) ? elm.attr('name') : null;
 
       // Make sure that element has a name="" attribute else it will not work
-      if(typeof elmName === "undefined" || elmName === null) {
+      if (typeof elmName === "undefined" || elmName === null) {
         var ngModelName = (!!elm) ? elm.attr('ng-model') : 'unknown';
         throw 'Angular-Validation Service requires you to have a (name="") attribute on the element to validate... Your element is: ng-model="' + ngModelName + '"';
       }
@@ -261,27 +301,27 @@ angular
       var errorElm = null;
 
       // find the element which we'll display the error message, this element might be defined by the user with 'validationErrorTo'
-      if(!!self.validatorAttrs && self.validatorAttrs.hasOwnProperty('validationErrorTo')) {
+      if (!!self.validatorAttrs && self.validatorAttrs.hasOwnProperty('validationErrorTo')) {
         // validationErrorTo can be used in 3 different ways: with '.' (element error className) or with/without '#' (element error id)
         var firstChar = self.validatorAttrs.validationErrorTo.charAt(0);
-        var selector = (firstChar === '.' || firstChar === '#') ? self.validatorAttrs.validationErrorTo : '#'+self.validatorAttrs.validationErrorTo;
+        var selector = (firstChar === '.' || firstChar === '#') ? self.validatorAttrs.validationErrorTo : '#' + self.validatorAttrs.validationErrorTo;
         errorElm = angular.element(document.querySelector(selector));
       }
       // errorElm can be empty due to:
       //  1. validationErrorTo has not been set
       //  2. validationErrorTo has been mistyped, and if mistyped, use regular functionality
-      if(!errorElm || errorElm.length === 0) {
+      if (!errorElm || errorElm.length === 0) {
         // most common way, let's try to find our <span class="validation-inputName">
-        errorElm = angular.element(document.querySelector('.validation-'+elmInputName));
+        errorElm = angular.element(document.querySelector('.validation-' + elmInputName));
       }
 
       // form might have already been submitted
       var isSubmitted = (!!attrs && attrs.isSubmitted) ? attrs.isSubmitted : false;
 
       // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
-      if(!!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
-        (errorElm.length > 0) ? errorElm.text(errorMsg) : elm.after('<span class="validation validation-'+elmInputName+' text-danger">'+errorMsg+'</span>');
-      }else {
+      if (!!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
+        (errorElm.length > 0) ? errorElm.text(errorMsg) : elm.after('<span class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</span>');
+      } else {
         errorElm.text('');  // element is pristine or no validation applied, error message has to be blank
       }
     }
@@ -303,7 +343,7 @@ angular
 
       // to make proper validation, our element value cannot be an undefined variable (we will at minimum make it an empty string)
       // For example, in some particular cases "undefined" returns always True on regex.test() which is incorrect especiall on max_len:x
-      if(typeof strValue === "undefined") {
+      if (typeof strValue === "undefined") {
         strValue = '';
       }
 
@@ -318,136 +358,141 @@ angular
       var rules = self.validatorAttrs.hasOwnProperty('rules') ? self.validatorAttrs.rules : self.validatorAttrs.validation;
 
       // loop through all validators (could be multiple)
-      for(var j = 0, jln = self.validators.length; j < jln; j++) {
+      for (var j = 0, jln = self.validators.length; j < jln; j++) {
         validator = self.validators[j];
 
-        if(validator.type === "conditionalDate") {
+        if (validator.type === "conditionalDate") {
           // 1- we first need to validate that the Date input is well formed through regex
           // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
           regex = new RegExp(validator.pattern, 'i');
           isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
 
           // 2- date is valid, then we can do our conditional date check
-          if(isValid) {
+          if (isValid) {
             // For Date comparison, we will need to construct a Date Object that follows the ECMA so then it could work in all browser
             // Then convert to timestamp & finally we can compare both dates for filtering
             var dateType = validator.dateType;                   // date type (ISO, EURO, US-SHORT, US-LONG)
             var timestampValue = parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
 
             // if 2 params, then it's a between condition
-            if(validator.params.length == 2) {
+            if (validator.params.length == 2) {
               // this is typically a "between" condition, a range of number >= and <=
               var timestampParam0 = parseDate(validator.params[0], dateType).getTime();
               var timestampParam1 = parseDate(validator.params[1], dateType).getTime();
               var isValid1 = testCondition(validator.condition[0], timestampValue, timestampParam0);
               var isValid2 = testCondition(validator.condition[1], timestampValue, timestampParam1);
               isValid = (isValid1 && isValid2) ? true : false;
-            }else {
+            } else {
               // else, 1 param is a simple conditional date check
               var timestampParam = parseDate(validator.params[0], dateType).getTime();
               isValid = testCondition(validator.condition, timestampValue, timestampParam);
             }
           }
         }
-        // it might be a conditional number checking
-        else if(validator.type === "conditionalNumber") {
+          // it might be a conditional number checking
+        else if (validator.type === "conditionalNumber") {
           // if 2 params, then it's a between condition
-          if(validator.params.length == 2) {
+          if (validator.params.length == 2) {
             // this is typically a "between" condition, a range of number >= and <=
             var isValid1 = testCondition(validator.condition[0], parseFloat(strValue), parseFloat(validator.params[0]));
             var isValid2 = testCondition(validator.condition[1], parseFloat(strValue), parseFloat(validator.params[1]));
             isValid = (isValid1 && isValid2) ? true : false;
-          }else {
+          } else {
             // else, 1 param is a simple conditional number check
             isValid = testCondition(validator.condition, parseFloat(strValue), parseFloat(validator.params[0]));
           }
         }
-        // it might be a match input checking
-        else if(validator.type === "match") {
+          // it might be a match input checking
+        else if (validator.type === "match") {
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
           var otherNgModel = validator.params[0];
           var otherNgModelVal = self.scope.$eval(otherNgModel);
           isValid = (otherNgModelVal === strValue && !!strValue);
         }
-        // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
-        else if(validator.type === "remote" && strValue !== '' && showError === true) {
-          self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
+          // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+        else if (validator.type === "remote") {
+          if (!!strValue && !!showError) {
+            self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
 
-          var fct = null;
-          var fname = validator.params[0];
-          if (fname.indexOf(".") === -1) {
-            fct = self.scope[fname];
-          } else {
-            // function name might also be declared with the Controller As alias, for example: vm.customRemote()
-            // split the name and flatten it to find it inside the scope
-            var split = fname.split('.');
-            fct = self.scope;
-            for (var k = 0, kln = split.length; k < kln; k++) {
-              fct = fct[split[k]];
-            }
-          }
-          var promise = (typeof fct === "function") ? fct() : null;
-
-          // if we already have previous promises running, we might want to abort them (if user specified an abort function)
-          if (remotePromises.length > 1) {
-            while (remotePromises.length > 0) {
-              var previousPromise = remotePromises.pop();
-              if (typeof previousPromise.abort === "function") {
-                previousPromise.abort(); // run the abort if user declared it
+            var fct = null;
+            var fname = validator.params[0];
+            if (fname.indexOf(".") === -1) {
+              fct = self.scope[fname];
+            } else {
+              // function name might also be declared with the Controller As alias, for example: vm.customRemote()
+              // split the name and flatten it to find it inside the scope
+              var split = fname.split('.');
+              fct = self.scope;
+              for (var k = 0, kln = split.length; k < kln; k++) {
+                fct = fct[split[k]];
               }
             }
-          }
-          remotePromises.push(promise); // always add to beginning of array list of promises
+            var promise = (typeof fct === "function") ? fct() : null;
 
-          if(!!promise && typeof promise.then === "function") {
-            self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
-
-            // process the promise
-            (function(altText) {
-              promise.then(function (result) {
-                result = result.data || result;
-                remotePromises.pop();                 // remove the last promise from array list of promises
-
-                self.ctrl.$processing = false;  // finished resolving, no more pending
-                var errorMsg = message + ' ';   // use the global error message
-
-                if (typeof result === "boolean") {
-                  isValid = (!!result) ? true : false;
-                }else if(typeof result === "object") {
-                  isValid = (!!result.isValid) ? true : false;
+            // if we already have previous promises running, we might want to abort them (if user specified an abort function)
+            if (_remotePromises.length > 1) {
+              while (_remotePromises.length > 0) {
+                var previousPromise = _remotePromises.pop();
+                if (typeof previousPromise.abort === "function") {
+                  previousPromise.abort(); // run the abort if user declared it
                 }
+              }
+            }
+            _remotePromises.push(promise); // always add to beginning of array list of promises
 
-                if(isValid === false) {
-                  formElmObj.isValid = false;
-                  errorMsg += (!!result.message) ? result.message : altText;
+            if (!!promise && typeof promise.then === "function") {
+              self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
 
-                  // is field is invalid and we have an error message given, then add it to validationSummary and display error
-                  addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
-                }
-                if(isValid === true && isFieldValid === true) {
-                  // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
-                  // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
-                  formElmObj.isValid = true;
-                  self.ctrl.$setValidity('remote', true);
-                  addToValidationAndDisplayError(self, formElmObj, '', true, showError);
-                }
-              });
-            })(validator.altText);
-          }else {
-            throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
+              // process the promise
+              (function (altText) {
+                promise.then(function (result) {
+                  result = result.data || result;
+                  _remotePromises.pop();                 // remove the last promise from array list of promises
+
+                  self.ctrl.$processing = false;  // finished resolving, no more pending
+                  var errorMsg = message + ' ';   // use the global error message
+
+                  if (typeof result === "boolean") {
+                    isValid = (!!result) ? true : false;
+                  } else if (typeof result === "object") {
+                    isValid = (!!result.isValid) ? true : false;
+                  }
+
+                  if (isValid === false) {
+                    formElmObj.isValid = false;
+                    errorMsg += (!!result.message) ? result.message : altText;
+
+                    // is field is invalid and we have an error message given, then add it to validationSummary and display error
+                    addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
+                  }
+                  if (isValid === true && isFieldValid === true) {
+                    // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
+                    // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
+                    formElmObj.isValid = true;
+                    self.ctrl.$setValidity('remote', true);
+                    addToValidationAndDisplayError(self, formElmObj, '', true, showError);
+                  }
+                });
+              })(validator.altText);
+            } else {
+              throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
+            }
           }
         }
-        // or finally it might be a regular regex pattern checking
+          // or finally it might be a regular regex pattern checking
         else {
+          // get the ngDisabled attribute if found
+          var elmAttrNgDisabled = (typeof self.attrs !== "undefined") ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
+
           // a 'disabled' element should always be valid, there is no need to validate it
-          if(self.elm.prop("disabled") || parseInt(self.elm.attr("ng-disabled")) == true || self.elm.attr("ng-disabled") === "true") {
+          if (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled)) {
             isValid = true;
           } else {
             // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
-            if(typeof strValue === "string" && strValue === "" && self.elm.prop('type').toUpperCase() === "NUMBER") {
+            if (typeof strValue === "string" && strValue === "" && self.elm.prop('type').toUpperCase() === "NUMBER") {
               isValid = false;
               //message = $translate.instant("INVALID_KEY_CHAR");
-            }else {
+            } else {
               // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
               regex = new RegExp(validator.pattern, 'i');
               isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
@@ -456,36 +501,36 @@ angular
         }
 
         // not required and not filled is always valid & 'disabled', 'ng-disabled' elements should always be valid
-        if( (!self.bFieldRequired && !strValue) || (self.elm.prop("disabled") || parseInt(self.elm.attr("ng-disabled")) == true || self.elm.attr("ng-disabled") === "true") ) {
+        if ((!self.bFieldRequired && !strValue) || (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled))) {
           isValid = true;
         }
 
-        if(!isValid) {
+        if (!isValid) {
           isFieldValid = false;
 
           // run $translate promise, use closures to keep access to all necessary variables
-          (function(formElmObj, isValid, validator) {
+          (function (formElmObj, isValid, validator) {
             var msgToTranslate = validator.message;
-            if(!!validator.altText && validator.altText.length > 0) {
+            if (!!validator.altText && validator.altText.length > 0) {
               msgToTranslate = validator.altText.replace("alt=", "");
             }
 
             $translate(msgToTranslate).then(function (translation) {
               // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
               // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
-              if (message.length > 0 && bDisplayOnlyLastErrorMsg) {
+              if (message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
                 message = ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               } else {
                 message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               }
               addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
-            }).catch(function(data) {
+            }).catch(function (data) {
               // error caught:
               // alternate text might not need translation if the user sent his own custom message or is already translated
               // so just send it directly into the validation summary.
               if (!!validator.altText && validator.altText.length > 0) {
                 // if user is requesting to see only the last error message
-                if (message.length > 0 && bDisplayOnlyLastErrorMsg) {
+                if (message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
                   message = ' ' + msgToTranslate;
                 } else {
                   message += ' ' + msgToTranslate;
@@ -498,14 +543,14 @@ angular
       }   // for() loop
 
       // only log the invalid message in the $validationSummary
-      if(isValid) {
+      if (isValid) {
         addToValidationSummary(self, '');
         self.updateErrorMsg('', { isValid: isValid });
       }
 
-      if(!!formElmObj) {
+      if (!!formElmObj) {
         formElmObj.isValid = isFieldValid;
-        if(isFieldValid) {
+        if (isFieldValid) {
           formElmObj.message = '';
         }
       }
@@ -525,13 +570,13 @@ angular
       var elmName = (!!attrs.name) ? attrs.name : elm.attr('name');
       var friendlyName = (!!attrs && !!attrs.friendlyName) ? $translate.instant(attrs.friendlyName) : '';
       var formElm = { fieldName: elmName, friendlyName: friendlyName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
-      var index = arrayFindObjectIndex(formElements, 'fieldName', elm.attr('name')); // find index of object in our array
-      if(index >= 0) {
-        formElements[index] = formElm;
-      }else {
-        formElements.push(formElm);
+      var index = arrayFindObjectIndex(_formElements, 'fieldName', elm.attr('name')); // find index of object in our array
+      if (index >= 0) {
+        _formElements[index] = formElm;
+      } else {
+        _formElements.push(formElm);
       }
-      return formElements;
+      return _formElements;
     }
 
     /** Will add error to the validationSummary and also display the error message if requested
@@ -548,26 +593,26 @@ angular
       addToValidationSummary(formElmObj, message);
 
       // change the Form element object boolean flag from the `formElements` variable, used in the `checkFormValidity()`
-      if(!!formElmObj) {
+      if (!!formElmObj) {
         formElmObj.message = message;
       }
 
       // if user is pre-validating all form elements, display error right away
-      if (!!self.validatorAttrs.preValidateFormElements || (!!self.scope.$validationOptions && !!self.scope.$validationOptions.preValidateFormElements)) {
+      if (!!self.validatorAttrs.preValidateFormElements || !!_globalOptions.preValidateFormElements) {
         // make the element as it was touched for CSS, only works in AngularJS 1.3+
         if (!!formElmObj && typeof self.ctrl.$setTouched === "function") {
           formElmObj.ctrl.$setTouched();
         }
         // only display errors on page load, when elements are not yet dirty
-        if(self.ctrl.$dirty === false) {
+        if (self.ctrl.$dirty === false) {
           updateErrorMsg(message, { isSubmitted: true, isValid: isFieldValid, obj: formElmObj });
         }
       }
 
       // error Display
-      if(showError && !!formElmObj && !formElmObj.isValid) {
+      if (showError && !!formElmObj && !formElmObj.isValid) {
         self.updateErrorMsg(message, { isValid: isFieldValid });
-      }else if(!!formElmObj && formElmObj.isValid) {
+      } else if (!!formElmObj && formElmObj.isValid) {
         addToValidationSummary(formElmObj, '');
       }
     }
@@ -577,7 +622,7 @@ angular
      * @param string message: error message
      */
     function addToValidationSummary(self, message) {
-      if(typeof self === "undefined" || self == null) {
+      if (typeof self === "undefined" || self == null) {
         return;
       }
 
@@ -589,33 +634,34 @@ angular
           : self.elm.attr('name');
 
       var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
-      var index = arrayFindObjectIndex(validationSummary, 'field', elmName);  // find index of object in our array
+      var index = arrayFindObjectIndex(_validationSummary, 'field', elmName);  // find index of object in our array
 
       // if message is empty, remove it from the validation summary
-      if(index >= 0 && message === '') {
-        validationSummary.splice(index, 1);
-      }else if(message !== '') {
+      if (index >= 0 && message === '') {
+        _validationSummary.splice(index, 1);
+      } else if (message !== '') {
         var friendlyName = (!!self.attrs && !!self.friendlyName) ? $translate.instant(self.friendlyName) : '';
         var errorObj = { field: elmName, friendlyName: friendlyName, message: message, formName: (!!form) ? form.$name : null };
 
         // if error already exist then refresh the error object inside the array, else push it to the array
-        if(index >= 0) {
-          validationSummary[index] = errorObj;
-        }else {
-          validationSummary.push(errorObj);
+        if (index >= 0) {
+          _validationSummary[index] = errorObj;
+        } else {
+          _validationSummary.push(errorObj);
         }
       }
 
       // save validation summary scope root
-      self.scope.$validationSummary = validationSummary;
+      self.scope.$validationSummary = _validationSummary;
 
       // and also save it inside the current scope form (if found)
       if (!!form) {
         // since validationSummary contain errors of all forms
         // we need to find only the errors of current form and them into the current scope form object
-        form.$validationSummary = arrayFindObjects(validationSummary, 'formName', form.$name);
+        form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
       }
-      return validationSummary;
+
+      return _validationSummary;
     }
 
     /** Quick function to find an object inside an array by it's given field name and value, return the object found or null
@@ -625,9 +671,11 @@ angular
      * @return object found from source array or null
      */
     function arrayFindObject(sourceArray, searchId, searchValue) {
-      for (var i = 0; i < sourceArray.length; i++) {
-        if (sourceArray[i][searchId] === searchValue) {
-          return sourceArray[i];
+      if (!!sourceArray) {
+        for (var i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i][searchId] === searchValue) {
+            return sourceArray[i];
+          }
         }
       }
       return null;
@@ -641,9 +689,11 @@ angular
      */
     function arrayFindObjects(sourceArray, searchId, searchValue) {
       var results = [];
-      for (var i = 0; i < sourceArray.length; i++) {
-        if (sourceArray[i][searchId] === searchValue) {
-          results.push(sourceArray[i]);
+      if (!!sourceArray) {
+        for (var i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i][searchId] === searchValue) {
+            results.push(sourceArray[i]);
+          }
         }
       }
       return results;
@@ -656,11 +706,14 @@ angular
      * @return int index position found
      */
     function arrayFindObjectIndex(sourceArray, searchId, searchValue) {
-      for (var i = 0; i < sourceArray.length; i++) {
-        if (sourceArray[i][searchId] === searchValue) {
-          return i;
+      if (!!sourceArray) {
+        for (var i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i][searchId] === searchValue) {
+            return i;
+          }
         }
       }
+
       return -1;
     }
 
@@ -677,7 +730,7 @@ angular
         var form = forms[i].form;
         if (!!form && form.name && self.scope[form.name]) {
           parentForm = self.scope[form.name];
-          if(typeof parentForm.$name === "undefined") {
+          if (typeof parentForm.$name === "undefined") {
             parentForm.$name = form.name; // make sure it has a $name, since we use that variable later on
           }
           return parentForm;
@@ -686,7 +739,7 @@ angular
 
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
       // we can hack it and define our own form inside this isolate scope, in that way we can still use something like: isolateScope.form1.$validationSummary
-      if(!!form && !!form.name) {
+      if (!!form && !!form.name) {
         return self.scope[form.name] = { $name: form.name, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
       }
       return null;
@@ -852,4 +905,4 @@ angular
       });
     }
 
-}]); // validationCommon service
+  }]); // validationCommon service

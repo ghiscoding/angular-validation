@@ -106,7 +106,7 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
   //    #3 .addValidator({ elmName: 'inputX', rules: 'myRules'})
   // the available object properties are the exact same set as the directive except that they are camelCase
   myValidation
-    .setGlobalOptions({ debounce: 1500, scope: $scope, isolatedScope: $scope, preValidateFormElements: false })
+    .setGlobalOptions({ debounce: 1500, scope: $scope, isolatedScope: $scope, preValidateFormElements: false, displayOnlyLastErrorMsg: false })
     .addValidator({ elmName: 'input2', debounce: 3000, rules: 'numeric_signed|required'})
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
     .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')

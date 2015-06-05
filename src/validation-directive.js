@@ -36,12 +36,14 @@
         // for the case of field that might be ng-disabled, we should skip validation
         // Observe the angular disabled attribute
         attrs.$observe("disabled", function(disabled) {
-          if(disabled) {
-            // Turn off validation when element is disabled
-            ctrl.$setValidity('validation', true);
+          if (disabled) {
+            // Turn off validation when element is disabled & remove it from validation summary
+            cancelValidation();
+            var validationSummary = commonObj.removeFromValidationSummary(attrs.name);
           } else {
             // Re-Validate the input when enabled
-            ctrl.$setValidity('validation', commonObj.validate(ctrl.$viewValue, true));
+            var value = ctrl.$viewValue || null;
+            ctrl.$setValidity('validation', commonObj.validate(value, true));
           }
         });
 

@@ -34,6 +34,12 @@
             <label for="input3">{{ 'LAST_NAME' | translate }}</label>
             <input type="text" class="form-control" name="input3" friendly-name="{{ 'LAST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="input3" validation="alpha_dash|min_len:2|required" />
         </div>
+        <div class="form-group">
+            <label for="input4">Input4 - ngDisabled =></label>
+            ON <input type="radio" id="radioDisableInput4_on" ng-model="disableInput4" value="on" ng-init="disableInput4 = 'on'">
+            OFF <input type="radio" id="radioDisableInput4_off" ng-model="disableInput4" value="off">
+            <input type="text" class="form-control" name="input4" placeholder="alpha_dash|min_len:2|required" ng-model="input4" validation="alpha_dash|min_len:2|required" ng-disabled="disableInput4 == 'on'" />
+        </div>
     </fieldset>
 
     <div class="form-actions">
