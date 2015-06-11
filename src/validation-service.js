@@ -9,9 +9,10 @@
  */
 angular
 	.module('ghiscoding.validation')
-	.service('validationService', ['$timeout', 'validationCommon', function ($timeout, validationCommon) {
+	.service('validationService', ['$interpolate', '$timeout', 'validationCommon', function ($interpolate, $timeout, validationCommon) {
     // global variables of our object (start with _var)
 	  var _blurHandler;
+    var _watchers = [];
 
     // service constructor
     var validationService = function () {
@@ -58,9 +59,12 @@ angular
         throw 'Angular-Validation-Service requires at least the following 3 attributes: {elmName, rules, scope}';
       }
 
+      // get the scope from the validator or from the global options (validationAttrs)
+      var scope = (!!attrs.scope) ? attrs.scope : self.validationAttrs.scope;
+
       // find the DOM element & make sure it's a filled object before going further
       // we will exclude disabled/ng-disabled element from being validated
-      attrs.elm = angular.element(document.querySelector('[name="'+attrs.elmName+'"]:not([disabled]):not([ng-disabled]'));
+      attrs.elm = angular.element(document.querySelector('[name="'+attrs.elmName+'"]'));
       if(typeof attrs.elm !== "object" || attrs.elm.length === 0) {
         return self;
       }
@@ -68,12 +72,9 @@ angular
       // copy the element attributes name to use throughout validationCommon
       // when using dynamic elements, we might have encounter unparsed or uncompiled data, we need to get Angular result with $interpolate
       if(new RegExp("{{(.*?)}}").test(attrs.elmName)) {
-        attrs.elmName = $interpolate(attrs.elmName)(attrs.scope);
+        attrs.elmName = $interpolate(attrs.elmName)(scope);
       }
       attrs.name = attrs.elmName;
-
-      // get the scope from the validator or from the global options (validationAttrs)
-      var scope = (!!attrs.scope) ? attrs.scope : self.validationAttrs.scope;
 
       // user could pass his own scope, useful in a case of an isolate scope
       if (!!self.validationAttrs.isolatedScope) {
@@ -86,7 +87,10 @@ angular
 
       // onBlur make validation without waiting
       attrs.elm.bind('blur', _blurHandler = function(event) {
-        if (!self.isValidationCancelled) {
+        // get the form element custom object and use it after
+        var formElmObj = self.commonObj.getFormElementByName(attrs.elmName);
+
+        if (!formElmObj.isValidationCancelled) {
           // re-initialize to use current element & validate without delay
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
           attemptToValidate(self, event.target.value, 0);
@@ -97,8 +101,12 @@ angular
       // so the position inside the mergeObject call is very important
       attrs = self.commonObj.mergeObjects(self.validationAttrs, attrs);
 
+      // watch the `disabled` attribute for changes
+      // if it become disabled then skip validation else it becomes enable then we need to revalidate it
+      watchNgDisabled(self, scope, attrs);
+
       // watch the element for any value change, validate it once that happen
-			scope.$watch(attrs.elmName, function (newVal, oldVal) {
+			var watcherHandler = scope.$watch(attrs.elmName, function (newVal, oldVal) {
         // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
         // we will still call the `.validate()` function so that it shows also the possible other error messages
         if(newVal === undefined && oldVal !== undefined) {
@@ -114,6 +122,9 @@ angular
         attemptToValidate(self, newVal);
 		  }, true); // $watch()
 
+      // save the watcher inside an array in case we want to deregister it when removing a validator
+      _watchers.push({ elmName: attrs.elmName, watcherHandler: watcherHandler});
+
       return self;
 		} // addValidator()
 
@@ -126,7 +137,7 @@ angular
       var self = this;
       var ctrl, elm, elmName = '', isValid = true;
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
       }
 
       // loop through $validationSummary and display errors when found on each field
@@ -179,7 +190,7 @@ angular
      * @param array/string of element name(s) (name attribute)
      * @return object self
      */
-    function removeValidator(obj, attrs) {
+    function removeValidator(obj, args) {
       var self = this;
       var formElmObj;
 
@@ -187,24 +198,18 @@ angular
         throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
       }
 
-      // if element was not defined by the Service but instead by the Directive,
-      // we should find our scope element inside the `self.validationAttrs` we will need the scope object to remove error from $validationSummary
-      if (typeof self.commonObj.scope === "undefined" && typeof self.validationAttrs.scope !== "undefined") {
-        self.commonObj.scope = self.validationAttrs.scope;
-      }
-
       // Note: removeAttr() will remove validation attribute from the DOM (if defined by Directive), but as no effect when defined by the Service
       // removeValidator() 2nd argument could be passed an Array or a string of element name(s)
       //   if it's an Array we will loop through all elements to be removed
       //   else just remove the 1 element defined as a string
-      if (attrs instanceof Array) {
-        for (var i = 0, ln = attrs.length; i < ln; i++) {
-          formElmObj = self.commonObj.getFormElementByName(attrs[i]);
+      if (args instanceof Array) {
+        for (var i = 0, ln = args.length; i < ln; i++) {
+          formElmObj = self.commonObj.getFormElementByName(args[i]);
           formElmObj.elm.removeAttr('validation');
           removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
         }
       } else {
-        formElmObj = self.commonObj.getFormElementByName(attrs);
+        formElmObj = self.commonObj.getFormElementByName(args);
         formElmObj.elm.removeAttr('validation');
         removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
       }
@@ -258,16 +263,19 @@ angular
       // get the waiting delay time if passed as argument or get it from common Object
       var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : self.commonObj.typingLimit;
 
+      // get the form element custom object and use it after
+      var formElmObj = self.commonObj.getFormElementByName(self.commonObj.ctrl.$name);
+
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
       self.commonObj.validate(value, false);
 
       // if field is not required and his value is empty, cancel validation and exit out
       if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
-        cancelValidation(self);
+        cancelValidation(self, formElmObj);
         return value;
       }else {
-        self.isValidationCancelled = false;
+        formElmObj.isValidationCancelled = false;
       }
 
       // invalidate field before doing any validation
@@ -307,15 +315,19 @@ angular
     /** Cancel current validation test and blank any leftover error message
      * @param object obj
      */
-    function cancelValidation(obj) {
+    function cancelValidation(obj, formElmObj) {
+      // get the form element custom object and use it after
+      var ctrl = (!!formElmObj.ctrl) ? formElmObj.ctrl : obj.commonObj.ctrl;
+
       $timeout.cancel(self.timer);
-      obj.isValidationCancelled = true;
-      obj.commonObj.updateErrorMsg('');
-      obj.commonObj.ctrl.$setValidity('validation', true);
+      formElmObj.isValidationCancelled = true;
+      ctrl.$setValidity('validation', true);
+      obj.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
 
       // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-      if(typeof _blurHandler !== "undefined") {
-        obj.commonObj.elm.unbind('blur', _blurHandler);
+      if(typeof _blurHandler === "function") {
+        var elm = (!!formElmObj.elm) ? formElmObj.elm : obj.commonObj.elm;
+        elm.unbind('blur', _blurHandler);
       }
     }
 
@@ -325,15 +337,27 @@ angular
      * @param object validationSummary
      */
     function removeWatcherAndErrorMessage(self, formElmObj, validationSummary) {
-      if(typeof self.commonObj.scope === "undefined") {
-        return;
+      var scope =
+        !!self.commonObj.scope
+          ? self.commonObj.scope
+          : !!formElmObj.scope
+            ? formElmObj.scope
+            : null;
+      if(typeof scope === "undefined") {
+        throw 'removeValidator() requires a valid $scope object passed but unfortunately could not find it.';
       }
-      // unbind the $watch
-      var unbindWatcher = self.commonObj.scope.$watch(formElmObj.fieldName, function (newVal, oldVal) {}); // $watch()
-      unbindWatcher();
 
-      // also unbind the blur directly applied on element
-      //formElmObj.elm.unbind();
+      // deregister the $watch from the _watchers array we kept it
+      var foundWatcher = self.commonObj.arrayFindObject(_watchers, 'elmName', formElmObj.fieldName);
+      if(!!foundWatcher) {
+        foundWatcher.watcherHandler(); // deregister the watch by calling his handler
+      }
+
+      // make the validation cancelled so it won't get called anymore in the blur eventHandler
+      formElmObj.isValidationCancelled = true;
+      formElmObj.isValid = true;
+      formElmObj.attrs.validation = "";
+      cancelValidation(self, formElmObj);
 
       // now to remove any errors, we need to make the element untouched, pristine and remove the validation
       // also remove it from the validationSummary list and remove any displayed error
@@ -341,10 +365,59 @@ angular
         // make the element untouched in CSS, only works in AngularJS 1.3+
         formElmObj.ctrl.$setUntouched();
       }
+      self.commonObj.scope = scope;
       formElmObj.ctrl.$setPristine();
-      formElmObj.ctrl.$setValidity('validation', true);
       self.commonObj.removeFromValidationSummary(formElmObj.fieldName, validationSummary);
-      self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
+    }
+
+    function watchNgDisabled(self, scope, attrs) {
+      scope.$watch(function() {
+        return (typeof attrs.elm.attr('ng-disabled') === "undefined") ? null : scope.$eval(attrs.elm.attr('ng-disabled')); //this will evaluate attribute value `{{}}``
+      }, function(disabled) {
+        if(typeof disabled === "undefined" || disabled === null) {
+          return null;
+        }
+
+        // get current ctrl of element & re-initialize to use current element
+        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
+        self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
+
+        // get the form element custom object and use it after
+        var formElmObj = self.commonObj.getFormElementByName(attrs.name);
+
+        // use a timeout so that the digest of removing the `disabled` attribute on the DOM is completed
+        // because commonObj.validate() checks for both the `disabled` and `ng-disabled` attribute so it basically fails without the $timeout because of the digest
+        $timeout(function() {
+          if (disabled) {
+            // Remove it from validation summary
+            attrs.ctrl.$setValidity('validation', true);
+            self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
+            self.commonObj.removeFromValidationSummary(attrs.name);
+          } else {
+            // make the element as it was touched for CSS, only works in AngularJS 1.3+
+            if (typeof attrs.ctrl.$setTouched === "function") {
+              attrs.ctrl.$setTouched();
+            }
+            // Re-Validate the input when enabled
+            var value = attrs.ctrl.$viewValue || '';
+
+            // re-initialize to use current element & validate without delay
+            self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
+            attrs.ctrl.$setValidity('validation', self.commonObj.validate(value, true));
+          }
+        }, 0, false);
+
+        // these cannot be done inside the $timeout, when doing it would cancel validation for all element because of the delay
+        if (disabled) {
+          // Turn off validation when element is disabled & remove from validationSummary (seems I need to remove from summary inside $timeout and outside)
+          // make the element as it was untouched for CSS, only works in AngularJS 1.3+
+          if (typeof attrs.ctrl.$setUntouched === "function") {
+            attrs.ctrl.$setUntouched();
+          }
+          attrs.ctrl.$setValidity('validation', true);
+          self.commonObj.removeFromValidationSummary(attrs.name);
+        }
+      });
     }
 
 }]); // validationService

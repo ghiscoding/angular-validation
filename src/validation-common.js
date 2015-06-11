@@ -57,6 +57,7 @@ angular
     };
 
     // list of available published public functions of this object
+    validationCommon.prototype.arrayFindObject = arrayFindObject;                                   // search an object inside an array of objects
     validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
     validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
     validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
@@ -212,7 +213,8 @@ angular
      * @param string elmName: element name
      */
     function removeFromValidationSummary(elmName, validationSummaryObj) {
-      var form = getElementParentForm(elmName, this);                         // find the parent form (only found if it has a name)
+      var self = this;
+      var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
       var vsObj = (!!validationSummaryObj) ? validationSummaryObj : _validationSummary;
 
       var index = arrayFindObjectIndex(vsObj, 'field', elmName); // find index of object in our array
@@ -226,7 +228,7 @@ angular
         _validationSummary.splice(index, 1);
       }
 
-      this.scope.$validationSummary = _validationSummary;
+      self.scope.$validationSummary = _validationSummary;
 
       // and also save it inside the current scope form (if found)
       if (!!form) {
@@ -348,8 +350,8 @@ angular
       }
 
       // get some common variables
-      var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
-        ? self.validatorAttrs.name
+      var elmName = (!!self.ctrl && !!self.ctrl.$name)
+        ? self.ctrl.$name
         : (!!self.attrs && !!self.attrs.name)
           ? self.attrs.name
           : self.elm.attr('name');
@@ -627,8 +629,8 @@ angular
       }
 
       // get the element name, whichever we find it
-      var elmName = (!!self.validatorAttrs && !!self.validatorAttrs.name)
-        ? self.validatorAttrs.name
+      var elmName = (!!self.ctrl && !!self.ctrl.$name)
+        ? self.ctrl.$name
         : (!!self.attrs && !!self.attrs.name)
           ? self.attrs.name
           : self.elm.attr('name');

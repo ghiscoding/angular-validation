@@ -40,14 +40,22 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService', function ($q, $scope, validationService) {
   $scope.$validationOptions = { debounce: 1500, preValidateFormElements: false }; // you can change default debounce globally
 
+  // remove a single element ($scope.form1, string)
+  // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
+  $scope.removeInputValidator = function ( elmName ) {
+    new validationService().removeValidator($scope.form1, elmName);
+  };
+
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
     }
   }
+
   $scope.showValidationSummary = function () {
     $scope.displayValidationSummary = true;
   }
+
   $scope.customRemoteValidationCall = function() {
     var deferred = $q.defer();
     setTimeout(function() {
@@ -126,7 +134,8 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
     .addValidator({elmName: 'input17', rules: 'alpha_spaces|exact_len:3|required', debounce: 3000})
     .addValidator('input18', 'date_iso_min:2001-01-01|required')
     .addValidator('input19', 'date_us_short_between:11/28/99,12/31/15|required')
-    .addValidator('area1', 'alpha_dash_spaces|min_len:15|required');
+    .addValidator('area1', 'alpha_dash_spaces|min_len:15|required')
+    .addValidator('input20', 'alpha_dash|min_len:2|required');
 
   // remove a single element ($scope.form1, string)
   // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])

@@ -12,7 +12,7 @@
  */
  angular
   .module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', ['$timeout', 'validationCommon', 'validationRules', function($timeout, validationCommon, validationRules) {
+  .directive('validation', ['$timeout', 'validationCommon', function($timeout, validationCommon) {
     return {
       restrict: "A",
       require: "ngModel",
@@ -33,25 +33,47 @@
         ctrl.$formatters.unshift(attemptToValidate);
         ctrl.$parsers.unshift(attemptToValidate);
 
-        // for the case of field that might be ng-disabled, we should skip validation
-        // Observe the angular disabled attribute
+        // watch the `disabled` attribute for changes
+        // if it become disabled then skip validation else it becomes enable then we need to revalidate it
         attrs.$observe("disabled", function(disabled) {
           if (disabled) {
             // Turn off validation when element is disabled & remove it from validation summary
             cancelValidation();
-            var validationSummary = commonObj.removeFromValidationSummary(attrs.name);
+            commonObj.removeFromValidationSummary(attrs.name);
           } else {
+            // make the element as it was touched for CSS, only works in AngularJS 1.3+
+            if (typeof ctrl.$setTouched === "function") {
+              ctrl.$setTouched();
+            }
+
             // Re-Validate the input when enabled
-            var value = ctrl.$viewValue || null;
+            var value = ctrl.$viewValue || '';
             ctrl.$setValidity('validation', commonObj.validate(value, true));
+          }
+        });
+
+        // watch for a validation becoming empty, if that is the case, unbind everything from it
+        scope.$watch(function() {
+          return elm.attr('validation');
+        }, function(validation) {
+          if(typeof validation === "undefined" || validation === '') {
+            // unbind everything and cancel the validation
+            ctrl.$formatters.shift();
+            ctrl.$parsers.shift();
+            cancelValidation();
           }
         });
 
         // onBlur make validation without waiting
         elm.bind('blur', blurHandler = function(event) {
-          if(!isValidationCancelled) {
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+
+          if (!formElmObj.isValidationCancelled) {
             // validate without delay
             attemptToValidate(event.target.value, 0);
+          }else {
+            ctrl.$setValidity('validation', true);
           }
         });
 
@@ -61,13 +83,16 @@
 
         /** Cancel current validation test and blank any leftover error message */
         function cancelValidation() {
-          isValidationCancelled = true;
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+
+          formElmObj.isValidationCancelled = true;
           $timeout.cancel(timer);
           commonObj.updateErrorMsg('');
           ctrl.$setValidity('validation', true);
 
           // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-          if(typeof blurHandler !== "undefined") {
+          if(typeof blurHandler === "function") {
             elm.unbind('blur', blurHandler);
           }
         }
@@ -80,6 +105,9 @@
           // get the waiting delay time if passed as argument or get it from common Object
           var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : commonObj.typingLimit;
 
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing false as 2nd argument for not showing any errors on screen
           commonObj.validate(value, false);
@@ -89,7 +117,7 @@
             cancelValidation();
             return value;
           }else {
-            isValidationCancelled = false;
+            formElmObj.isValidationCancelled = false;
           }
 
           // invalidate field before doing any validation

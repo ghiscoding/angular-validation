@@ -80,7 +80,7 @@
     'Change language',
     'May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required.'
   ];
-  var errorMessages2FormsExtra = 'Field is required.';
+  var errorMessages2FormsExtra = 'May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.';
   var validInput2FormsTexts = [
     'John',
     'Doe',
@@ -88,6 +88,7 @@
     'en',
     'This is a great tool'
   ];
+  var input3error = 'May only contain a positive or negative float value (integer excluded). Needs to be a numeric value, between -0.6 and 99.5. Field is required.';
 
   for(var k = 0, kln = types.length; k < kln; k++) {
     // because we are dealing with promises, we better use closures to pass certain variables
@@ -173,7 +174,6 @@
               element(by.cssContainingText('option', 'en')).click(); // click on good option first
               element(by.cssContainingText('option', '...')).click(); // then click on option[0], the one containing '...'
               elmInput.sendKeys(protractor.Key.TAB);
-              //browser.sleep(5000); // sleep 5 seconds
 
               var elmError = $('.validation-select1');
               expect(elmError.getText()).toEqual(errorMessages[i]);
@@ -194,6 +194,7 @@
             var elmInput = $('[name=' + formElementNames[i] + ']');
             elmInput.click();
             elmInput.sendKeys(validInputTexts[i]);
+            elmInput.sendKeys(protractor.Key.TAB);
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', validInputTexts[i])).click(); // click on good option
@@ -203,6 +204,135 @@
             var elmError = $('.validation-' + formElementNames[i]);
             expect(elmError.getText()).toEqual('');
           }
+        });
+
+        it('Should check that ngDisabled button is now enabled', function() {
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(true);
+        });
+
+        it('Should make input3 error appear', function() {
+          // scroll back to top
+          browser.executeScript('window.scrollTo(0,0);').then(function () {
+            // make input3 invalid, remove text
+            var elmInput3 = $('[name=input3]');
+            clearInput(elmInput3);
+            elmInput3.sendKeys(protractor.Key.TAB);
+
+            // error should appear on input3
+            var elmError2 = $('.validation-input3');
+            expect(elmError2.getText()).toEqual(input3error);
+          });
+        });
+
+        it('Should show input3 error in ValidationSummary', function () {
+          var btnShowSummary = $('button[name=btn_showValidation]');
+          btnShowSummary.click();
+          browser.waitForAngular();
+
+          // showValidation checkbox should false at first but true after
+          var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+          expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
+
+          // scroll back to top
+          browser.executeScript('window.scrollTo(0,0);').then(function () {
+            var itemRows = element.all(by.binding('message'));
+            var inputName;
+
+            for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
+              expect(itemRows.get(i).getText()).toEqual('input3: ' + input3error);
+            }
+          });
+        });
+
+        it('Should click on "Remove input3 validator" and error should go away from input & ValidationSummary', function() {
+          // scroll back to top
+          browser.executeScript('window.scrollTo(0,0);').then(function () {
+            var btnRemoveValidator2 = $('button[name=btn_RemoveValidator2]');
+            btnRemoveValidator2.click();
+            browser.waitForAngular();
+
+            // error should be removed from input3
+            var elmError2 = $('.validation-input3');
+            expect(elmError2.getText()).toEqual('');
+
+            // validation summary should become empty
+            var itemRows = element.all(by.binding('message'));
+            expect(itemRows.count()).toBe(0);
+          });
+        });
+
+        it('Should enter any text on input3 and stay without errors', function () {
+          // make input3 invalid, remove text
+          var elmInput3 = $('[name=input3]');
+          elmInput3.sendKeys('any text');
+          //elmInput3.sendKeys(protractor.Key.TAB);
+
+          // error should be removed from input3
+          var elmError3 = $('.validation-input3');
+          expect(elmError3.getText()).toEqual('');
+
+          // validation summary should become empty
+          var itemRows = element.all(by.binding('message'));
+          expect(itemRows.count()).toBe(0);
+        });
+
+        it('Should check that ngDisabled button is now enabled (after input3 check)', function() {
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(true);
+        });
+
+        it('Should make input20 editable & error should appear', function() {
+          // click on the radio button OFF, that will make the input editable
+          element(by.id('radioDisableInput20_off')).click();
+          browser.waitForAngular();
+
+          // error should appear
+          var elmError = $('.validation-input20');
+          expect(elmError.getText()).toEqual(errorMessages2FormsExtra);
+
+          // Save button should become disable
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(false);
+        });
+
+        it('Should show input20 error in ValidationSummary', function () {
+          var btnShowSummary = $('button[name=btn_showValidation]');
+          btnShowSummary.click();
+          browser.waitForAngular();
+
+          // showValidation checkbox should false at first but true after
+          var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+          expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
+
+          // scroll back to top
+          browser.executeScript('window.scrollTo(0,0);').then(function () {
+            var itemRows = element.all(by.binding('message'));
+            var inputName;
+
+            for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
+              expect(itemRows.get(i).getText()).toEqual('input20: May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.');
+            }
+          });
+        });
+
+        it('Should disable input20, error go away from input & validation summary', function() {
+          // click on the radio button OFF, that will make the input editable
+          element(by.id('radioDisableInput20_on')).click();
+          browser.waitForAngular();
+
+          // error should appear
+          var elmError = $('.validation-input20');
+          expect(elmError.getText()).toEqual('');
+
+          // validation summary should become empty
+          var itemRows = element.all(by.binding('message'));
+          expect(itemRows.count()).toBe(0);
+        });
+
+        it('Should check that ngDisabled button is now enabled (after input20 check)', function() {
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(true);
         });
 
         it('Should reload english route, click on submit and display all error messages', function () {
@@ -257,6 +387,7 @@
             }
           });
         });
+
       });         // Directive()
     })(types, k); // closure
   }               // for()
@@ -344,7 +475,7 @@
       expect(elmSubmit2.isEnabled()).toBe(true);
     });
 
-    it('Should make input4 editable & error should show on input4', function() {
+    it('Should make input4 editable & error should appear', function() {
       // click on the radio button OFF, that will make the input editable
       element(by.id('radioDisableInput4_off')).click();
 
@@ -397,5 +528,14 @@
       var elmSubmit2 = $('[name=save_btn2]');
       expect(elmSubmit2.isEnabled()).toBe(true);
     });
-  });
-});
+
+  }); // describe 2forms
+});   // describe Angular-Validation tests
+
+function clearInput(elem) {
+  elem.getAttribute('value').then(function (text) {
+    var len = text.length
+    var backspaceSeries = Array(len+1).join(protractor.Key.BACK_SPACE);
+    elem.sendKeys(backspaceSeries);
+  })
+}

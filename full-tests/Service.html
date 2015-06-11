@@ -488,4 +488,9 @@
         <input class="form-control" type="text" name="input116" ng-model="input116">
     </div>
   </fieldset>
+
+  <div class="form-actions">
+    <button type="submit" name="btn_ngDisabled" class="btn btn-primary" ng-disabled="form01.$invalid">{{ 'SAVE' | translate }} (ngDisabled)</button>
+    <button type="submit" name="save_btn" class="btn btn-primary" ng-click="submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+  </div>
 </form>

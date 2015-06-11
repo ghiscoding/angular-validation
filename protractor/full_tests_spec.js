@@ -75,7 +75,7 @@
                 (function(elmInput, data, i) {
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
-                    //elmInput.sendKeys(protractor.Key.TAB);
+                    elmInput.sendKeys(protractor.Key.TAB);
                     var elmError = $('.validation-input' + i);
                     expect(elmError.getText()).toEqual('');
                   });
@@ -83,6 +83,11 @@
               }
           }
         }, 420000);
+
+        it('Should check that ngDisabled button is now enabled', function() {
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(true);
+        });
 
         it('Should enter invalid text and make error appear', function () {
           for (var i = 0, ln = validations.length; i < ln; i++) {
@@ -96,7 +101,7 @@
                 (function(elmInput, data, i) {
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
-                    //elmInput.sendKeys(protractor.Key.TAB);
+                    elmInput.sendKeys(protractor.Key.TAB);
                     var elmError = $('.validation-input' + i);
                     expect(elmError.getText()).toEqual(validations[i].error_message[languages[0]]);
                   });

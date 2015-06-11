@@ -6,14 +6,15 @@
 <h3>Service</h3>
 
 <div class="checkbox text-right" style="margin-top:-25px">
-    <span class="text-right">
-        <button name="btn_RemoveValidator2" class="btn btn-warning btn-xs text-right" ng-click="removeInputValidator('input2'); isValidator2removed=true;" ng-disabled="isValidator2removed">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Input2 Validator
-        </button>
-    </span>
-    <label style="margin:10px;">
+    <label>
       <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
     </label>
+    &nbsp;|&nbsp;
+    <span class="text-right">
+        <button name="btn_RemoveValidator2" class="btn btn-warning btn-xs text-right" ng-click="removeInputValidator('input3'); isValidator3removed=true;" ng-disabled="isValidator3removed">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Input3 Validator
+        </button>
+    </span>
 </div>
 
 <!-- Angular-Validation saves the summary of errors inside 2 locations: 1- $scope.$validationSummary 2- $scope.formName.$validationSummary (only accessible if you named your form) so it becomes easy to show all errors -->
@@ -40,7 +41,7 @@
         </div>
         <div class="form-group">
             <label for="input3">{{ 'INPUT3' | translate }}</label>
-            <input type="number" class="form-control" name="input3" placeholder="float_signed|between_num:-0.6,99.5|required" ng-model="input3" />
+            <input type="text" class="form-control" name="input3" placeholder="float_signed|between_num:-0.6,99.5|required" ng-model="input3" />
         </div>
         <div class="form-group">
             <label for="input4">{{ 'INPUT4' | translate }}</label>
@@ -123,6 +124,12 @@
         <div class="form-group">
             <label for="area1">{{ 'AREA1' | translate }}</label>
             <textarea class="form-control" name="area1" rows="2" placeholder="alpha_dash_spaces|min_len:15|required" ng-model="area1"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="input20">ngDisabled =></label>
+            ON <input type="radio" id="radioDisableInput20_on" ng-model="disableInput20" value="on" ng-init="disableInput20 = 'on'">
+            OFF <input type="radio" id="radioDisableInput20_off" ng-model="disableInput20" value="off">
+            <input type="text" class="form-control" name="input20" placeholder="alpha_dash|min_len:2|required" ng-model="input20" ng-disabled="disableInput20 == 'on'" />
         </div>
     </fieldset>
 
