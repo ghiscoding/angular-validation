@@ -79,6 +79,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [PreValidate Form (on page load)](https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load))
     * [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX))
     * [Remove a Validator](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
+    * [Reset Form](https://github.com/ghiscoding/angular-validation/wiki/Reset-Form)
     * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
     * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
 * Properties & Options
