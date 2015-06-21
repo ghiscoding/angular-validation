@@ -78,6 +78,7 @@
     "INPUT19":                          "Date US COURT (mm/dd/yy) -- entre les dates 12/01/99 et 12/31/15",
     "FIRST_NAME":                       "Prénom",
     "LAST_NAME":                        "Nom de Famille",
+    "RESET_FORM":                       "Réinitialisation le formulaire",
     "SAVE":                             "Sauvegarder",
     "SELECT1":                          "Requis (select) -- validation avec EVENT (blur)",
     "SHOW_VALIDATION_SUMMARY":          "Afficher le Résumé de Validation"

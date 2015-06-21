@@ -78,6 +78,7 @@
     "INPUT19":                          "Fecha formato US corto (mm/dd/yy) -- entre las fechas 12/01/99 and 12/31/15",
     "FIRST_NAME":                       "Nombre",
     "LAST_NAME":                        "Apellido",
+    "RESET_FORM":                       "Cambiar la Forma",
     "SAVE":                             "Guardar",
     "SELECT1":                          "Requerido (select) -- validación con (blur) EVENT",
     "SHOW_VALIDATION_SUMMARY":          "Mostar el resumén de validación"

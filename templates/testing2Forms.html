@@ -1,7 +1,9 @@
 <div class="alert alert-info alert-dismissable">
     {{ 'FORM_PREVALIDATED' | translate }} <br/>
     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-    <a href="https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load)">Wiki - PreValidate Form (on page load)</a>
+    <a href="https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load)">Wiki - PreValidate Form (on page load)</a><br/>
+    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    <a href="https://github.com/ghiscoding/angular-validation/wiki/Reset-Form">Wiki - Reset Form</a>
 </div>
 
 <h3>Directive - 2 Forms</h3>
@@ -10,6 +12,8 @@
     <label>
       <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
     </label>
+    &nbsp;|&nbsp;
+    <input type="button" name="btn_resetForm" class="btn btn-info btn-xs" ng-click="resetForm(form01)" value="{{ 'RESET_FORM' | translate }}" title="params: { emptyAllInputValues: false, removeAllValidators: true }" />
 </div>
 
 

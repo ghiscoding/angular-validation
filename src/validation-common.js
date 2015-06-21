@@ -157,7 +157,10 @@ angular
     /** Return all Form elements
      * @return array object elements
      */
-    function getFormElements() {
+    function getFormElements(formName) {
+      if(!!formName) {
+        return arrayFindObjects(_formElements, 'formName', formName);
+      }
       return _formElements;
     }
 
@@ -570,8 +573,9 @@ angular
      */
     function addToFormElementObjectList(elm, attrs, ctrl, scope) {
       var elmName = (!!attrs.name) ? attrs.name : elm.attr('name');
+      var form = getElementParentForm(elmName, { scope: scope });                         // find the parent form (only found if it has a name)
       var friendlyName = (!!attrs && !!attrs.friendlyName) ? $translate.instant(attrs.friendlyName) : '';
-      var formElm = { fieldName: elmName, friendlyName: friendlyName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '' };
+      var formElm = { fieldName: elmName, friendlyName: friendlyName, elm: elm, attrs: attrs, ctrl: ctrl, scope: scope, isValid: false, message: '', formName: (!!form) ? form.$name : null };
       var index = arrayFindObjectIndex(_formElements, 'fieldName', elm.attr('name')); // find index of object in our array
       if (index >= 0) {
         _formElements[index] = formElm;

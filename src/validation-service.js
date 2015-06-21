@@ -26,6 +26,7 @@ angular
     validationService.prototype.addValidator = addValidator;                                          // add a Validator to current element
     validationService.prototype.checkFormValidity = checkFormValidity;                                // check the form validity (can be called by an empty validationService and used by both Directive/Service)
     validationService.prototype.removeValidator = removeValidator;                                    // remove a Validator from an element
+    validationService.prototype.resetForm = resetForm;                                                // reset the form (reset it to Pristine and Untouched)
     validationService.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                    // setter on: do we want to bypass the default of root scope variables reset?
     validationService.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;              // setter on the behaviour of displaying only the last error message
     validationService.prototype.setGlobalOptions = setGlobalOptions;                                  // set and initialize global options used by all validators
@@ -54,7 +55,7 @@ angular
         attrs = var1;
       }
 
-      // Make sure that we have all required attributes to function properly
+      // Make sure that we have all required attributes to work properly
       if(typeof attrs !== "object" || !attrs.hasOwnProperty('elmName') || !attrs.hasOwnProperty('rules') || (!attrs.hasOwnProperty('scope') && typeof self.validationAttrs.scope === "undefined") ) {
         throw 'Angular-Validation-Service requires at least the following 3 attributes: {elmName, rules, scope}';
       }
@@ -169,7 +170,7 @@ angular
     function clearInvalidValidatorsInSummary(obj) {
       var self = this;
       if (typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'clearInvalidValidatorsInSummary() requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'clearInvalidValidatorsInSummary() requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
       }
       // Get list of names to remove
       var elmName = [];
@@ -195,7 +196,7 @@ angular
       var formElmObj;
 
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope object passed as argument to function properly (ex.: $scope.form1  OR  $scope).';
+        throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
       }
 
       // Note: removeAttr() will remove validation attribute from the DOM (if defined by Directive), but as no effect when defined by the Service
@@ -208,13 +209,62 @@ angular
           formElmObj.elm.removeAttr('validation');
           removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
         }
-      } else {
+      }
+      else if(args instanceof Object && !!args.formElmObj) {
+        formElmObj = args.formElmObj;
+        formElmObj.elm.removeAttr('validation');
+        removeWatcherAndErrorMessage(args.self, formElmObj, obj.$validationSummary);
+      }
+      else {
         formElmObj = self.commonObj.getFormElementByName(args);
         formElmObj.elm.removeAttr('validation');
         removeWatcherAndErrorMessage(self, formElmObj, obj.$validationSummary);
       }
 
       return self;
+    }
+
+    /** Reset a Form, reset all input element to Pristine, Untouched & remove error dislayed (if any)
+     * @param object Angular Form or Scope Object
+     * @param bool empty also the element values? (True by default)
+     */
+    function resetForm(obj, args) {
+      var self = this;
+      var formElmObj;
+      var args = args || {};
+      var shouldRemoveValidator = (typeof args.removeAllValidators !== "undefined") ? args.removeAllValidators : false;
+      var shouldEmptyValues = (typeof args.emptyAllInputValues !== "undefined") ? args.emptyAllInputValues : false;
+
+      if(typeof obj === "undefined" || typeof obj.$name === "undefined") {
+        throw 'resetForm() requires a valid Angular Form object passed as argument to work properly (ex.: $scope.form1).';
+      }
+
+      // get all Form input elements and loop through all of them to set them Pristine, Untouched and also remove errors displayed
+      var formElements = self.commonObj.getFormElements(obj.$name);
+      if(formElements instanceof Array) {
+        for (var i = 0, ln = formElements.length; i < ln; i++) {
+          formElmObj = formElements[i];
+
+          // should we empty input elment values as well?
+          if(!!shouldEmptyValues) {
+            formElmObj.elm.val(null);
+          }
+
+          // should we remove all validators?
+          // if yes, then run removeValidator() and since that already removes message & make input valid, no need to run the $setUntouched() and $setPristine()
+          // else make the field $setUntouched() and $setPristine()
+          if(!!shouldRemoveValidator) {
+            removeValidator(obj, { self: self, formElmObj: formElmObj});
+          }else {
+            // make the element as it was touched for CSS, only works in AngularJS 1.3+
+            if (typeof formElmObj.ctrl.$setUntouched === "function") {
+              formElmObj.ctrl.$setUntouched();
+            }
+            formElmObj.ctrl.$setPristine();
+            self.commonObj.updateErrorMsg('', { isValid: false, obj: formElmObj });
+          }
+        }
+      }
     }
 
 	  /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.

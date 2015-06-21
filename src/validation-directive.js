@@ -116,7 +116,7 @@
           if(!commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
             return value;
-          }else {
+          }else if(!!formElmObj) {
             formElmObj.isValidationCancelled = false;
           }
 

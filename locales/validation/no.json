@@ -78,6 +78,7 @@
     "INPUT19":                          "US SHORT dato (mm/dd/yy) -- mellom 12/01/99 og 12/31/15",
     "FIRST_NAME":                       "Fornavn",
     "LAST_NAME":                        "Etternavn",
+    "RESET_FORM":                       "Nullstill skjemaet",
     "SAVE":                             "Lagre",
     "SELECT1":                          "Påkrevd (select) -- validering med (blur) EVENT",
     "SHOW_VALIDATION_SUMMARY":          "Vis Valideringsoppsummering"

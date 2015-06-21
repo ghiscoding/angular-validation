@@ -99,9 +99,6 @@
 
           // Find the title element
           var titleElement = element(by.css('h1'));
-
-          // Assert that the text element has the expected value.
-          // Protractor patches 'expect' to understand promises.
           expect(titleElement.getText()).toEqual('Angular-Validation Directive|Service (ghiscoding)');
         });
 
@@ -114,9 +111,6 @@
 
           // Find the sub-title element
           var titleElement = element(by.css('h3'));
-
-          // Assert that the text element has the expected value.
-          // Protractor patches 'expect' to understand promises.
           expect(titleElement.getText()).toEqual(types[k]);
         });
 
@@ -226,7 +220,7 @@
         });
 
         it('Should show input3 error in ValidationSummary', function () {
-          var btnShowSummary = $('button[name=btn_showValidation]');
+          var btnShowSummary = $('[name=btn_showValidation]');
           btnShowSummary.click();
           browser.waitForAngular();
 
@@ -297,7 +291,7 @@
         });
 
         it('Should show input20 error in ValidationSummary', function () {
-          var btnShowSummary = $('button[name=btn_showValidation]');
+          var btnShowSummary = $('[name=btn_showValidation]');
           btnShowSummary.click();
           browser.waitForAngular();
 
@@ -357,16 +351,47 @@
           });
         });
 
-        it('Should show ValidationSummary and contain all error messages', function () {
+        it('Should click on ResetForm button and all errors should be gone', function() {
+          var btnResetForm = $('[name=btn_resetForm]');
+          btnResetForm.click();
+          browser.waitForAngular();
+
+          // loop through all form element and make sure there is no more errors
+          for (var i = 0, ln = formElementNames.length; i < ln; i++) {
+            // some fields are not required or disabled so no error will show up, continue to next ones
+            if (formElementNames[i] === 'input12' || formElementNames[i] === 'input14') {
+              continue;
+            }
+            var elmInput = $('[name=' + formElementNames[i] + ']');
+            elmInput.click();
+            elmInput.sendKeys(validInputTexts[i]);
+            elmInput.sendKeys(protractor.Key.TAB);
+
+            if (formElementNames[i] === 'select1') {
+              element(by.cssContainingText('option', validInputTexts[i])).click(); // click on good option
+              elmInput.sendKeys(protractor.Key.TAB);
+            }
+
+            var elmError = $('.validation-' + formElementNames[i]);
+            expect(elmError.getText()).toEqual('');
+          }
+        });
+
+        it('Should check that ngDisabled button is now enabled (after input20 check)', function() {
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(false);
+        });
+
+        it('Should reload english route & show ValidationSummary should contain all error messages', function () {
           var elmBtnEnglish = $('button[name=btn_english]');
           elmBtnEnglish.click();
           browser.waitForAngular();
 
-          // showValidation checkbox should false at first but true after
+          // showValidation checkbox should be false at first but true after we clicked on it
           var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
           expect(elmCheckboxShowSummary.isSelected()).toBeFalsy();
 
-          var btnShowSummary = $('button[name=btn_showValidation]');
+          var btnShowSummary = $('[name=btn_showValidation]');
           btnShowSummary.click();
           browser.waitForAngular();
 
@@ -398,9 +423,6 @@
 
       // Find the title element
       var titleElement = element(by.css('h1'));
-
-      // Assert that the text element has the expected value.
-      // Protractor patches 'expect' to understand promises.
       expect(titleElement.getText()).toEqual('Angular-Validation Directive|Service (ghiscoding)');
     });
 
@@ -413,9 +435,6 @@
 
       // Find the sub-title element
       var titleElement = element(by.css('h3'));
-
-      // Assert that the text element has the expected value.
-      // Protractor patches 'expect' to understand promises.
       expect(titleElement.getText()).toEqual('Directive - 2 Forms');
     });
 
@@ -424,7 +443,7 @@
       var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
       expect(elmCheckboxShowSummary.isSelected()).toBeFalsy();
 
-      var btnShowSummary = $('button[name=btn_showValidation]');
+      var btnShowSummary = $('[name=btn_showValidation]');
       btnShowSummary.click();
       browser.waitForAngular();
 
@@ -489,7 +508,7 @@
     });
 
     it('Should show input4 error in ValidationSummary', function () {
-      var btnShowSummary = $('button[name=btn_showValidation]');
+      var btnShowSummary = $('[name=btn_showValidation]');
       btnShowSummary.click();
       browser.waitForAngular();
 
@@ -527,6 +546,51 @@
 
       var elmSubmit2 = $('[name=save_btn2]');
       expect(elmSubmit2.isEnabled()).toBe(true);
+    });
+
+    it('Should reload english route, and enter invalid text on inputs', function() {
+      var elmBtnEnglish = $('button[name=btn_english]');
+      elmBtnEnglish.click();
+      browser.waitForAngular();
+
+      // just enter letter "a" on first 2 inputs to make them invalid
+      var ln = 2;
+      for (var i = 0; i < ln; i++) {
+        var elmInput = $('[name=' + formElement2FormsNames[i] + ']');
+        elmInput.click();
+        elmInput.sendKeys("a");
+        elmInput.sendKeys(protractor.Key.TAB);
+
+        // both inputs should have the same error message
+        var elmError = $('.validation-' + formElement2FormsNames[i]);
+        expect(elmError.getText()).toEqual('Must be at least 2 characters.');
+      }
+    });
+
+    it('Should check that first submit button is disabled', function() {
+      var elmSubmit1 = $('[name=save_btn1]');
+      expect(elmSubmit1.isEnabled()).toBe(false);
+    });
+
+    it('Should click on ResetForm button, then error should be gone and input value now being empty', function() {
+      var btnResetForm = $('[name=btn_resetForm]');
+      btnResetForm.click();
+      browser.waitForAngular();
+
+      // just loop on first 2 inputs and make sure they are now empty input values and empty error message
+      var ln = 2;
+      for (var i = 0; i < ln; i++) {
+        var elmInput = $('[name=' + formElement2FormsNames[i] + ']');
+        expect(elmInput.getAttribute('value')).toEqual('');
+
+        var elmError = $('.validation-' + formElement2FormsNames[i]);
+        expect(elmError.getText()).toEqual('');
+      }
+    });
+
+    it('Should check that first submit button is now enabled', function() {
+      var elmSubmit1 = $('[name=save_btn1]');
+      expect(elmSubmit1.isEnabled()).toBe(true);
     });
 
   }); // describe 2forms

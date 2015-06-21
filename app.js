@@ -45,7 +45,9 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
   $scope.removeInputValidator = function ( elmName ) {
     new validationService().removeValidator($scope.form1, elmName);
   };
-
+  $scope.resetForm = function() {
+    new validationService().resetForm($scope.form1);
+  };
   $scope.submitForm = function() {
     if(new validationService().checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
@@ -83,6 +85,9 @@ myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope,
       alert('All good, proceed with submit...');
     }
   }
+  $scope.resetForm = function(form) {
+    new validationService().resetForm(form, { emptyAllInputValues: true, removeAllValidators: true });
+  };
   $scope.showValidationSummary = function () {
     $scope.displayValidationSummary = true;
   }
@@ -142,7 +147,9 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
   $scope.removeInputValidator = function ( elmName ) {
     myValidation.removeValidator($scope.form1, elmName);
   };
-
+  $scope.resetForm = function() {
+    myValidation.resetForm($scope.form1);
+  };
   $scope.showValidationSummary = function () {
     $scope.displayValidationSummary = true;
   }

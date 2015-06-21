@@ -78,6 +78,7 @@
     "INPUT19":                          "Data w formacie US SHORT (mm/dd/rr) -- pomiędzy datami 12/01/99 a 12/31/15",
     "FIRST_NAME":                       "Imię",
     "LAST_NAME":                        "Nazwisko",
+    "RESET_FORM":                       "Zresetować formularz",
     "SAVE":                             "Zapisz",
     "SELECT1":                          "Wymagane (wybierz) -- walidacja z zdarzeniem (blur)",
     "SHOW_VALIDATION_SUMMARY":          "Pokaż podsumowanie walidacji"
