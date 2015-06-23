@@ -135,7 +135,7 @@ angular
         case "dateEuroLong" :
         case "date_euro_long" :
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/](19|20)\\d\\d$",
             message: "INVALID_DATE_EURO_LONG",
             type: "regex"
           };
@@ -152,7 +152,7 @@ angular
             condition: [">=","<="],
             dateType: "EURO_LONG",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/](19|20)\\d\\d$",
             message: "INVALID_DATE_EURO_LONG_BETWEEN",
             type: "conditionalDate"
           };
@@ -165,7 +165,7 @@ angular
             condition: "<=",
             dateType: "EURO_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/](19|20)\\d\\d$",
             message: "INVALID_DATE_EURO_LONG_MAX",
             type: "conditionalDate"
           };
@@ -178,7 +178,7 @@ angular
             condition: ">=",
             dateType: "EURO_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/](19|20)\\d\\d$",
             message: "INVALID_DATE_EURO_LONG_MIN",
             type: "conditionalDate"
           };
@@ -186,7 +186,7 @@ angular
         case "dateEuroShort" :
         case "date_euro_short" :
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/]\\d\\d$",
             message: "INVALID_DATE_EURO_SHORT",
             type: "regex"
           };
@@ -203,7 +203,7 @@ angular
             condition: [">=","<="],
             dateType: "EURO_SHORT",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/]\\d\\d$",
             message: "INVALID_DATE_EURO_SHORT_BETWEEN",
             type: "conditionalDate"
           };
@@ -216,7 +216,7 @@ angular
             condition: "<=",
             dateType: "EURO_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/]\\d\\d$",
             message: "INVALID_DATE_EURO_SHORT_MAX",
             type: "conditionalDate"
           };
@@ -229,7 +229,7 @@ angular
             condition: ">=",
             dateType: "EURO_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/]\\d\\d$",
+            pattern: "^(0[1-9]|[12][0-9]|3[01])[.-/](0[1-9]|1[012])[.-/]\\d\\d$",
             message: "INVALID_DATE_EURO_SHORT_MIN",
             type: "conditionalDate"
           };
