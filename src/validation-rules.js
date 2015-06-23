@@ -39,7 +39,7 @@ angular
       switch(rule) {
         case "alpha" :
           validator = {
-            pattern: "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$",
+            pattern: "^([a-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ])+$",
             message: "INVALID_ALPHA",
             type: "regex"
           };
@@ -47,7 +47,7 @@ angular
         case "alphaSpaces" :
         case "alpha_spaces" :
           validator = {
-            pattern: "^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$",
+            pattern: "^([a-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s])+$",
             message: "INVALID_ALPHA_SPACE",
             type: "regex"
           };
@@ -55,7 +55,7 @@ angular
         case "alphaNum" :
         case "alpha_num" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ])+$",
+            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ])+$",
             message: "INVALID_ALPHA_NUM",
             type: "regex"
           };
@@ -63,7 +63,7 @@ angular
         case "alphaNumSpaces" :
         case "alpha_num_spaces" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s])+$",
+            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s])+$",
             message: "INVALID_ALPHA_NUM_SPACE",
             type: "regex"
           };
@@ -71,7 +71,7 @@ angular
         case "alphaDash" :
         case "alpha_dash" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ_-])+$",
+            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ_-])+$",
             message: "INVALID_ALPHA_DASH",
             type: "regex"
           };
@@ -79,7 +79,7 @@ angular
         case "alphaDashSpaces" :
         case "alpha_dash_spaces" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\\s_-])+$",
+            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s_-])+$",
             message: "INVALID_ALPHA_DASH_SPACE",
             type: "regex"
           };
