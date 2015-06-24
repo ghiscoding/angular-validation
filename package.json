@@ -1,13 +1,13 @@
 {
   "name": "angular-validation-ghiscoding",
-  "version": "1.3.31",
+  "version": "1.3.32",
   "author": "Ghislain B.",
   "description": "Angular-Validation Directive and Service (ghiscoding)",
   "main": "app.js",
   "dependencies": {},
   "devDependencies": {
     "del": "^1.1.1",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "gulp-bump": "^0.3.0",
     "gulp-concat": "^2.5.2",
     "gulp-if": "^1.2.5",

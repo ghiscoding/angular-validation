@@ -67,10 +67,7 @@
           for (var i = 0, ln = validations.length; i < ln; i++) {
             var elmInput = $('[name=input' + i + ']');
             elmInput.click();
-              for(var j = 0, jln = 2; j < jln; j++) {
-                if(jln > validations[i].length) {
-                  break;
-                }
+              for(var j = 0, jln = validations[i].valid_data.length; j < jln; j++) {
                 var data = validations[i].valid_data[j];
                 (function(elmInput, data, i) {
                   elmInput.clear().then(function() {
@@ -287,7 +284,7 @@ function loadData() {
         'validator': 'dateEuroLong',
         'aliases': ['date_euro_long'],
         'invalid_data': ['abc', '32-12-2000', '00-01-2001', '30-13-2012'],
-        'valid_data': ['01-01-2001', '30-12-2001', '28-02-2001'],
+        'valid_data': ['30-12-2001', '28-02-2001', '05.05.2005'],
         'error_message': {
           'en': "Must be a valid date format (dd-mm-yyyy) OR (dd/mm/yyyy).",
           'es': "Debe contener una fecha valida con formato (dd-mm-yyyy) ó (dd/mm/yyyy).",
@@ -301,7 +298,7 @@ function loadData() {
         'aliases': ['date_euro_long_between', 'betweenDateEuroLong', 'between_date_euro_long'],
         'params': '01-01-2001,28-02-2001',
         'invalid_data': ['abc', '32-12-2000', '00-01-2001', '30-13-2012', '31-12-2000', '01-03-2001'],
-        'valid_data': ['01-01-2001', '01-02-2001', '28-02-2001'],
+        'valid_data': ['01-02-2001', '28-02-2001', '05.02.2001'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yyyy) OR (dd/mm/yyyy) between 01-01-2001 and 28-02-2001.",
           'es': "Debe contener una fecha valida entre 01-01-2001 y 28-02-2001 con formato (dd-mm-yyyy) ó (dd/mm/yyyy).",
@@ -315,7 +312,7 @@ function loadData() {
         'aliases': ['date_euro_long_max', 'maxDateEuroLong', 'max_date_euro_long'],
         'params': '30-05-2012',
         'invalid_data': ['abc', '32-12-2000', '00-01-2001', '30-13-2012', '01-06-2012'],
-        'valid_data': ['01-01-2001', '01/01/2001', '30-05-2012'],
+        'valid_data': ['01/01/2001', '30-05-2012', '05.05.2005'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yyyy) OR (dd/mm/yyyy), equal to, or lower than 30-05-2012.",
           'es': "Debe contener una fecha valida igual ó menor que 30-05-2012 con formato (dd-mm-yyyy) ó (dd/mm/yyyy).",
@@ -329,7 +326,7 @@ function loadData() {
         'aliases': ['date_euro_long_min', 'minDateEuroLong', 'min_date_euro_long'],
         'params': '25-05-2012',
         'invalid_data': ['abc', '24-05-2012', '32-12-2000', '00-01-2001', '30-13-2012'],
-        'valid_data': ['25-05-2012', '25/05/2012', '30-05-2012'],
+        'valid_data': ['25/05/2012', '30-05-2012', '05.05.2015'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yyyy) OR (dd/mm/yyyy), equal to, or higher than 25-05-2012.",
           'es': "Debe contener una fecha valida igual ó mayor que 25-05-2012 con formato (dd-mm-yyyy) ó (dd/mm/yyyy).",
@@ -343,7 +340,7 @@ function loadData() {
         'aliases': ['date_euro_short'],
         'params': '25-05-12',
         'invalid_data': ['32-12-00', '00-01-01', '30-13-12', '01-06-2012'],
-        'valid_data': ['25-05-12', '25/05/12', '30-05-12'],
+        'valid_data': ['25/05/12', '30-05-12', '05.05.05'],
         'error_message': {
           'en': "Must be a valid date format (dd-mm-yy) OR (dd/mm/yy).",
           'es': "Debe contener una fecha valida con formato (dd-mm-yy) o (dd/mm/yy).",
@@ -357,7 +354,7 @@ function loadData() {
         'aliases': ['date_euro_short_between', 'betweenDateEuroShort', 'between_date_euro_short'],
         'params': '25-05-12,04-06-12',
         'invalid_data': ['24-05-12', '32-12-00', '00-01-01', '30-13-12', '24-05-12', '05-06-12', '01-06-2012'],
-        'valid_data': ['25-05-12', '25/05/12', '30-05-12', '04-06-12'],
+        'valid_data': ['25/05/12', '30.05.12', '04-06-12'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yy) OR (dd/mm/yy) between 25-05-12 and 04-06-12.",
           'es': "Debe contener una fecha valida entre 25-05-12 y 04-06-12 con formato (dd-mm-yy) o (dd/mm/yy).",
@@ -371,7 +368,7 @@ function loadData() {
         'aliases': ['date_euro_short_max', 'maxDateEuroShort', 'max_date_euro_short'],
         'params': '04-06-12',
         'invalid_data': ['32-12-00', '00-01-01', '30-13-12', '05-06-12', '01-06-2012'],
-        'valid_data': ['25-05-12', '25/05/12', '04-06-12'],
+        'valid_data': ['25/05/12', '04-06-12', '05.05.05'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yy) OR (dd/mm/yy), equal to, or lower than 04-06-12.",
           'es': "Debe contener una fecha valida igual ó menor que 04-06-12 con formato (dd-mm-yy) ó (dd/mm/yy).",
@@ -385,7 +382,7 @@ function loadData() {
         'aliases': ['date_euro_short_min', 'minDateEuroShort', 'min_date_euro_short'],
         'params': '04-06-12',
         'invalid_data': ['32-12-00', '00-01-01', '30-13-12', '03-06-12', '01-06-2012'],
-        'valid_data': ['25-07-12', '25/07/12', '04-06-12'],
+        'valid_data': ['25/07/12', '04-06-12', '05.05.15'],
         'error_message': {
           'en': "Needs to be a valid date format (dd-mm-yy) OR (dd/mm/yy), equal to, or higher than 04-06-12.",
           'es': "Debe contener una fecha valida igual ó mayor que 04-06-12 con formato (dd-mm-yy) ó (dd/mm/yy).",
@@ -453,7 +450,7 @@ function loadData() {
         'validator': 'dateUsLong',
         'aliases': ['date_us_long'],
         'invalid_data': ['32-12-2000', '00-01-2001', '13-30-2012'],
-        'valid_data': ['01-01-2001', '01/01/2001', '12/30/2001', '28/02/2001'],
+        'valid_data': ['01-01-2001', '12/30/2001', '05.15.2005'],
         'error_message': {
           'en': "Must be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy).",
           'es': "Debe contener una fecha valida con formato (mm/dd/yyyy) ó (mm-dd-yyyy).",
@@ -467,7 +464,7 @@ function loadData() {
         'aliases': ['date_us_long_between', 'betweenDateUsLong', 'between_date_us_long'],
         'params': '01/01/1990,12/31/2015',
         'invalid_data': ['00/02/1990', '01/01/2016', '12/31/15'],
-        'valid_data': ['01-01-1990', '01/01/1990', '12/31/2015', '01/12/2000'],
+        'valid_data': ['01-01-1990', '12/31/2015', '05.15.2015'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy) between 01/01/1990 and 12/31/2015.",
           'es': "Debe contener una fecha valida entre 01/01/1990 y 12/31/2015 con formato (mm/dd/yyyy) ó (mm/dd/yyyy).",
@@ -481,7 +478,7 @@ function loadData() {
         'aliases': ['date_us_long_max', 'maxDateUsLong', 'max_date_us_long'],
         'params': '01/01/1990',
         'invalid_data': ['00/02/1990', '02/01/1990', '12/31/15'],
-        'valid_data': ['01-01-1990', '01/01/1990', '12/31/1989', '01/12/1900'],
+        'valid_data': ['01-01-1990', '12/31/1989', '01.12.1900'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy), equal to, or lower than 01/01/1990.",
           'es': "Debe contener una fecha valida igual ó menor que 01/01/1990 con formato (mm/dd/yyyy) ó (mm/dd/yyyy).",
@@ -495,7 +492,7 @@ function loadData() {
         'aliases': ['date_us_long_min', 'minDateUsLong', 'min_date_us_long'],
         'params': '01/01/1990',
         'invalid_data': ['00/02/1990', '12/31/1989', '12/31/15'],
-        'valid_data': ['01-01-1990', '01/01/1990', '12/31/1999'],
+        'valid_data': ['01-01-1990', '12/31/1990', '12.31.1999'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy), equal to, or higher than 01/01/1990.",
           'es': "Debe contener una fecha valida igual ó mayor que 01/01/1990 con formato (mm/dd/yyyy) ó (mm/dd/yyyy).",
@@ -508,7 +505,7 @@ function loadData() {
         'validator': 'dateUsShort',
         'aliases': ['date_us_short'],
         'invalid_data': ['32-12-00', '00-01-01', '13-30-12'],
-        'valid_data': ['01-01-01', '01/01/01', '12/30/01', '28/02/01'],
+        'valid_data': ['01-01-01', '12/30/01', '05.15.05'],
         'error_message': {
           'en': "Must be a valid date format (mm/dd/yy) OR (mm-dd-yy).",
           'es': "Debe contener una fecha valida con formato (mm/dd/yy) ó (mm-dd-yy).",
@@ -522,7 +519,7 @@ function loadData() {
         'aliases': ['date_us_short_between', 'betweenDateUsShort', 'between_date_us_short'],
         'params': '01/01/90,12/31/15',
         'invalid_data': ['00/02/90', '01/01/16', '12/31/15', '12/31/2015'],
-        'valid_data': ['01-01-90', '01/01/90', '12/31/15', '01/12/00'],
+        'valid_data': ['01-01-90', '12/31/15', '05.15.15'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy) between 01/01/90 and 12/31/15.",
           'es': "Debe contener una fecha valida entre 01/01/90 y 12/31/15 con formato (mm/dd/yy) ó (mm/dd/yy).",
@@ -536,7 +533,7 @@ function loadData() {
         'aliases': ['date_us_short_max', 'maxDateUsShort', 'max_date_us_short'],
         'params': '01/01/90',
         'invalid_data': ['00/02/90', '02/01/90', '12/31/15', '12/31/2015'],
-        'valid_data': ['01-01-90', '01/01/90', '12/31/89', '01/12/00'],
+        'valid_data': ['01-01-90', '12/31/89', '01.12.89'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy), equal to, or lower than 01/01/90.",
           'es': "Debe contener una fecha valida igual ó menor que 01/01/90 con formato (mm/dd/yy) ó (mm/dd/yy).",
@@ -550,7 +547,7 @@ function loadData() {
         'aliases': ['date_us_short_min', 'minDateUsShort', 'min_date_us_short'],
         'params': '01/01/90',
         'invalid_data': ['00/02/90', '12/31/89', '31/12/15', '12/31/2015'],
-        'valid_data': ['01-01-90', '01/01/90', '02/01/90', '12/31/89'],
+        'valid_data': ['01-01-90', '02/28/90', '05.15.05'],
         'error_message': {
           'en': "Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy), equal to, or higher than 01/01/90.",
           'es': "Debe contener una fecha valida igual ó mayor que 01/01/90 con formato (mm/dd/yy) ó (mm/dd/yy).",
@@ -639,7 +636,7 @@ function loadData() {
         'validator': 'intSigned',
         'aliases': ['integerSigned', 'int_signed', 'integer_signed'],
         'invalid_data': ['12.5', '.5', 'abc', '12,4'],
-        'valid_data': ['12', '100', '-12.3', '+12.3'],
+        'valid_data': ['12', '100', '-12', '+12'],
         'error_message': {
           'en': "Must be a positive or negative integer.",
           'es': "Debe contener un número entero positivo ó negativo.",
@@ -779,8 +776,8 @@ function loadData() {
       },
       {
         'validator': 'time',
-        'invalid_data': ['1010', '61:61', '00:00', '59:59:60'],
-        'valid_data': ['10:10', '00:01', '59:59:59'],
+        'invalid_data': ['1010', '61:61', '00:00', '59:59:59'],
+        'valid_data': ['10:10', '00:01', '23:59:59'],
         'error_message': {
           'en': "Must be a valid time format (hh:mm) OR (hh:mm:ss).",
           'es': "Debe contener un formato de tiempo valido (hh:mm) ó (hh:mm:ss).",

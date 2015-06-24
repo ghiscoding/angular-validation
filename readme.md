@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.31`
+`Version: 1.3.32`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -24,7 +24,7 @@ If you do use Angular-Validation, please click on the **Star** and add it as a f
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation now has a full set of End-to-End tests with Protractor, there is over 1400+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation now has a full set of End-to-End tests with Protractor, there is over 1600+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
