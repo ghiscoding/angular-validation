@@ -22,9 +22,13 @@ angular
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       if (!_bypassRootScopeReset) {
-        _globalOptions.displayOnlyLastErrorMsg = false;
-        _formElements = [];        // array containing all form elements, valid or invalid
-        _validationSummary = [];   // array containing the list of invalid fields inside a validationSummary
+        _globalOptions.displayOnlyLastErrorMsg = false; // reset the option of displaying only the last error message
+        _globalOptions.preValidateFormElements = false; // reset the option of pre-validate all form elements, false by default
+        _globalOptions.isolatedScope = null;            // reset used scope on route change
+        _globalOptions.scope = null;                    // reset used scope on route change
+
+        _formElements = [];                             // array containing all form elements, valid or invalid
+        _validationSummary = [];                        // array containing the list of invalid fields inside a validationSummary
       }
     });
 

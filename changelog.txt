@@ -34,3 +34,4 @@ Angular-Validation change logs
 1.3.30 (2015-06-15) Merged pull request #40 - Polish translations
 1.3.31 (2015-06-20) Enhancement #39 - How to Reset a Form, added Protractor tests to cover this new functionality.
 1.3.32 (2015-06-24) Merged pull request #41 and fixed errors inside it, updated Protractor test as well.
+1.3.33 (2015-07-02) Reset isolatedScope on route change
