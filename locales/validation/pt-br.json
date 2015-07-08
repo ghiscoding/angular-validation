@@ -1,6 +1,6 @@
 {
   "INVALID_ALPHA":                    "Deve conter apenas letras. ",
-  "INVALID_ALPHA_SPACE":              "Deve coner apenas letras e espaços. ",
+  "INVALID_ALPHA_SPACE":              "Deve conter apenas letras e espaços. ",
   "INVALID_ALPHA_NUM":                "Deve conter apenas letras e números. ",
   "INVALID_ALPHA_NUM_SPACE":          "Deve conter apenas letras, números e espaços. ",
   "INVALID_ALPHA_DASH":               "Deve conter apenas letras, números e hífens. ",
