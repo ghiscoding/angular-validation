@@ -1,37 +1,38 @@
 Angular-Validation change logs
 
-1.1.0 (2014-05-02): only start validating after user inactivity, it could also be passed as an argument for more customization of the inactivity timeout (typing-limit).
-1.3.0 (2014-12-01): support to Angular 1.3.x
-1.3.1 (2015-01-02): Added Input Match (confirmation) Validator
-1.3.2 (2015-01-03): Float number validator to also permit dot (.) as first char. Also removed keyboard blocking of invalid character on input type="number" instead display error message.
-1.3.3 (2015-01-04): Updated Bootstrap(3.3.1) and AngularJS(1.3.7) to latest versions
-1.3.4 (2015-01-06): Removed the necessity of creating a <span> for displaying the error message, the directive now handles it by itself.
-1.3.5 (2015-01-26): Throw an error message when user did not provide a name="" property inside the element to validate.
-1.3.6 (2015-02-09): Added ng-strict-di for minification, renamed some files and folder lib to /vendors, moved directive into new /src folder for better separation.
-1.3.7 (2015-03-08): Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
-1.3.8 (2015-03-15): Added between/min/max conditional validators on all Date types (ISO, EURO_LONG, EURO_SHORT, US_LONG, US_SHORT)
-1.3.9 (2015-03-21): Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
-1.3.10 (2015-03-28): Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.
-1.3.11 (2015-03-30): Accepted pull request #15 to fix form without name attribute. Also accepted pull request #18 to add Spanish locales.
-1.3.12 (2015-04-04): Fix issue #16 and added Validators Alternate Text option on all type of validators. Also fixed removeValidator and clean a lot of code.
-1.3.13 (2015-04-06) Fixed $translate delay issue when using external JSON files
-1.3.14 (2015-04-07) Merge pull request #19 Added norwegian translation and changes to allow user to remove invalid validators.
-1.3.15 (2015-04-08) Fixed issue #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
-1.3.16 (2015-04-09) Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
-1.3.17 (2015-04-11) Added global `$scope.$validationOptions` object, for now only has the `debounce` property that be used by both the Directive and Service.
-1.3.18 (2015-04-19) Fixed issue #20 - Error messages shown on submit are non-understandable, this was fixed using $translate promises instead of $translate.instant(). Fixed a few error display on the validationSummary() and checkFormValidity(). Also merged #27 to add Russian
-1.3.19 (2015-04-20) Fixed issue #28 - unbind all 'blur' in cancelValidation() might affect other modules
-1.3.20 (2015-04-21) Fixed issue #26 - validation of forms inside ng-repeat (added sample `dynamicFormView` in `more-examples` folder). And again issue #28 - unbind all 'blur' in cancelValidation() might affect other modules.
-1.3.21 (2015-04-29) Moved the Alternate Text inside the $translate promise as well which removes possible delay of non-translated text appearing as alternate text (this will not affect regular text, or already translated text). Also cleanup code and made my Gulp task even more automated.
-1.3.22 (2015-05-03) Added new element attribute of `friendly-name` which is used ONLY in the ValidationSummary, this friendly name is to give a better element name display, which also support translation, inside the ValidationSummary instead of just "input1" (see ValidationSummary for more details).
-1.3.23 (2015-05-05) Added option to display only last error message instead of all messages at once. Fixed a bug where changing route on View/Controller would make the ValidationSummary fail when coming back to original View/Controller, this bug was associated to the fact that the ValidationSummary kept growing from Controller to Controller, now this ValidationSummary is wipe out as soon as we detect a route change.
-1.3.24 (2015-05-17) Replaced all `:param` inside each locale translations with a better standard of {0}, {1}, etc.. like C# `String.Format()`. Added a full Protractor End-to-End test suite (1000+ asserts). Fixed a few minor bugs found with Protractor test cases. Fixed issue #36, bower.json scripts in wrong order.
-1.3.25 (2015-05-19) Enhancement #34 to add Remote Validation and updated Protractor to cover this new feature.
-1.3.26 (2015-05-30) Added enhancement #35 - PreValidate the Form, display all errors on page load.
-1.3.27 (2015-06-02) Added possibility to use own isolated scope (issue #37 and #26). Fixed an implementation issue found from last revision (issue #35). Fixed email validation (issue #38). Fixed a performance issue found with onBlur which would run as much validations as there was characters inside the input when onBlur was called (abcdef => would make 6 validations) and this was extremely costly with a Remote validation call. Update the code of Remote validation to also accept the "As" alias "remote:vm.customRemoteValidation". Finally added and updated a few Protractor tests to cover all of the above and more.
-1.3.28 (2015-06-04) Fixed a bug with ngDisabled not being interpreted before observing it (ng-disabled="vm.type == 1" would give false result because it was not being interpreted), added Protractor Test for this behavior in 2Forms page. Added `displayOnlyLastErrorMsg` in the list of Global Options. Cleaned up a lot of code.
-1.3.29 (2015-06-10) Added RemoveValidator() for Directive, added Protractor tests on RemoveValidator() for both the Directive and Service. Fixed ngDisabled not working correctly in Service, added Protractor tests for ngDisabled On/Off in both Directive and Service
-1.3.30 (2015-06-15) Merged pull request #40 - Polish translations
-1.3.31 (2015-06-20) Enhancement #39 - How to Reset a Form, added Protractor tests to cover this new functionality.
-1.3.32 (2015-06-24) Merged pull request #41 and fixed errors inside it, updated Protractor test as well.
+1.3.34 (2015-07-08) Merge pull request #44 - Adding support to brazilian portuguese language.
 1.3.33 (2015-07-02) Reset isolatedScope on route change
+1.3.32 (2015-06-24) Merged pull request #41 and fixed errors inside it, updated Protractor test as well.
+1.3.31 (2015-06-20) Enhancement #39 - How to Reset a Form, added Protractor tests to cover this new functionality.
+1.3.30 (2015-06-15) Merged pull request #40 - Polish translations
+1.3.29 (2015-06-10) Added RemoveValidator() for Directive, added Protractor tests on RemoveValidator() for both the Directive and Service. Fixed ngDisabled not working correctly in Service, added Protractor tests for ngDisabled On/Off in both Directive and Service
+1.3.28 (2015-06-04) Fixed a bug with ngDisabled not being interpreted before observing it (ng-disabled="vm.type == 1" would give false result because it was not being interpreted), added Protractor Test for this behavior in 2Forms page. Added `displayOnlyLastErrorMsg` in the list of Global Options. Cleaned up a lot of code.
+1.3.27 (2015-06-02) Added possibility to use own isolated scope (issue #37 and #26). Fixed an implementation issue found from last revision (issue #35). Fixed email validation (issue #38). Fixed a performance issue found with onBlur which would run as much validations as there was characters inside the input when onBlur was called (abcdef => would make 6 validations) and this was extremely costly with a Remote validation call. Update the code of Remote validation to also accept the "As" alias "remote:vm.customRemoteValidation". Finally added and updated a few Protractor tests to cover all of the above and more.
+1.3.26 (2015-05-30) Added enhancement #35 - PreValidate the Form, display all errors on page load.
+1.3.25 (2015-05-19) Enhancement #34 to add Remote Validation and updated Protractor to cover this new feature.
+1.3.24 (2015-05-17) Replaced all `:param` inside each locale translations with a better standard of {0}, {1}, etc.. like C# `String.Format()`. Added a full Protractor End-to-End test suite (1000+ asserts). Fixed a few minor bugs found with Protractor test cases. Fixed issue #36, bower.json scripts in wrong order.
+1.3.23 (2015-05-05) Added option to display only last error message instead of all messages at once. Fixed a bug where changing route on View/Controller would make the ValidationSummary fail when coming back to original View/Controller, this bug was associated to the fact that the ValidationSummary kept growing from Controller to Controller, now this ValidationSummary is wipe out as soon as we detect a route change.
+1.3.22 (2015-05-03) Added new element attribute of `friendly-name` which is used ONLY in the ValidationSummary, this friendly name is to give a better element name display, which also support translation, inside the ValidationSummary instead of just "input1" (see ValidationSummary for more details).
+1.3.21 (2015-04-29) Moved the Alternate Text inside the $translate promise as well which removes possible delay of non-translated text appearing as alternate text (this will not affect regular text, or already translated text). Also cleanup code and made my Gulp task even more automated.
+1.3.20 (2015-04-21) Fixed issue #26 - validation of forms inside ng-repeat (added sample `dynamicFormView` in `more-examples` folder). And again issue #28 - unbind all 'blur' in cancelValidation() might affect other modules.
+1.3.19 (2015-04-20) Fixed issue #28 - unbind all 'blur' in cancelValidation() might affect other modules
+1.3.18 (2015-04-19) Fixed issue #20 - Error messages shown on submit are non-understandable, this was fixed using $translate promises instead of $translate.instant(). Fixed a few error display on the validationSummary() and checkFormValidity(). Also merged #27 to add Russian
+1.3.17 (2015-04-11) Added global `$scope.$validationOptions` object, for now only has the `debounce` property that be used by both the Directive and Service.
+1.3.16 (2015-04-09) Accept Merge #3 Fixed removeFromValidationSummary to also remove from 'local' array
+1.3.15 (2015-04-08) Fixed issue #23 If multiple forms exist in the app the errors in 1 form affect validation in the other
+1.3.14 (2015-04-07) Merge pull request #19 Added norwegian translation and changes to allow user to remove invalid validators.
+1.3.13 (2015-04-06) Fixed $translate delay issue when using external JSON files
+1.3.12 (2015-04-04): Fix issue #16 and added Validators Alternate Text option on all type of validators. Also fixed removeValidator and clean a lot of code.
+1.3.11 (2015-03-30): Accepted pull request #15 to fix form without name attribute. Also accepted pull request #18 to add Spanish locales.
+1.3.10 (2015-03-28): Added new function of `checkFormValidity()` before submitting the form. Now use only 1 minified script instead of multiples.
+1.3.9 (2015-03-21): Added validation summary through 2 new and equivalent properties `$scope.$validationSummary` and `$scope.formName.$validationSummary`. Also added `bower` and `gulp` support, the Gulp script gives minified files.
+1.3.8 (2015-03-15): Added between/min/max conditional validators on all Date types (ISO, EURO_LONG, EURO_SHORT, US_LONG, US_SHORT)
+1.3.7 (2015-03-08): Complete rewrite (but same functionality) so that I could add an Angular-Validation Service which is similar implementation as the Directive. Also added `debounce` attribute which is an alias to `typingLimit`, validation rules are now defined as an external service for better maintainability and also created a common file for shared functions by both Validation Directive and Service.
+1.3.6 (2015-02-09): Added ng-strict-di for minification, renamed some files and folder lib to /vendors, moved directive into new /src folder for better separation.
+1.3.5 (2015-01-26): Throw an error message when user did not provide a name="" property inside the element to validate.
+1.3.4 (2015-01-06): Removed the necessity of creating a <span> for displaying the error message, the directive now handles it by itself.
+1.3.3 (2015-01-04): Updated Bootstrap(3.3.1) and AngularJS(1.3.7) to latest versions
+1.3.2 (2015-01-03): Float number validator to also permit dot (.) as first char. Also removed keyboard blocking of invalid character on input type="number" instead display error message.
+1.3.1 (2015-01-02): Added Input Match (confirmation) Validator
+1.3.0 (2014-12-01): support to Angular 1.3.x
+1.1.0 (2014-05-02): only start validating after user inactivity, it could also be passed as an argument for more customization of the inactivity timeout (typing-limit).
