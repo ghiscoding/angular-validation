@@ -38,7 +38,12 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
 myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService', function ($q, $scope, validationService) {
-  $scope.$validationOptions = { debounce: 1500, preValidateFormElements: false }; // you can change default debounce globally
+  // you can change default debounce globally
+  $scope.$validationOptions = { debounce: 1500, preValidateFormElements: false };
+
+  // if we want to use the invalid_pattern_data locale translation as an alternateText (:alt=)
+  // then we need to supply an extra 'data' variable (as defined in the JSON locale) of what we expect the search pattern on our input4
+  $scope.translationData = { data: 'YYWW' };
 
   // remove a single element ($scope.form1, string)
   // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
@@ -122,7 +127,7 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
     .setGlobalOptions({ debounce: 1500, scope: $scope, isolatedScope: $scope, preValidateFormElements: false, displayOnlyLastErrorMsg: false })
     .addValidator({ elmName: 'input2', debounce: 3000, rules: 'numeric_signed|required'})
     .addValidator('input3', 'float_signed|between_num:-0.6,99.5|required')
-    .addValidator('input4', 'exact_len:4|regex:YYWW:=^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$:regex|required|integer')
+    .addValidator('input4', 'exact_len:4|pattern=/^(0[9]|1[0-9]|2[0-9]|3[0-9])(5[0-2]|[0-4][0-9])$/:alt=' + $translate.instant('INVALID_PATTERN_DATA', { data: 'YYWW' }) + '|required|integer')
     .addValidator('input5', 'email|required|min_len:6', $translate.instant('INPUT5')) // 3rd argument being the Friendly name
     .addValidator('input6', 'url|required')
     .addValidator('input7', 'ipv4|required')

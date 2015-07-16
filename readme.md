@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.34`
+`Version: 1.3.35`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -13,18 +13,18 @@ Supporting AngularJS 1.3.x *(current code should work with 1.2.x just the same, 
 Now support <b>Service</b> using the same functionalities as the <b>Directive</b>.
 Huge rewrite to have a better code separation and also adding support to Service functionalities. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).
 
-[Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit and Validation](/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation) button.
+[Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary) was also recently added to easily show all validation errors that are still active on the form and you can also use 2 ways of dealing with the [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation) button.
 
 For more reasons to use it, see the answered question of: [Why Use It?](#whyuseit)
 
-If you like the Angular-Validation project and you use it, please click on the **Star** and add it as a favourite. The more star ratings there is, the more chances it could be found by other users inside the popular trend section. That is the only support I ask you... thanks ;)
+If you like the Angular-Validation project and you use it, please click on the **Star** and add it as a favorite. The more star ratings there is, the more chances it could be found by other users inside the popular trend section. That is the only support I ask you... thanks and enjoy it ;)
 
 <a name="plunker"></a>
 ## Live Demo
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation now has a full set of End-to-End tests with Protractor, there is over 1600+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation now has a full set of **End-to-End tests** with **Protractor**, there is over 1600+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -56,7 +56,7 @@ into the following (errors will automatically be displayed in your chosen locale
 ```
 The Angular-Validation will create, by itself, the necessary error message. Now imagine your form having 10 inputs, using the documented Angular way will end up being 30 lines of code, while on the other hand `Angular-Validation` will stay with 10 lines of code, no more... so what are you waiting for? Use Angular-Validation!!!  Don't forget to add it to your favorite, click on the **Star** on top :)
 
-Let's not forget the [Validation Summary](/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
+Let's not forget the [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
 
 Another awesome feature recently added is the [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX)) which is so convenient.
 
@@ -87,7 +87,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [Global Options](https://github.com/ghiscoding/angular-validation/wiki/Global-Options)
 * Validators
     * [Available Validator Rules](https://github.com/ghiscoding/angular-validation/wiki/Available-Validators-(rules))
-    * [Regular Expression](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expressions-(Regex))
+    * [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
 * Misc
     * [Changelog](https://github.com/ghiscoding/angular-validation/wiki/CHANGELOG)
     * [License](https://github.com/ghiscoding/angular-validation/wiki/License)
@@ -170,7 +170,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
 * `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
-* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](#alternate))
+* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
 * `max_date_iso` alias of `date_iso_max`.
 * `max_date_euro_long` alias of `date_euro_long_max`.
 * `max_date_euro_short` alias of `date_euro_short_max`.
@@ -187,7 +187,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
-* `regex` Ensure it follows a regular expression pattern... please see [Regex](#regex) section
+* `pattern` Ensure it follows a regular expression pattern... please see [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
 * `required` Ensures the specified key value exists and is not empty
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
 * `url` Check for valid URL or subdomain

@@ -39,7 +39,7 @@ angular
       switch(rule) {
         case "alpha" :
           validator = {
-            pattern: "^([a-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ])+$/i,
             message: "INVALID_ALPHA",
             type: "regex"
           };
@@ -47,7 +47,7 @@ angular
         case "alphaSpaces" :
         case "alpha_spaces" :
           validator = {
-            pattern: "^([a-zÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ\s])+$/i,
             message: "INVALID_ALPHA_SPACE",
             type: "regex"
           };
@@ -55,7 +55,7 @@ angular
         case "alphaNum" :
         case "alpha_num" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9])+$/i,
             message: "INVALID_ALPHA_NUM",
             type: "regex"
           };
@@ -63,7 +63,7 @@ angular
         case "alphaNumSpaces" :
         case "alpha_num_spaces" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9\s])+$/i,
             message: "INVALID_ALPHA_NUM_SPACE",
             type: "regex"
           };
@@ -71,7 +71,7 @@ angular
         case "alphaDash" :
         case "alpha_dash" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ_-])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9_-])+$/i,
             message: "INVALID_ALPHA_DASH",
             type: "regex"
           };
@@ -79,7 +79,7 @@ angular
         case "alphaDashSpaces" :
         case "alpha_dash_spaces" :
           validator = {
-            pattern: "^([a-z0-9ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðòóôõöøùúûüýÿ\\s_-])+$",
+            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9\s_-])+$/i,
             message: "INVALID_ALPHA_DASH_SPACE",
             type: "regex"
           };
@@ -112,14 +112,14 @@ angular
           break;
         case "boolean":
           validator = {
-            pattern: "^(true|True|false|False|0|1)$",
+            pattern: /^(true|false|0|1)$/i,
             message: "INVALID_BOOLEAN",
             type: "regex"
           };
           break;
         case "checked":
           validator = {
-            pattern: "^true$",
+            pattern: /^true$/i,
             message: "INVALID_CHECKBOX_SELECTED",
             type: "regex"
           };
@@ -127,7 +127,7 @@ angular
         case "creditCard" :
         case "credit_card" :
           validator = {
-            pattern: "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\\d{3})\\d{11})$",
+            pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/,
             message: "INVALID_CREDIT_CARD",
             type: "regex"
           };
@@ -135,7 +135,7 @@ angular
         case "dateEuroLong" :
         case "date_euro_long" :
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_EURO_LONG",
             type: "regex"
           };
@@ -152,7 +152,7 @@ angular
             condition: [">=","<="],
             dateType: "EURO_LONG",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_EURO_LONG_BETWEEN",
             type: "conditionalDate"
           };
@@ -165,7 +165,7 @@ angular
             condition: "<=",
             dateType: "EURO_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_EURO_LONG_MAX",
             type: "conditionalDate"
           };
@@ -178,7 +178,7 @@ angular
             condition: ">=",
             dateType: "EURO_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_EURO_LONG_MIN",
             type: "conditionalDate"
           };
@@ -186,7 +186,7 @@ angular
         case "dateEuroShort" :
         case "date_euro_short" :
           validator = {
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.]\d\d$/,
             message: "INVALID_DATE_EURO_SHORT",
             type: "regex"
           };
@@ -203,7 +203,7 @@ angular
             condition: [">=","<="],
             dateType: "EURO_SHORT",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.]\d\d$/,
             message: "INVALID_DATE_EURO_SHORT_BETWEEN",
             type: "conditionalDate"
           };
@@ -216,7 +216,7 @@ angular
             condition: "<=",
             dateType: "EURO_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.]\d\d$/,
             message: "INVALID_DATE_EURO_SHORT_MAX",
             type: "conditionalDate"
           };
@@ -229,7 +229,7 @@ angular
             condition: ">=",
             dateType: "EURO_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|[12][0-9]|3[01])[-\/\.](0[1-9]|1[012])[-\/\.]\d\d$/,
             message: "INVALID_DATE_EURO_SHORT_MIN",
             type: "conditionalDate"
           };
@@ -237,7 +237,7 @@ angular
         case "dateIso" :
         case "date_iso" :
           validator = {
-            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            pattern: /^(19|20)\d\d([-])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/,
             message: "INVALID_DATE_ISO",
             type: "regex"
           };
@@ -254,7 +254,7 @@ angular
             condition: [">=","<="],
             dateType: "ISO",
             params: [ranges[0], ranges[1]],
-            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            pattern: /^(19|20)\d\d([-])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/,
             message: "INVALID_DATE_ISO_BETWEEN",
             type: "conditionalDate"
           };
@@ -267,7 +267,7 @@ angular
             condition: "<=",
             dateType: "ISO",
             params: [ruleParams],
-            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            pattern: /^(19|20)\d\d([-])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/,
             message: "INVALID_DATE_ISO_MAX",
             type: "conditionalDate"
           };
@@ -280,7 +280,7 @@ angular
             condition: ">=",
             dateType: "ISO",
             params: [ruleParams],
-            pattern: "^(19|20)\\d\\d([-])(0[1-9]|1[012])\\2(0[1-9]|[12][0-9]|3[01])$",
+            pattern: /^(19|20)\d\d([-])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$/,
             message: "INVALID_DATE_ISO_MIN",
             type: "conditionalDate"
           };
@@ -288,7 +288,7 @@ angular
         case "dateUsLong" :
         case "date_us_long" :
           validator = {
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_US_LONG",
             type: "regex"
           };
@@ -305,7 +305,7 @@ angular
             condition: [">=","<="],
             dateType: "US_LONG",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_US_LONG_BETWEEN",
             type: "conditionalDate"
           };
@@ -318,7 +318,7 @@ angular
             condition: "<=",
             dateType: "US_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_US_LONG_MAX",
             type: "conditionalDate"
           };
@@ -331,7 +331,7 @@ angular
             condition: ">=",
             dateType: "US_LONG",
             params: [ruleParams],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.](19|20)\d\d$/,
             message: "INVALID_DATE_US_LONG_MIN",
             type: "conditionalDate"
           };
@@ -339,7 +339,7 @@ angular
         case "dateUsShort" :
         case "date_us_short" :
           validator = {
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.]\d\d$/,
             message: "INVALID_DATE_US_SHORT",
             type: "regex"
           };
@@ -356,7 +356,7 @@ angular
             condition: [">=","<="],
             dateType: "US_SHORT",
             params: [ranges[0], ranges[1]],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.]\d\d$/,
             message: "INVALID_DATE_US_SHORT_BETWEEN",
             type: "conditionalDate"
           };
@@ -369,7 +369,7 @@ angular
             condition: "<=",
             dateType: "US_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.]\d\d$/,
             message: "INVALID_DATE_US_SHORT_MAX",
             type: "conditionalDate"
           };
@@ -382,7 +382,7 @@ angular
             condition: ">=",
             dateType: "US_SHORT",
             params: [ruleParams],
-            pattern: "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.]\\d\\d$",
+            pattern: /^(0[1-9]|1[012])[-\/\.](0[1-9]|[12][0-9]|3[01])[-\/\.]\d\d$/,
             message: "INVALID_DATE_US_SHORT_MIN",
             type: "conditionalDate"
           };
@@ -391,7 +391,7 @@ angular
           validator = {
             // Email RFC 5322, pattern pulled from  http://www.regular-expressions.info/email.html
             // but removed necessity of a TLD (Top Level Domain) which makes this email valid: admin@mailserver1
-            pattern: "(?:[\\wа-я0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.?[\\wа-я0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\wа-я0-9](?:[\\wа-я0-9-]*[\\wа-я0-9])?\\.?)+[\\wа-я0-9](?:[\\wа-я0-9-]*[\\wа-я0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.?){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[\\wа-я0-9-]*[\\wа-я0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
+            pattern: /^[-\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9#~!$%^&*_=+\/`\|}{\'?]+(\.[-\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9#~!$%^&*_=+\/`\|}{\'?]+)*@([\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9_][-\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9_]*(\.[-\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9_]+)*([\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ]+)|(\.[\wа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i,
             message: "INVALID_EMAIL",
             type: "regex"
           };
@@ -407,7 +407,7 @@ angular
           break;
         case "float" :
           validator = {
-            pattern: "^\\d*\\.{1}\\d+$",
+            pattern: /^\d*\.{1}\d+$/,
             message: "INVALID_FLOAT",
             type: "regex"
           };
@@ -415,14 +415,14 @@ angular
         case "floatSigned" :
         case "float_signed" :
           validator = {
-            pattern: "^[-+]?\\d*\\.{1}\\d+$",
+            pattern: /^[-+]?\d*\.{1}\d+$/,
             message: "INVALID_FLOAT_SIGNED",
             type: "regex"
           };
           break;
         case "iban" :
           validator = {
-            pattern: "^[a-zA-Z]{2}\\d{2}\\s?([0-9a-zA-Z]{4}\\s?){4}[0-9a-zA-Z]{2}$",
+            pattern: /^[a-zA-Z]{2}\d{2}\s?([0-9a-zA-Z]{4}\s?){4}[0-9a-zA-Z]{2}$/i,
             message: "INVALID_IBAN",
             type: "regex"
           };
@@ -430,7 +430,7 @@ angular
         case "int" :
         case "integer" :
           validator = {
-            pattern: "^\\d+$",
+            pattern: /^\d+$/,
             message: "INVALID_INTEGER",
             type: "regex"
           };
@@ -440,21 +440,21 @@ angular
         case "int_signed" :
         case "integer_signed" :
           validator = {
-            pattern: "^[+-]?\\d+$",
+            pattern: /^[+-]?\d+$/,
             message: "INVALID_INTEGER_SIGNED",
             type: "regex"
           };
           break;
         case "ipv4" :
           validator = {
-            pattern: "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$",
+            pattern: /^(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$/,
             message: "INVALID_IPV4",
             type: "regex"
           };
           break;
         case "ipv6" :
           validator = {
-            pattern: "^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$",
+            pattern: /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/i,
             message: "INVALID_IPV6",
             type: "regex"
           };
@@ -505,7 +505,7 @@ angular
           break;
         case "numeric" :
           validator = {
-            pattern: "^\\d*\\.?\\d+$",
+            pattern: /^\d*\.?\d+$/,
             message: "INVALID_NUMERIC",
             type: "regex"
           };
@@ -513,11 +513,12 @@ angular
         case "numericSigned" :
         case "numeric_signed" :
           validator = {
-            pattern: "^[-+]?\\d*\\.?\\d+$",
+            pattern: /^[-+]?\d*\.?\d+$/,
             message: "INVALID_NUMERIC_SIGNED",
             type: "regex"
           };
           break;
+        case "pattern" :
         case "regex" :
           // Custom User Regex is a special case, the properties (message, pattern) were created and dealt separately prior to the for loop
           validator = {
@@ -536,21 +537,21 @@ angular
           break;
         case "required" :
           validator = {
-            pattern: "\\S+",
+            pattern: /\S+/,
             message: "INVALID_REQUIRED",
             type: "regex"
           };
           break;
         case "url" :
           validator = {
-            pattern: "(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?",
+            pattern: /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@?^=%&amp;\/~\+#])?/i,
             message: "INVALID_URL",
             type: "regex"
           };
           break;
         case "time" :
           validator = {
-            pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$",
+            pattern: /^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/,
             message: "INVALID_TIME",
             type: "regex"
           };

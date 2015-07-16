@@ -106,11 +106,37 @@ angular
         self.typingLimit = parseInt(_globalOptions.debounce, 10);
       }
 
-      // We first need to see if the validation holds a custom user regex, if it does treat it first
-      // So why treat it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
+      // get the rules(or validation), inside directive it's named (validation), inside service(rules)
+      var rules = (self.validatorAttrs.hasOwnProperty('rules')) ? self.validatorAttrs.rules : self.validatorAttrs.validation;
+
+      // We first need to see if the validation holds a custom user regex, if it does then deal with it first
+      // So why deal with it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
+      if(rules.indexOf("pattern=/") >= 0) {
+        var matches = rules.match(/pattern=(\/.*?\/[igm]*)(:alt=(.*))?/);
+        if (!matches || matches.length < 3) {
+          throw 'Regex validator within the validation needs to be define with an opening "/" and a closing "/", please review your validator.';
+        }
+        var pattern = matches[1];
+        var altMsg = (!!matches[2]) ? matches[2].replace(/\|(.*)/, '') : '';
+
+        // convert the string into a real RegExp pattern
+        var match = pattern.match(new RegExp('^/(.*?)/([gimy]*)$'));
+        var regex = new RegExp(match[1], match[2]);
+
+        customUserRegEx = {
+          altMsg: altMsg,
+          message: altMsg.replace(/:alt=/, ''),
+          pattern: regex
+        };
+
+        // rewrite the rules so that it doesn't contain any regular expression
+        // we simply remove the pattern so that it won't break the Angular-Validation since it also use the pipe |
+        rules = rules.replace('pattern=' + pattern, 'pattern');
+      }
+      // DEPRECATED, in prior version of 1.3.34 and less, the way of writing a regular expression was through regex:/.../:regex
+      // this is no longer supported but is still part of the code so that it won't break for anyone using previous way of validating
       // Return string will have the complete regex pattern removed but we will keep ':regex' so that we can still loop over it
-      var rules = (self.validatorAttrs.hasOwnProperty('rules')) ? self.validatorAttrs.rules : self.validatorAttrs.validation; // inside directive(validation), inside service(rules)
-      if (rules.indexOf("regex:") >= 0) {
+      else if (rules.indexOf("regex:") >= 0) {
         var matches = rules.match("regex:(.*?):regex");
         if (matches.length < 2) {
           throw 'Regex validator within the validation needs to be define with an opening "regex:" and a closing ":regex", please review your validator.';
@@ -119,7 +145,7 @@ angular
         customUserRegEx = {
           message: regAttrs[0],
           pattern: regAttrs[1]
-        }
+        };
 
         // rewrite the rules so that it doesn't contain the regex: ... :regex ending
         // we simply remove it so that it won't break if there's a pipe | inside the actual regex
@@ -373,8 +399,8 @@ angular
         if (validator.type === "conditionalDate") {
           // 1- we first need to validate that the Date input is well formed through regex
           // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-          regex = new RegExp(validator.pattern, 'i');
-          isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+          regex = new RegExp(validator.pattern);
+          isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
 
           // 2- date is valid, then we can do our conditional date check
           if (isValid) {
@@ -398,7 +424,7 @@ angular
             }
           }
         }
-          // it might be a conditional number checking
+        // it might be a conditional number checking
         else if (validator.type === "conditionalNumber") {
           // if 2 params, then it's a between condition
           if (validator.params.length == 2) {
@@ -411,14 +437,14 @@ angular
             isValid = testCondition(validator.condition, parseFloat(strValue), parseFloat(validator.params[0]));
           }
         }
-          // it might be a match input checking
+        // it might be a match input checking
         else if (validator.type === "match") {
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
           var otherNgModel = validator.params[0];
           var otherNgModelVal = self.scope.$eval(otherNgModel);
           isValid = (otherNgModelVal === strValue && !!strValue);
         }
-          // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+        // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
         else if (validator.type === "remote") {
           if (!!strValue && !!showError) {
             self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
@@ -488,7 +514,7 @@ angular
             }
           }
         }
-          // or finally it might be a regular regex pattern checking
+        // or finally it might be a regular regex pattern checking
         else {
           // get the ngDisabled attribute if found
           var elmAttrNgDisabled = (typeof self.attrs !== "undefined") ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
@@ -503,8 +529,8 @@ angular
               //message = $translate.instant("INVALID_KEY_CHAR");
             } else {
               // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-              regex = new RegExp(validator.pattern, 'i');
-              isValid = ((validator.pattern === "\\S+" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+              regex = new RegExp(validator.pattern);
+              isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
             }
           }
         }

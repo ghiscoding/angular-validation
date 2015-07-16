@@ -48,6 +48,7 @@
     "INVALID_NUMERIC":                  "Must be a positive number. ",
     "INVALID_NUMERIC_SIGNED":           "Must be a positive or negative number. ",
     "INVALID_PATTERN":                  "Must be following this format: {0}. ",
+    "INVALID_PATTERN_DATA":             "Must be following this format \"{{data}}\". ",
     "INVALID_REQUIRED":                 "Field is required. ",
     "INVALID_URL":                      "Must be a valid URL. ",
     "INVALID_TIME":                     "Must be a valid time format (hh:mm) OR (hh:mm:ss). ",

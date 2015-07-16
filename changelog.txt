@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.3.35 (2015-07-15) Deprecated old implentation of `regex:...:regex` (though it still works) by a new and much better implementation of `pattern=` validator. Converted all the rules from string pattern to regex pattern (when possible) defined in `angular-validation.js`. Also fixed issue #45 on email check.
 1.3.34 (2015-07-08) Merge pull request #44 - Adding support to brazilian portuguese language.
 1.3.33 (2015-07-02) Reset isolatedScope on route change
 1.3.32 (2015-06-24) Merged pull request #41 and fixed errors inside it, updated Protractor test as well.

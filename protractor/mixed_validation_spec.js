@@ -28,7 +28,7 @@
   var errorMessages = [
     'Must be a positive or negative number. Field is required.',
     'May only contain a positive or negative float value (integer excluded). Needs to be a numeric value, between -0.6 and 99.5. Field is required.',
-    'Must have a length of exactly 4 characters. Must be following this format: YYWW. Field is required. Must be a positive integer.',
+    'Must have a length of exactly 4 characters. Field is required. Must be a positive integer. Must be following this format "YYWW".',
     'Must be a valid email address. Field is required. Must be at least 6 characters.',
     'Must be a valid URL. Field is required.',
     'Must be a valid IP (IPV4). Field is required.',

@@ -558,8 +558,8 @@ function loadData() {
       },
       {
         'validator': 'email',
-        'invalid_data': ['g$g.com', 'g@g,com', 'g@g.'],
-        'valid_data': ['someone@hotmail.com', 'nickname@zone', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф'],
+        'invalid_data': ['g$g.com', 'g@g,com', '.my@email.com.', 'some space@hotmail.com'],
+        'valid_data': ['nickname@domain', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф', 'hola.àáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿ@español.com'],
         'error_message': {
           'en': "Must be a valid email address.",
           'es': "Debe contener una dirección de correo electronico valida.",
