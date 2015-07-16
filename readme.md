@@ -87,7 +87,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [Global Options](https://github.com/ghiscoding/angular-validation/wiki/Global-Options)
 * Validators
     * [Available Validator Rules](https://github.com/ghiscoding/angular-validation/wiki/Available-Validators-(rules))
-    * [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
+    * [Custom Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
 * Misc
     * [Changelog](https://github.com/ghiscoding/angular-validation/wiki/CHANGELOG)
     * [License](https://github.com/ghiscoding/angular-validation/wiki/License)
