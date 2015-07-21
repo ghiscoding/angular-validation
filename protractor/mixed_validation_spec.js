@@ -440,14 +440,14 @@
 
     it('Should show ValidationSummary and contain all error messages', function () {
       // showValidation checkbox should false at first but true after
-      var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      var elmCheckboxShowSummary = element(by.model('vm.displayValidationSummary'));
       expect(elmCheckboxShowSummary.isSelected()).toBeFalsy();
 
       var btnShowSummary = $('[name=btn_showValidation]');
       btnShowSummary.click();
       browser.waitForAngular();
 
-      elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      elmCheckboxShowSummary = element(by.model('vm.displayValidationSummary'));
       expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
 
       // scroll back to top
@@ -513,7 +513,7 @@
       browser.waitForAngular();
 
       // showValidation checkbox should false at first but true after
-      var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+      var elmCheckboxShowSummary = element(by.model('vm.displayValidationSummary'));
       expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
 
       // scroll back to top

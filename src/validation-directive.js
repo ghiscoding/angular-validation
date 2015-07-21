@@ -71,7 +71,7 @@
 
           if (!formElmObj.isValidationCancelled) {
             // validate without delay
-            attemptToValidate(event.target.value, 0);
+            attemptToValidate(event.target.value, 10);
           }else {
             ctrl.$setValidity('validation', true);
           }

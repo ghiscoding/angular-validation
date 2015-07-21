@@ -6,7 +6,7 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
     $compileProvider.debugInfoEnabled(false);
     $routeProvider
       .when('/validate-directive', { templateUrl: 'templates/testingFormDirective.html', controller: 'CtrlValidationDirective' })
-      .when('/validate-2forms', { templateUrl: 'templates/testing2Forms.html', controller: 'Ctrl2forms' })
+      .when('/validate-2forms', { templateUrl: 'templates/testing2Forms.html', controller: 'Ctrl2forms as vm' })
       .when('/validate-ngRepeat', { templateUrl: 'templates/testingFormNgRepeat.html', controller: 'CtrlNgRepeat' })
       .when('/validate-service', { templateUrl: 'templates/testingFormService.html', controller: 'CtrlValidationService' })
       .otherwise({ redirectTo: 'validate-directive'  });
@@ -80,21 +80,24 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
 }]);
 
 // -- Controller to use Angular-Validation Directive with 2 forms
+// on this page we will pre-validate the form and show all errors on page load
 // ---------------------------------------------------------------
 myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope, validationService) {
-  // on this page we will pre-validate the form and show all errors on page load
-  $scope.$validationOptions = { debounce: 500, preValidateFormElements: true };
+  var vm = this; // use the ControllerAs alias syntax
 
-  $scope.submitForm = function() {
-    if(new validationService().checkFormValidity($scope.form01)) {
+  // set the global options BEFORE any function declarations, we will prevalidate current form
+  var myValidationService = new validationService({ controllerAs: vm, debounce: 500, preValidateFormElements: true });
+
+  vm.submitForm = function() {
+    if(myValidationService.checkFormValidity(vm.form01)) {
       alert('All good, proceed with submit...');
     }
   }
-  $scope.resetForm = function(form) {
-    new validationService().resetForm(form, { emptyAllInputValues: true, removeAllValidators: true });
+  vm.resetForm = function(form) {
+    myValidationService.resetForm(form, { emptyAllInputValues: true, removeAllValidators: true });
   };
-  $scope.showValidationSummary = function () {
-    $scope.displayValidationSummary = true;
+  vm.showValidationSummary = function () {
+    vm.displayValidationSummary = true;
   }
 }]);
 

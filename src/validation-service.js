@@ -15,11 +15,16 @@ angular
     var _watchers = [];
 
     // service constructor
-    var validationService = function () {
+    var validationService = function (globalOptions) {
       this.isValidationCancelled = false;       // is the validation cancelled?
       this.timer = null;                        // timer of user inactivity time
       this.validationAttrs = {};                // Current Validator attributes
       this.commonObj = new validationCommon();  // Object of validationCommon service
+
+      // if global options were passed to the constructor
+      if (!!globalOptions) {
+        this.setGlobalOptions(globalOptions);
+      }
     }
 
     // list of available published public functions of this object
@@ -94,7 +99,7 @@ angular
         if (!formElmObj.isValidationCancelled) {
           // re-initialize to use current element & validate without delay
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-          attemptToValidate(self, event.target.value, 0);
+          attemptToValidate(self, event.target.value, 10);
         }
       });
 
@@ -138,7 +143,7 @@ angular
       var self = this;
       var ctrl, elm, elmName = '', isValid = true;
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'checkFormValidity() requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
+        throw 'checkFormValidity() requires a valid Angular Form or $scope/vm object passed as argument to work properly, for example:: fn($scope) OR fn($scope.form1) OR fn(vm) OR fn(vm.form1)';
       }
 
       // loop through $validationSummary and display errors when found on each field
@@ -170,7 +175,7 @@ angular
     function clearInvalidValidatorsInSummary(obj) {
       var self = this;
       if (typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'clearInvalidValidatorsInSummary() requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
+        throw 'clearInvalidValidatorsInSummary() requires a valid Angular Form or $scope/vm object passed as argument to work properly, for example:: fn($scope) OR fn($scope.form1) OR fn(vm) OR fn(vm.form1)';
       }
       // Get list of names to remove
       var elmName = [];
@@ -196,7 +201,7 @@ angular
       var formElmObj;
 
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
-        throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope object passed as argument to work properly (ex.: $scope.form1  OR  $scope).';
+        throw 'removeValidator() only works with Validation that were defined by the Service (not by the Directive) and requires a valid Angular Form or $scope/vm object passed as argument to work properly, for example:: fn($scope) OR fn($scope.form1) OR fn(vm) OR fn(vm.form1)';
       }
 
       // Note: removeAttr() will remove validation attribute from the DOM (if defined by Directive), but as no effect when defined by the Service

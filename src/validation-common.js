@@ -22,11 +22,12 @@ angular
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       if (!_bypassRootScopeReset) {
-        _globalOptions.displayOnlyLastErrorMsg = false; // reset the option of displaying only the last error message
-        _globalOptions.preValidateFormElements = false; // reset the option of pre-validate all form elements, false by default
-        _globalOptions.isolatedScope = null;            // reset used scope on route change
-        _globalOptions.scope = null;                    // reset used scope on route change
-
+        _globalOptions = {
+          displayOnlyLastErrorMsg: false, // reset the option of displaying only the last error message
+          preValidateFormElements: false, // reset the option of pre-validate all form elements, false by default
+          isolatedScope: null,            // reset used scope on route change
+          scope: null                     // reset used scope on route change
+        };
         _formElements = [];                             // array containing all form elements, valid or invalid
         _validationSummary = [];                        // array containing the list of invalid fields inside a validationSummary
       }
@@ -65,6 +66,7 @@ angular
     validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
     validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
     validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
+    validationCommon.prototype.getGlobalOptions = getGlobalOptions;                                 // get the global options used by all validators (usually called by the validationService)
     validationCommon.prototype.isFieldRequired = isFieldRequired;                                   // return boolean knowing if the current field is required
     validationCommon.prototype.initialize = initialize;                                             // initialize current object with passed arguments
     validationCommon.prototype.mergeObjects = mergeObjects;                                         // merge 2 javascript objects, Overwrites obj1's values with obj2's (basically Object2 as higher priority over Object1)
@@ -194,6 +196,14 @@ angular
       return _formElements;
     }
 
+    /** Get global options used by all validators
+     * @param object attrs: global options
+     * @return object self
+     */
+    function getGlobalOptions() {
+      return _globalOptions;
+    }
+
     /** Initialize the common object
      * @param object scope
      * @param object elm
@@ -263,12 +273,24 @@ angular
 
       self.scope.$validationSummary = _validationSummary;
 
-      // and also save it inside the current scope form (if found)
+      // overwrite the scope form (if found)
       if (!!form) {
         // since validationSummary contain errors of all forms
         // we need to find only the errors of current form and them into the current scope form object
         form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
       }
+
+      // overwrite the ControllerAs alias if it was passed in the global options
+      if (!!_globalOptions && !!_globalOptions.controllerAs) {
+        _globalOptions.controllerAs.$validationSummary = _validationSummary;
+
+        // also overwrite it inside controllerAs form (if found)
+        if (!!form) {
+          var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
+          _globalOptions.controllerAs[formName].$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+        }
+      }
+
 
       return _validationSummary;
     }
@@ -687,7 +709,7 @@ angular
         }
       }
 
-      // save validation summary scope root
+      // save validation summary into scope root
       self.scope.$validationSummary = _validationSummary;
 
       // and also save it inside the current scope form (if found)
@@ -695,6 +717,17 @@ angular
         // since validationSummary contain errors of all forms
         // we need to find only the errors of current form and them into the current scope form object
         form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+      }
+
+      // also save it inside the ControllerAs alias if it was passed in the global options
+      if (!!_globalOptions && !!_globalOptions.controllerAs) {
+        _globalOptions.controllerAs.$validationSummary = _validationSummary;
+
+        // also save it inside controllerAs form (if found)
+        if (!!form) {
+          var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
+          _globalOptions.controllerAs[formName].$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+        }
       }
 
       return _validationSummary;
@@ -753,6 +786,22 @@ angular
       return -1;
     }
 
+    /** Explode a '.' dot notation string to an object
+     * @param string str
+     * @parem object
+     * @return object
+     */
+    function explodedDotNotationStringToObject(str, obj) {
+      var split = str.split('.');
+
+      for (var k = 0, kln = split.length; k < kln; k++) {
+        if(!!obj[split[k]]) {
+          obj = obj[split[k]];
+        }
+      }
+      return obj;
+    }
+
     /** Get the element's parent Angular form (if found)
      * @param object self
      * @return object scope form
@@ -764,19 +813,31 @@ angular
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
-        if (!!form && form.name && self.scope[form.name]) {
-          parentForm = self.scope[form.name];
-          if (typeof parentForm.$name === "undefined") {
-            parentForm.$name = form.name; // make sure it has a $name, since we use that variable later on
+
+        if (!!form && !!form.name) {
+          parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && form.name.indexOf('.') >= 0)
+            ? explodedDotNotationStringToObject(form.name, self.scope)
+            : self.scope[form.name];
+
+          if(!!parentForm) {
+            if (typeof parentForm.$name === "undefined") {
+              parentForm.$name = form.name; // make sure it has a $name, since we use that variable later on
+            }
+            return parentForm;
           }
-          return parentForm;
         }
       }
 
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
       // we can hack it and define our own form inside this isolate scope, in that way we can still use something like: isolateScope.form1.$validationSummary
       if (!!form && !!form.name) {
-        return self.scope[form.name] = { $name: form.name, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
+        var obj = { $name: form.name, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
+
+        if (!!_globalOptions && !!_globalOptions.controllerAs && form.name.indexOf('.') >= 0) {
+          var formSplit = form.name.split('.');
+          return self.scope[formSplit[0]][formSplit[1]] = obj
+        }
+        return self.scope[form.name] = obj;
       }
       return null;
     }

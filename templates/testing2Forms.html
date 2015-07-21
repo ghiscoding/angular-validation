@@ -3,68 +3,70 @@
     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
     <a href="https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load)">Wiki - PreValidate Form (on page load)</a><br/>
     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-    <a href="https://github.com/ghiscoding/angular-validation/wiki/Reset-Form">Wiki - Reset Form</a>
+    <a href="https://github.com/ghiscoding/angular-validation/wiki/Reset-Form">Wiki - Reset Form</a><br/>
+    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+    <a href="https://github.com/ghiscoding/angular-validation/wiki/ControllerAs-Syntax">Wiki - ControllerAs</a>
 </div>
 
 <h3>Directive - 2 Forms</h3>
 
 <div class="checkbox text-right" style="margin-top:-25px">
     <label>
-      <input type="checkbox" ng-model="displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
+      <input type="checkbox" ng-model="vm.displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
     </label>
     &nbsp;|&nbsp;
-    <input type="button" name="btn_resetForm" class="btn btn-info btn-xs" ng-click="resetForm(form01)" value="{{ 'RESET_FORM' | translate }}" title="params: { emptyAllInputValues: false, removeAllValidators: true }" />
+    <input type="button" name="btn_resetForm" class="btn btn-info btn-xs" ng-click="vm.resetForm(vm.form01)" value="{{ 'RESET_FORM' | translate }}" title="params: { emptyAllInputValues: false, removeAllValidators: true }" />
 </div>
 
 
 <hr />
 
 <!-- Angular-Validation saves the summary of errors inside 2 locations: 1- $scope.$validationSummary 2- $scope.formName.$validationSummary (only accessible if you named your form) so it becomes easy to show all errors -->
-<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary && form01.$validationSummary.length > 0">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+<div class="alert alert-danger alert-dismissable" ng-show="vm.displayValidationSummary && vm.form01.$validationSummary.length > 0">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="vm.displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form01.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in vm.form01.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
 
-<form novalidate name="form01" method="POST">
+<form novalidate name="vm.form01" method="POST">
     <fieldset>
         <div class="form-group">
             <label for="input2">{{ 'FIRST_NAME' | translate }}</label>
-            <input type="text" class="form-control" name="input2" friendly-name="{{ 'FIRST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="input2" validation="alpha_dash|min_len:2|required" />
+            <input type="text" class="form-control" name="input2" friendly-name="{{ 'FIRST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="vm.input2" validation="alpha_dash|min_len:2|required" />
         </div>
         <div class="form-group">
             <label for="input3">{{ 'LAST_NAME' | translate }}</label>
-            <input type="text" class="form-control" name="input3" friendly-name="{{ 'LAST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="input3" validation="alpha_dash|min_len:2|required" />
+            <input type="text" class="form-control" name="input3" friendly-name="{{ 'LAST_NAME' | translate }}" placeholder="alpha_dash|min_len:2|required" ng-model="vm.input3" validation="alpha_dash|min_len:2|required" />
         </div>
         <div class="form-group">
             <label for="input4">ngDisabled =></label>
-            ON <input type="radio" id="radioDisableInput4_on" ng-model="disableInput4" value="on" ng-init="disableInput4 = 'on'">
-            OFF <input type="radio" id="radioDisableInput4_off" ng-model="disableInput4" value="off">
-            <input type="text" class="form-control" name="input4" placeholder="alpha_dash|min_len:2|required" ng-model="input4" validation="alpha_dash|min_len:2|required" ng-disabled="disableInput4 == 'on'" />
+            ON <input type="radio" id="radioDisableInput4_on" ng-model="vm.disableInput4" value="on" ng-init="vm.disableInput4 = 'on'">
+            OFF <input type="radio" id="radioDisableInput4_off" ng-model="vm.disableInput4" value="off">
+            <input type="text" class="form-control" name="input4" placeholder="alpha_dash|min_len:2|required" ng-model="vm.input4" validation="alpha_dash|min_len:2|required" ng-disabled="vm.disableInput4 == 'on'" />
         </div>
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn1" class="btn btn-primary" ng-disabled="form01.$invalid" >{{ 'SAVE' | translate }}</button>
+        <button type="submit" name="save_btn1" class="btn btn-primary" ng-disabled="vm.form01.$invalid" >{{ 'SAVE' | translate }}</button>
     </div>
 </form>
 
 <hr />
 
-<div class="alert alert-danger alert-dismissable" ng-show="displayValidationSummary && form02.$validationSummary.length > 0">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="displayValidationSummary = false">&times;</button>
+<div class="alert alert-danger alert-dismissable" ng-show="vm.displayValidationSummary && vm.form02.$validationSummary.length > 0">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="vm.displayValidationSummary = false">&times;</button>
     <h4><strong>{{ 'ERRORS' | translate }}!</strong></h4>
     <ul>
-        <li ng-repeat="item in form02.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+        <li ng-repeat="item in vm.form02.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
     </ul>
 </div>
-<form novalidate name="form02" method="POST">
+<form novalidate name="vm.form02" method="POST">
     <fieldset>
         <div class="form-group">
             <label for="select1">{{ 'SELECT1' | translate }}</label>
-            <select class="form-control" name="select1" ng-model="select1" validation="required:alt={{ 'CHANGE_LANGUAGE' | translate }}">
+            <select class="form-control" name="select1" ng-model="vm.select1" validation="required:alt={{ 'CHANGE_LANGUAGE' | translate }}">
                 <option value="">...</option>
                 <option value="en">English</option>
                 <option value="es">Español</option>
@@ -73,13 +75,13 @@
         </div>
         <div class="form-group">
             <label for="area1">{{ 'AREA1' | translate }}</label>
-            <textarea class="form-control" name="area1" rows="3" placeholder="alpha_dash_spaces|min_len:15|required" validation="alpha_dash_spaces|min_len:15|required" ng-model="area1"></textarea>
+            <textarea class="form-control" name="area1" rows="3" placeholder="alpha_dash_spaces|min_len:15|required" validation="alpha_dash_spaces|min_len:15|required" ng-model="vm.area1"></textarea>
         </div>
     </fieldset>
 
     <div class="form-actions">
-        <button type="submit" name="save_btn2" class="btn btn-primary" ng-disabled="form02.$invalid" >{{ 'SAVE' | translate }}</button>
+        <button type="submit" name="save_btn2" class="btn btn-primary" ng-disabled="vm.form02.$invalid" >{{ 'SAVE' | translate }}</button>
     </div>
 </form>
 <br/>
-<button type="submit" name="btn_showValidation" class="btn btn-warning btn-xs" ng-click="showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
+<button type="submit" name="btn_showValidation" class="btn btn-warning btn-xs" ng-click="vm.showValidationSummary()">{{ 'SHOW_VALIDATION_SUMMARY' | translate }}</button>
