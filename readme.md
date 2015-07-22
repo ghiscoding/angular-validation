@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.3.36`
+`Version: 1.3.37`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -67,8 +67,8 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
 **Wiki Contents**
 * [Angular-Validation Wiki](https://github.com/ghiscoding/angular-validation/wiki)
 * Installation
+    * [HOWTO - Step by Step](https://github.com/ghiscoding/angular-validation/wiki/Include-it-in-your-Angular-Application)
     * [Bower/NuGet Packages](https://github.com/ghiscoding/angular-validation/wiki/Download-and-Install-it)
-    * [Include it in your Angular Application project](https://github.com/ghiscoding/angular-validation/wiki/Include-it-in-your-Angular-Application)
     * [Locales (languages)](https://github.com/ghiscoding/angular-validation/wiki/Locales-(languages))
 * Code Samples
     * [Directive Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Directive-Examples)

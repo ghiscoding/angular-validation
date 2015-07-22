@@ -581,7 +581,8 @@ angular
                 message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               }
               addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
-            }).catch(function (data) {
+            })
+            ["catch"](function (data) {
               // error caught:
               // alternate text might not need translation if the user sent his own custom message or is already translated
               // so just send it directly into the validation summary.
