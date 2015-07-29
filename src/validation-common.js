@@ -377,9 +377,9 @@ angular
 
       // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
       if (!!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
-        (errorElm.length > 0) ? errorElm.text(errorMsg) : elm.after('<span class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</span>');
+        (errorElm.length > 0) ? errorElm.html(errorMsg) : elm.after('<span class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</span>');
       } else {
-        errorElm.text('');  // element is pristine or no validation applied, error message has to be blank
+        errorElm.html('');  // element is pristine or no validation applied, error message has to be blank
       }
     }
 
