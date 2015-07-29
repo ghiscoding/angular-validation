@@ -41,15 +41,14 @@
             cancelValidation();
             commonObj.removeFromValidationSummary(attrs.name);
           } else {
-            // make the element as it was touched for CSS, only works in AngularJS 1.3+
-            if (typeof ctrl.$setTouched === "function") {
-              ctrl.$setTouched();
-            }
-
-            // Re-Validate the input when enabled
-            var value = ctrl.$viewValue || '';
-            ctrl.$setValidity('validation', commonObj.validate(value, true));
+            // revalidate & re-attach the onBlur event
+            revalidateAndAttachOnBlur();
           }
+        });
+
+        // if DOM element gets destroyed, we need to cancel validation, unbind onBlur & remove it from $validationSummary
+        elm.on('$destroy', function() {
+          cancelAndUnbindValidation();
         });
 
         // watch for a validation becoming empty, if that is the case, unbind everything from it
@@ -57,15 +56,21 @@
           return elm.attr('validation');
         }, function(validation) {
           if(typeof validation === "undefined" || validation === '') {
-            // unbind everything and cancel the validation
-            ctrl.$formatters.shift();
-            ctrl.$parsers.shift();
-            cancelValidation();
+            // if validation gets empty, we need to cancel validation, unbind onBlur & remove it from $validationSummary
+            cancelAndUnbindValidation();
+          }else {
+            // If validation attribute gets filled/re-filled (could be by interpolation)
+            //  we need to redefine the validation so that we can grab the new "validation" element attribute
+            // and finally revalidate & re-attach the onBlur event
+            commonObj.defineValidation();
+            revalidateAndAttachOnBlur();
           }
         });
 
         // onBlur make validation without waiting
-        elm.bind('blur', blurHandler = function(event) {
+        elm.bind('blur', blurHandler);
+
+        function blurHandler(event) {
           // get the form element custom object and use it after
           var formElmObj = commonObj.getFormElementByName(ctrl.$name);
 
@@ -75,27 +80,11 @@
           }else {
             ctrl.$setValidity('validation', true);
           }
-        });
+        }
 
         //----
         // Private functions declaration
         //----------------------------------
-
-        /** Cancel current validation test and blank any leftover error message */
-        function cancelValidation() {
-          // get the form element custom object and use it after
-          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
-
-          formElmObj.isValidationCancelled = true;
-          $timeout.cancel(timer);
-          commonObj.updateErrorMsg('');
-          ctrl.$setValidity('validation', true);
-
-          // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-          if(typeof blurHandler === "function") {
-            elm.unbind('blur', blurHandler);
-          }
-        }
 
         /** Validator function to attach to the element, this will get call whenever the input field is updated
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
@@ -153,6 +142,48 @@
 
           return value;
         } // attemptToValidate()
+
+        /** Cancel the validation, unbind onBlur and remove from $validationSummary */
+        function cancelAndUnbindValidation() {
+          // unbind everything and cancel the validation
+          ctrl.$formatters.shift();
+          ctrl.$parsers.shift();
+          cancelValidation();
+          commonObj.removeFromValidationSummary(attrs.name);
+        }
+
+        /** Cancel current validation test and blank any leftover error message */
+        function cancelValidation() {
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+          if(!!formElmObj) {
+            formElmObj.isValidationCancelled = true;
+          }
+          $timeout.cancel(timer);
+          commonObj.updateErrorMsg('');
+          ctrl.$setValidity('validation', true);
+
+          // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
+          if(typeof blurHandler === "function") {
+            elm.unbind('blur', blurHandler);
+          }
+        }
+
+        /** Re-evaluate the element and revalidate it, also re-attach the onBlur event on the element */
+        function revalidateAndAttachOnBlur() {
+          // Revalidate the input when enabled (without displaying the error)
+          var value = ctrl.$viewValue || '';
+          ctrl.$setValidity('validation', commonObj.validate(value, false));
+
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+          if(!!formElmObj) {
+            formElmObj.isValidationCancelled = false; // make sure it's renable validation as well
+          }
+
+          // re-attach the onBlur handler
+          elm.bind('blur', blurHandler);
+        }
 
       } // link()
     }; // return;

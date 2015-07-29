@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di ng-cloak="">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation Example with Interpolation</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../style.css">
+  </head>
+
+  <body ng-controller="Ctrl as vm">
+    <div class="container">
+      <h2>Example of Angular-Validation interpolation to validation attribute.</h2>
+      <hr/>
+
+      <div class="alert alert-danger alert-dismissable" ng-show="vm.test.$validationSummary.length &gt; 0">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><strong>ERRORS!</strong></h4>
+        <ul>
+            <li ng-repeat="item in vm.test.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
+        </ul>
+      </div>
+
+      <form name="vm.test">
+        <br/>
+        <label class="col-xs-4 control-label">Field1</label>
+        <div class="col-xs-6">
+          <input id="f1" class="form-control" type="text" name="f1"
+            ng-model="vm.model.f1"
+            validation="{{vm.f1Validation()}}" />
+        </div>
+        <br/>
+        <label class="col-xs-4 control-label">Inverted Validation Field1</label>
+        <div class="col-xs-6">
+          <input id="if1" class="form-control" type="text" name="if1"
+            ng-model="vm.model.if1"
+            validation="{{vm.if1Validation()}}" />
+        </div>
+        <br/>
+        <label class="col-xs-4 control-label">Toggle Validation</label>
+        <div class="col-xs-6 text-left">
+          <input id="toggle" type="checkbox" name="toggle"
+            ng-model="vm.validationRequired"
+            ng-change="vm.checkboxChange()" />
+        </div>
+
+        <hr/>
+
+        <div class="col-xs-6">
+          vm.validationRequired [{{vm.validationRequired}}]<br/>
+          vm.f1Validation() [{{vm.f1Validation()}}]<br/>
+          vm.if1Validation() [{{vm.if1Validation()}}]<br/>
+        </div>
+      </form>
+
+      <ng-view></ng-view>
+    </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-Validation -->
+    <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    -->
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

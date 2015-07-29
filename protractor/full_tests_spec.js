@@ -50,6 +50,7 @@
             var elmInput = $('[name=input' + i + ']');
             elmInput.click();
             elmInput.sendKeys(protractor.Key.TAB);
+            //$('[for=input' + i + ']').click();
 
             var elmError = $('.validation-input' + i);
             var errorMsg = (validations[i].validator === 'maxLen' || validations[i].validator === 'max_len' || validations[i].validator === 'required')
@@ -73,6 +74,7 @@
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
                     elmInput.sendKeys(protractor.Key.TAB);
+                    //$('[for=input' + i + ']').click();
                     var elmError = $('.validation-input' + i);
                     expect(elmError.getText()).toEqual('');
                   });
@@ -99,6 +101,7 @@
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
                     elmInput.sendKeys(protractor.Key.TAB);
+                    //$('[for=input' + i + ']').click();
                     var elmError = $('.validation-input' + i);
                     expect(elmError.getText()).toEqual(validations[i].error_message[languages[0]]);
                   });

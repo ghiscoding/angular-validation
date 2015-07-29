@@ -96,7 +96,7 @@ angular
         // get the form element custom object and use it after
         var formElmObj = self.commonObj.getFormElementByName(attrs.elmName);
 
-        if (!formElmObj.isValidationCancelled) {
+        if (!!formElmObj && !formElmObj.isValidationCancelled) {
           // re-initialize to use current element & validate without delay
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
           attemptToValidate(self, event.target.value, 10);
@@ -110,6 +110,18 @@ angular
       // watch the `disabled` attribute for changes
       // if it become disabled then skip validation else it becomes enable then we need to revalidate it
       watchNgDisabled(self, scope, attrs);
+
+      // if DOM element gets destroyed, we need to cancel validation, unbind onBlur & remove it from $validationSummary
+      attrs.elm.on('$destroy', function() {
+        // get the form element custom object and use it after
+        var formElmObj = self.commonObj.getFormElementByName(self.commonObj.ctrl.$name);
+
+        // unbind everything and cancel the validation
+        if(!!formElmObj) {
+          cancelValidation(self, formElmObj);
+          self.commonObj.removeFromValidationSummary(attrs.name);
+        }
+      });
 
       // watch the element for any value change, validate it once that happen
 			var watcherHandler = scope.$watch(attrs.elmName, function (newVal, oldVal) {
@@ -155,7 +167,7 @@ angular
           // get the form element custom object and use it after
           var formElmObj = self.commonObj.getFormElementByName(elmName);
 
-          if(!!formElmObj.elm && formElmObj.elm.length > 0) {
+          if(!!formElmObj && !!formElmObj.elm && formElmObj.elm.length > 0) {
             // make the element as it was touched for CSS, only works in AngularJS 1.3+
             if (typeof formElmObj.ctrl.$setTouched === "function") {
               formElmObj.ctrl.$setTouched();
@@ -372,16 +384,18 @@ angular
      */
     function cancelValidation(obj, formElmObj) {
       // get the form element custom object and use it after
-      var ctrl = (!!formElmObj.ctrl) ? formElmObj.ctrl : obj.commonObj.ctrl;
+      var ctrl = (!!formElmObj && !!formElmObj.ctrl) ? formElmObj.ctrl : obj.commonObj.ctrl;
 
+      if(!!formElmObj) {
+        formElmObj.isValidationCancelled = true;
+      }
       $timeout.cancel(self.timer);
-      formElmObj.isValidationCancelled = true;
       ctrl.$setValidity('validation', true);
       obj.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
 
       // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
       if(typeof _blurHandler === "function") {
-        var elm = (!!formElmObj.elm) ? formElmObj.elm : obj.commonObj.elm;
+        var elm = (!!formElmObj && !!formElmObj.elm) ? formElmObj.elm : obj.commonObj.elm;
         elm.unbind('blur', _blurHandler);
       }
     }
@@ -449,16 +463,24 @@ angular
             self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
             self.commonObj.removeFromValidationSummary(attrs.name);
           } else {
-            // make the element as it was touched for CSS, only works in AngularJS 1.3+
-            if (typeof attrs.ctrl.$setTouched === "function") {
-              attrs.ctrl.$setTouched();
-            }
-            // Re-Validate the input when enabled
+            // Re-Validate the input when enabled (without displaying the error)
             var value = attrs.ctrl.$viewValue || '';
 
-            // re-initialize to use current element & validate without delay
+            // re-initialize to use current element & validate without delay (without displaying the error)
             self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-            attrs.ctrl.$setValidity('validation', self.commonObj.validate(value, true));
+            attrs.ctrl.$setValidity('validation', self.commonObj.validate(value, false));
+
+            // make sure it's re-enable the validation as well
+            if(!!formElmObj) {
+              formElmObj.isValidationCancelled = false;
+            }
+
+            // re-attach the onBlur handler
+            attrs.elm.bind('blur', _blurHandler = function(event) {
+              if (!!formElmObj && !formElmObj.isValidationCancelled) {
+                attemptToValidate(self, event.target.value, 10);
+              }
+            });
           }
         }, 0, false);
 

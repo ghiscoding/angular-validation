@@ -125,6 +125,8 @@
           var elmInput = $('[name=input1]');
           elmInput.click();
           elmInput.sendKeys(protractor.Key.TAB);
+          //$('[for=input1]').click();
+          browser.waitForAngular();
           var elmError = $('.validation-input1');
 
           // Remote check will not process unless the input is field, so at first we will see the other validator errors only.
@@ -136,6 +138,7 @@
           elmInput.click();
           elmInput.sendKeys('ab');
           elmInput.sendKeys(protractor.Key.TAB);
+          //$('[for=input1]').click();
           browser.sleep(1500); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
 
           var elmError = $('.validation-input1');
@@ -147,6 +150,7 @@
           elmInput.clear().then(function() {
             elmInput.sendKeys('abc');
             elmInput.sendKeys(protractor.Key.TAB);
+            //$('[for=input1]').click();
             browser.sleep(1500); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
 
             var elmError = $('.validation-input1');
@@ -163,6 +167,7 @@
             var elmInput = $('[name=' + formElementNames[i] + ']');
             elmInput.click();
             elmInput.sendKeys(protractor.Key.TAB);
+            //$('[for=' + formElementNames[i] + ']').click(); // click on label to blur away
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', 'en')).click(); // click on good option first
@@ -189,6 +194,7 @@
             elmInput.click();
             elmInput.sendKeys(validInputTexts[i]);
             elmInput.sendKeys(protractor.Key.TAB);
+            //$('[for=' + formElementNames[i] + ']').click(); // click on label to blur away
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', validInputTexts[i])).click(); // click on good option
@@ -200,7 +206,7 @@
           }
         });
 
-        it('Should check that ngDisabled button is now enabled', function() {
+        it('Should check that ngDisabled button is now enabled (after all input filled)', function() {
           var elmSubmit1 = $('[name=btn_ngDisabled]');
           expect(elmSubmit1.isEnabled()).toBe(true);
         });
@@ -212,6 +218,7 @@
             var elmInput3 = $('[name=input3]');
             clearInput(elmInput3);
             elmInput3.sendKeys(protractor.Key.TAB);
+            //$('[for=input3]').click(); // click on label to blur away
 
             // error should appear on input3
             var elmError2 = $('.validation-input3');
@@ -260,7 +267,6 @@
           // make input3 invalid, remove text
           var elmInput3 = $('[name=input3]');
           elmInput3.sendKeys('any text');
-          //elmInput3.sendKeys(protractor.Key.TAB);
 
           // error should be removed from input3
           var elmError3 = $('.validation-input3');
@@ -276,16 +282,32 @@
           expect(elmSubmit1.isEnabled()).toBe(true);
         });
 
-        it('Should make input20 editable & error should appear', function() {
+        it('Should make input20 editable & should be without error until we focus later on it', function() {
           // click on the radio button OFF, that will make the input editable
           element(by.id('radioDisableInput20_off')).click();
           browser.waitForAngular();
+
+          // error should not exist yet
+          var elmError = element(by.css('.validation-input20'));
+          expect(elmError.isPresent()).toBeFalsy();
+
+          // Save button should become disable
+          var elmSubmit1 = $('[name=btn_ngDisabled]');
+          expect(elmSubmit1.isEnabled()).toBe(false);
+        });
+
+
+        it('Should focus and blur out of input20 & error should appear', function() {
+          var elmInput = $('[name=input20]');
+          elmInput.click();
+          elmInput.sendKeys(protractor.Key.TAB);
+          //$('[for=input20]').click(); // click on label to blur away
 
           // error should appear
           var elmError = $('.validation-input20');
           expect(elmError.getText()).toEqual(errorMessages2FormsExtra);
 
-          // Save button should become disable
+          // Save button should still be disabled
           var elmSubmit1 = $('[name=btn_ngDisabled]');
           expect(elmSubmit1.isEnabled()).toBe(false);
         });
