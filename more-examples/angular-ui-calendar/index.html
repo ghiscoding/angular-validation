@@ -9,9 +9,42 @@
 
   <body ng-controller="Ctrl as vm">
     <div class="container">
-      <h2>Example of Angular-Validation interpolation to validation attribute.</h2>
+      <h2>Example of Angular-Validation Date validation error after select from ui datepicker.</h2>
       <hr/>
+        <label class="control-label">Min Date {{vm.minDate}}</label>
+        <label class="control-label">Max Date {{vm.maxDate}}</label>
+      <hr/>
+      <form name="vm.test">
+        <label class="control-label">Date</label>
+        <div class="input-group">
+          <input
+            type="text"
+            id="dateOfChange"
+            name="dateOfChange"
+            class="form-control"
+            validation="required|date_euro_long_between:{{vm.minDate | date:'dd/MM/yyyy'}},{{vm.maxDate | date:'dd/MM/yyyy'}}"
+            validation-error-to="dateOfChangeValidation"
+            ng-model="vm.model.dateOfChange"
+            datepicker-popup="{{vm.datePickerFormat}}"
+            datepicker-options="vm.dateOptions"
+            datepicker-mode="'day'"
+            is-open="vm.isChangeDatePickerOpen"
+            min-date="vm.minDate"
+            max-date="vm.maxDate"
+            />
+          <span class="input-group-btn">
+              <button type="button" class="btn btn-default"
+                      data-ng-click="vm.openDatePicker($event)">
+                  <i class="glyphicon glyphicon-calendar"></i>
+              </button>
+          </span>
+        </div>
+        <div id="dateOfChangeValidation" class="validation text-danger"></div>
+      </form>
 
+
+      <br/>
+      <br/>
       <div class="alert alert-danger alert-dismissable" ng-show="vm.test.$validationSummary.length &gt; 0">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <h4><strong>ERRORS!</strong></h4>
@@ -19,38 +52,6 @@
             <li ng-repeat="item in vm.test.$validationSummary">{{ item.friendlyName != '' ? item.friendlyName : item.field }}: {{item.message}}</li>
         </ul>
       </div>
-
-      <form name="vm.test">
-        <br/>
-        <label class="col-xs-4 control-label">Field1</label>
-        <div class="col-xs-6">
-          <input id="f1" class="form-control" type="text" name="f1"
-            ng-model="vm.model.f1"
-            validation="{{vm.f1Validation()}}" />
-        </div>
-        <br/>
-        <label class="col-xs-4 control-label">Inverted Validation Field1</label>
-        <div class="col-xs-6">
-          <input id="if1" class="form-control" type="text" name="if1"
-            ng-model="vm.model.if1"
-            validation="{{vm.if1Validation()}}" />
-        </div>
-        <br/>
-        <label class="col-xs-4 control-label">Toggle Validation</label>
-        <div class="col-xs-6 text-left">
-          <input id="toggle" type="checkbox" name="toggle"
-            ng-model="vm.validationRequired"
-            ng-change="vm.checkboxChange()" />
-        </div>
-
-        <hr/>
-
-        <div class="col-xs-6">
-          vm.validationRequired [{{vm.validationRequired}}]<br/>
-          vm.f1Validation() [{{vm.f1Validation()}}]<br/>
-          vm.if1Validation() [{{vm.if1Validation()}}]<br/>
-        </div>
-      </form>
 
       <ng-view></ng-view>
     </div>
@@ -63,6 +64,9 @@
     <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
     <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
     <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-UI -->
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
 
     <!-- Angular-Validation -->
     <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>

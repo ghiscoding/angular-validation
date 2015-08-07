@@ -49,7 +49,7 @@ angular
 
       // user could pass his own scope, useful in a case of an isolate scope
       if (!!scope && (!!_globalOptions.isolatedScope || !!_globalOptions.scope)) {
-        this.scope = (!!_globalOptions.isolatedScope) ? _globalOptions.isolatedScope : _globalOptions.scope;  // overwrite original scope (isolatedScope/scope are equivalent arguments)
+        this.scope = _globalOptions.isolatedScope || _globalOptions.scope;  // overwrite original scope (isolatedScope/scope are equivalent arguments)
         _globalOptions = mergeObjects(scope.$validationOptions, _globalOptions);                              // reuse the validationOption from original scope
       }
 
@@ -109,7 +109,7 @@ angular
       }
 
       // get the rules(or validation), inside directive it's named (validation), inside service(rules)
-      var rules = (self.validatorAttrs.hasOwnProperty('rules')) ? self.validatorAttrs.rules : self.validatorAttrs.validation;
+      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation;
 
       // We first need to see if the validation holds a custom user regex, if it does then deal with it first
       // So why deal with it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
@@ -258,7 +258,7 @@ angular
     function removeFromValidationSummary(elmName, validationSummaryObj) {
       var self = this;
       var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
-      var vsObj = (!!validationSummaryObj) ? validationSummaryObj : _validationSummary;
+      var vsObj = validationSummaryObj || _validationSummary;
 
       var index = arrayFindObjectIndex(vsObj, 'field', elmName); // find index of object in our array
       // if message is empty, remove it from the validation summary object
@@ -412,24 +412,30 @@ angular
           : self.elm.attr('name');
 
       var formElmObj = getFormElementByName(elmName);
-      var rules = self.validatorAttrs.hasOwnProperty('rules') ? self.validatorAttrs.rules : self.validatorAttrs.validation;
+      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation;
 
       // loop through all validators (could be multiple)
       for (var j = 0, jln = self.validators.length; j < jln; j++) {
         validator = self.validators[j];
 
         if (validator.type === "conditionalDate") {
-          // 1- we first need to validate that the Date input is well formed through regex
-          // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-          regex = new RegExp(validator.pattern);
-          isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+          var isWellFormed = isValid = false;
 
-          // 2- date is valid, then we can do our conditional date check
-          if (isValid) {
+          // 1- make sure Date is well formed (if it's already a Date object then it's already good, else check that with Regex)
+          if((strValue instanceof Date)) {
+            isWellFormed = true;
+          }else {
+            // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
+            regex = new RegExp(validator.pattern);
+            isWellFormed = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+          }
+
+          // 2- date is well formed, then go ahead with conditional date check
+          if (isWellFormed) {
             // For Date comparison, we will need to construct a Date Object that follows the ECMA so then it could work in all browser
             // Then convert to timestamp & finally we can compare both dates for filtering
             var dateType = validator.dateType;                   // date type (ISO, EURO, US-SHORT, US-LONG)
-            var timestampValue = parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
+            var timestampValue = (strValue instanceof Date) ? strValue : parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
 
             // if 2 params, then it's a between condition
             if (validator.params.length == 2) {
@@ -517,7 +523,7 @@ angular
 
                   if (isValid === false) {
                     formElmObj.isValid = false;
-                    errorMsg += (!!result.message) ? result.message : altText;
+                    errorMsg += result.message || altText;
 
                     // is field is invalid and we have an error message given, then add it to validationSummary and display error
                     addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
@@ -539,7 +545,7 @@ angular
         // or finally it might be a regular regex pattern checking
         else {
           // get the ngDisabled attribute if found
-          var elmAttrNgDisabled = (typeof self.attrs !== "undefined") ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
+          var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
 
           // a 'disabled' element should always be valid, there is no need to validate it
           if (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled)) {
@@ -979,10 +985,7 @@ angular
     function stringPrototypeFormat() {
       var args = (Array.isArray(arguments[0])) ? arguments[0] : arguments;
       return this.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined'
-          ? args[number]
-          : match
-        ;
+        return (!!args[number]) ? args[number] : match;
       });
     }
 
@@ -996,10 +999,7 @@ angular
       var args = (Array.isArray(arguments[1])) ? arguments[1] : Array.prototype.slice.call(arguments, 1);
 
       return format.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined'
-          ? args[number]
-          : match
-        ;
+        return (!!args[number]) ? args[number] : match;
       });
     }
 
