@@ -91,7 +91,7 @@ angular
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_len:1,5";
           }
           validator = {
-            pattern: "^.{" + ranges[0] + "," + ranges[1] + "}$",
+            pattern: "^(.|[\r\n]){" + ranges[0] + "," + ranges[1] + "}$",
             message: "INVALID_BETWEEN_CHAR",
             params: [ranges[0], ranges[1]],
             type: "regex"
@@ -399,7 +399,7 @@ angular
         case "exactLen" :
         case "exact_len" :
           validator = {
-            pattern: "^.{" + ruleParams + "}$",
+            pattern: "^(.|[\r\n]){" + ruleParams + "}$",
             message: "INVALID_EXACT_LEN",
             params: [ruleParams],
             type: "regex"
@@ -470,7 +470,7 @@ angular
         case "maxLen" :
         case "max_len" :
           validator = {
-            pattern: "^.{0," + ruleParams + "}$",
+            pattern: "^(.|[\r\n]){0," + ruleParams + "}$",
             message: "INVALID_MAX_CHAR",
             params: [ruleParams],
             type: "regex"
@@ -488,7 +488,7 @@ angular
         case "minLen" :
         case "min_len" :
           validator = {
-            pattern: "^.{" + ruleParams + ",}$",
+            pattern: "^(.|[\r\n]){" + ruleParams + ",}$",
             message: "INVALID_MIN_CHAR",
             params: [ruleParams],
             type: "regex"

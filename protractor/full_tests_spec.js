@@ -235,7 +235,7 @@ function loadData() {
         'aliases': ['between_len'],
         'params': '1,5',
         'invalid_data': ['123456', 'abcdefg', '1234567890'],
-        'valid_data': ['12345', 'abcde', '!@#$%'],
+        'valid_data': ['12345', 'abcde', '!@#$%', '1\r234'],
         'error_message': {
           'en': "Text must be between 1 and 5 characters in length.",
           'es': "El número de caracteres debe de estar entre 1 y 5.",
@@ -677,7 +677,7 @@ function loadData() {
         'aliases': ['max_len'],
         'params': '11',
         'invalid_data': ['123456789012', 'abcdefghijkl', 'abcdefghijklmnopqrstuvwxyz'],
-        'valid_data': ['1234567890', '12345678901', 'abcdefghijk'],
+        'valid_data': ['1234567890', '12345678901', 'abcdefghijk', '12345\r67890'],
         'error_message': {
           'en': "May not be greater than 11 characters.",
           'es': "No puede contener mas de 11 caracteres.",
@@ -705,7 +705,7 @@ function loadData() {
         'aliases': ['min_len'],
         'params': '3',
         'invalid_data': ['12', 'ab'],
-        'valid_data': ['123', 'abc', 'word'],
+        'valid_data': ['123', 'abc', 'word', '1\r23'],
         'error_message': {
           'en': "Must be at least 3 characters.",
           'es': "Debe contener almenos 3 caracteres.",
