@@ -30,8 +30,11 @@
         }
 
         // attach the attemptToValidate function to the element
-        ctrl.$formatters.unshift(attemptToValidate);
-        ctrl.$parsers.unshift(attemptToValidate);
+        // wrap the calls into a $timeout so that if falls at the end of the $digest, because other tool like Bootstrap UI might interfere with our validation
+        $timeout(function() {
+          ctrl.$formatters.unshift(attemptToValidate);
+          ctrl.$parsers.unshift(attemptToValidate);
+        });
 
         // watch the `disabled` attribute for changes
         // if it become disabled then skip validation else it becomes enable then we need to revalidate it
