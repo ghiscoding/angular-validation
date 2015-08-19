@@ -20,7 +20,14 @@
   },
 
   // Spec patterns are relative to the current working directory when protractor is called
-  specs: ['mixed_validation_spec.js', 'dynamic_spec.js', 'full_tests_spec.js'],
+  specs: [
+    'mixed_validation_spec.js',
+    'dynamic_spec.js',
+    'controllerAsWithRoute_spec.js',
+    'interpolate_spec.js',
+    'ngIfDestroy_spec.js',
+    'full_tests_spec.js'
+  ],
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 550000

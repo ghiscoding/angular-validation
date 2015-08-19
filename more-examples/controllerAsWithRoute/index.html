@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di ng-cloak="">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation Example with Interpolation</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../style.css">
+  </head>
+
+  <body ng-controller="Ctrl as vmA">
+    <div class="container-fluid">
+      <h2>Angular-Validation with Routes Getting an error typing a char in Field1.</h2>
+
+      <div class="row">
+        <div class="col-xs-12 alert alert-danger alert-dismissable"
+            ng-show="vmA.test.$validationSummary.length > 0">
+          <button type="button" class="close"
+            data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h4><strong>ERRORS!</strong></h4>
+          <ul>
+              <li ng-repeat="item in vmA.test.$validationSummary">{{ item.field }}: {{item.message}}</li>
+          </ul>
+        </div>
+      </div>
+
+      vmA.model.f1 [[{{vmA.model.f1}}]]
+      <form name="vmA.test">
+        <div class="row">
+          <label class="col-xs-2 control-label">Field1</label>
+          <div class="col-xs-6">
+            <input id="f1" class="form-control" type="text" name="f1"
+              ng-model="vmA.model.f1"
+              validation="required" />
+          </div>
+        </div>
+      </form>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-xs-6">
+          Choose Route: [<a name="first_route" href="#/First">First</a>]
+          &nbsp;[<a name="second_route" href="#/Second">Second</a>]
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <h4>A View</h4>
+          <ng-view></ng-view>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-UI -->
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
+
+    <!-- Angular-Validation -->
+    <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    -->
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

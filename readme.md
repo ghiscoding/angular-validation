@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.2`
+`Version: 1.4.3`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -24,7 +24,7 @@ If you like the Angular-Validation project and you use it, please click on the *
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation now has a full set of **End-to-End tests** with **Protractor**, there is over 1600+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation now has a full set of **End-to-End tests** with **Protractor**, there is over 1700+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -62,7 +62,7 @@ Another awesome feature recently added is the [Remote Validation (AJAX)](https:/
 
 
 ## Angular-Validation Wiki
-All the documentation has been moved to the Wiki section, see the [github wiki](https://github.com/ghiscoding/angular-validation/wiki) for more explanation. If you just started with the project, then the most important page to read would be the [HOWTO - Step by Step](https://github.com/ghiscoding/angular-validation/wiki/HOWTO---Step-by-Step)
+All the documentation has been moved to the Wiki section, see the [github wiki](https://github.com/ghiscoding/angular-validation/wiki) for more explanation. If you just started with the library, then the most important page to read would be the [HOWTO - Step by Step](https://github.com/ghiscoding/angular-validation/wiki/HOWTO---Step-by-Step)
 
 **Wiki Contents**
 * [Angular-Validation Wiki](https://github.com/ghiscoding/angular-validation/wiki)

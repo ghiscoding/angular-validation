@@ -8,28 +8,28 @@
  */
 angular
   .module('ghiscoding.validation')
-  .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
-    // global variables of our object (start with _var)
-    var _bypassRootScopeReset = false;     // do we want to bypass the watch on the $rootScope? False by default
-    var _bFieldRequired = false;           // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
-    var _INACTIVITY_LIMIT = 1000;          // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
-
-    var _formElements = [];                // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
-    var _globalOptions = {};               // Angular-Validation global options, could be define by scope.$validationOptions or by validationService.setGlobalOptions()
-    var _remotePromises = [];              // keep track of promises called and running when using the Remote validator
-    var _validationSummary = [];           // Array Validation Error Summary
+  .factory('validationCommon', ['$rootScope', '$translate', 'validationRules', function ($rootScope, $translate, validationRules) {
+    // global variables of our object (start with _var), these variables are shared between the Directive & Service
+    var _bFieldRequired = false;            // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
+    var _INACTIVITY_LIMIT = 1000;           // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
+    var _formElements = [];                 // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
+    var _globalOptions = {                  // Angular-Validation global options, could be define by scope.$validationOptions or by validationService.setGlobalOptions()
+      resetGlobalOptionsOnRouteChange: true // do we want to reset the Global Options on a route change? True by default
+    };
+    var _remotePromises = [];               // keep track of promises called and running when using the Remote validator
+    var _validationSummary = [];            // Array Validation Error Summary
 
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
-      if (!_bypassRootScopeReset) {
+      if (_globalOptions.resetGlobalOptionsOnRouteChange) {
         _globalOptions = {
-          displayOnlyLastErrorMsg: false, // reset the option of displaying only the last error message
-          preValidateFormElements: false, // reset the option of pre-validate all form elements, false by default
-          isolatedScope: null,            // reset used scope on route change
-          scope: null                     // reset used scope on route change
+          displayOnlyLastErrorMsg: false,   // reset the option of displaying only the last error message
+          preValidateFormElements: false,   // reset the option of pre-validate all form elements, false by default
+          isolatedScope: null,              // reset used scope on route change
+          scope: null                       // reset used scope on route change
         };
-        _formElements = [];                             // array containing all form elements, valid or invalid
-        _validationSummary = [];                        // array containing the list of invalid fields inside a validationSummary
+        _formElements = [];                 // array containing all form elements, valid or invalid
+        _validationSummary = [];            // array containing the list of invalid fields inside a validationSummary
       }
     });
 
@@ -72,7 +72,6 @@ angular
     validationCommon.prototype.mergeObjects = mergeObjects;                                         // merge 2 javascript objects, Overwrites obj1's values with obj2's (basically Object2 as higher priority over Object1)
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary;           // remove an element from the $validationSummary
     validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;   // remove named items from formElements list
-    validationCommon.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                   // setter on: do we want to bypass the root scope reset?
     validationCommon.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;             // setter on the behaviour of displaying only the last error message
     validationCommon.prototype.setGlobalOptions = setGlobalOptions;                                 // set global options used by all validators (usually called by the validationService)
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                                     // update on screen an error message below current form element
@@ -287,21 +286,14 @@ angular
         // also overwrite it inside controllerAs form (if found)
         if (!!form) {
           var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
-          _globalOptions.controllerAs[formName].$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+          if(!!_globalOptions.controllerAs[formName]) {
+            _globalOptions.controllerAs[formName].$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+          }
         }
       }
 
 
       return _validationSummary;
-    }
-
-    /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.
-     * Explanation: By default a route change will trigger a reset of some global variables (formElements, validationSummary),
-     * so that we don't see validations of previous routes or controllers.
-     * @param boolean value
-     */
-    function setBypassRootScopeReset(boolValue) {
-      _bypassRootScopeReset = boolValue;
     }
 
     /** Setter on the behaviour of displaying only the last error message of each element.
@@ -733,7 +725,8 @@ angular
         // also save it inside controllerAs form (if found)
         if (!!form) {
           var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
-          _globalOptions.controllerAs[formName].$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+          var ctrlForm = (!!_globalOptions.controllerAs[formName]) ? _globalOptions.controllerAs[formName] : self.elm.controller()[formName];
+          ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
         }
       }
 

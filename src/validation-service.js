@@ -32,7 +32,6 @@ angular
     validationService.prototype.checkFormValidity = checkFormValidity;                                // check the form validity (can be called by an empty validationService and used by both Directive/Service)
     validationService.prototype.removeValidator = removeValidator;                                    // remove a Validator from an element
     validationService.prototype.resetForm = resetForm;                                                // reset the form (reset it to Pristine and Untouched)
-    validationService.prototype.setBypassRootScopeReset = setBypassRootScopeReset;                    // setter on: do we want to bypass the default of root scope variables reset?
     validationService.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;              // setter on the behaviour of displaying only the last error message
     validationService.prototype.setGlobalOptions = setGlobalOptions;                                  // set and initialize global options used by all validators
     validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary;    // clear clearInvalidValidatorsInSummary
@@ -43,9 +42,10 @@ angular
 		// Public Functions declaration
 		//----------------------------------
 
-		/** Add a validator on a form element, the argument could be passed as 2 string arguments or 1 single object embedding the properties
+		/** Add a validator on a form element, the argument could be passed as 1 single object (having all properties) or 2 to 3 string arguments
      * @param mixed var1: could be a string (element name) or an object representing the validator
-		 * @param mixed var2: could be a string (element name)
+     * @param string var2: [optional] validator rules
+     * @param string var3: [optional] friendly name
 		 */
 		function addValidator(var1, var2, var3) {
       var self = this;
@@ -282,17 +282,6 @@ angular
           }
         }
       }
-    }
-
-	  /** Setter on the action of bypassing the root scope reset, you can change the default behavior with this function here.
-     * Explanation: By default a route change will trigger a reset of some global variables (formElements, validationSummary),
-     * so that we don't see validations of previous routes or controllers.
-     * @param boolean
-     */
-    function setBypassRootScopeReset(boolValue) {
-      var self = this;
-      var isBypass = (typeof boolValue === "boolean") ? boolValue : true;
-      self.commonObj.setBypassRootScopeReset(isBypass);
     }
 
 	  /** Setter on the behaviour of displaying only the last error message of each element.

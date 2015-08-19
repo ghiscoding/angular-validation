@@ -30,8 +30,8 @@
         }
 
         // attach the attemptToValidate function to the element
-        // wrap the calls into a $timeout so that if falls at the end of the $digest, because other tool like Bootstrap UI might interfere with our validation
-        $timeout(function() {
+        // wrap the calls into a $evalAsync so that if falls at the end of the $digest, because other tool like Bootstrap UI might interfere with our validation
+        scope.$evalAsync(function() {
           ctrl.$formatters.unshift(attemptToValidate);
           ctrl.$parsers.unshift(attemptToValidate);
         });
