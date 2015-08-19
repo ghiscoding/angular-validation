@@ -41,8 +41,10 @@
   },
   "dependencies": {
     "angular": ">= 1.2.0",
-    "angular-route": ">= 1.2.0",
     "angular-translate": ">= 2.4.2",
     "angular-translate-loader-static-files": ">= 2.4.2"
+  },
+  "devDependencies": {
+    "angular-route": ">= 1.2.0"
   }
 }
