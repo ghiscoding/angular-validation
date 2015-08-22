@@ -131,7 +131,8 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
-* `between:min,max` will auto-detect value type then use proper validator. Numbers use `between_num`, string use `between_len`.
+* `between:min,max` will auto-detect value type then use proper validator.
+  * Type Number uses `between_num`, String use `between_len`.
 * `between_date_iso:d1,d2` alias of `between_date_iso`.
 * `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
 * `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
@@ -184,7 +185,8 @@ Confirmation field does not match specified field "Password".
 * `match:f` Match another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: Confirmation field does not match specified field "Password".
 * `match:f,t` Match another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
 * `match_input` alias of `match`.
-* `max:n` will auto-detect value type then use proper validator. Numbers use `max_num`, string use `max_len`.
+* `max:n` will auto-detect value type then use proper validator.
+  * Type Number uses `max_num`, String use `max_len`.
 * `max_date_iso` alias of `date_iso_max`.
 * `max_date_euro_long` alias of `date_euro_long_max`.
 * `max_date_euro_short` alias of `date_euro_short_max`.
@@ -192,7 +194,8 @@ Confirmation field does not match specified field "Password".
 * `max_date_us_short` alias of `date_us_short_max`.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
-* `min:n` will auto-detect value type then use proper validator. Numbers use `min_num`, string use `min_len`.
+* `min:n` will auto-detect value type then use proper validator.
+  * Type Number uses `min_num`, String use `min_len`.
 * `min_date_iso` alias of `date_iso_min`.
 * `min_date_euro_long` alias of `date_euro_long_min`.
 * `min_date_euro_short` alias of `date_euro_short_min`.
@@ -207,6 +210,7 @@ Confirmation field does not match specified field "Password".
 * `pattern` Ensure it follows a regular expression pattern... please see [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
 * `required` Ensures the specified key value exists and is not empty
 * `same` alias of `match`.
-* `size` will auto-detect value type then use proper validator. Numbers use `exact_num`, string use `exact_len`.
+* `size` will auto-detect value type then use proper validator.
+  * Type Number uses `exact_num`, String use `exact_len`.
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
 * `url` Check for valid URL or subdomain
