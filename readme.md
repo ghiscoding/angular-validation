@@ -163,9 +163,8 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
 * `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
 * `different` alias of `different_input`
-* `different_input:f` Must be different from another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the input name or the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: Confirmation field does not match specified field "Password".
-Confirmation field does not match specified field "Password".
-* `different_input:f,t` Must be different from another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
+* `different_input:f` Must be different from another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the input name or the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="First Name".../>` will display :: *Field must be different from specified field "First Name"*.
+* `different_input:f,t` Must be different from another input field(f), same as (different:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
 * `digits:n` Ensures that field only has integer numbers and length precisely matches the specified length (n).
 * `digits_between:min,max` Ensures that field only has integer numbers and is between a min,max length.
 * `email` Checks for a valid email address
@@ -182,7 +181,7 @@ Confirmation field does not match specified field "Password".
 * `ip` alias of `ipv4`
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
-* `match:f` Match another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: Confirmation field does not match specified field "Password".
+* `match:f` Match another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: *Confirmation field does not match specified field "Password"*.
 * `match:f,t` Match another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
 * `match_input` alias of `match`.
 * `max:n` will auto-detect value type then use proper validator.
