@@ -30,9 +30,9 @@
   ],
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 550000
+    defaultTimeoutInterval: 650000
   },
-  allScriptsTimeout: 550000,
+  allScriptsTimeout: 650000,
   seleniumAddress: 'http://localhost:4444/wd/hub',
 
   // format the output when tests are run with Team City

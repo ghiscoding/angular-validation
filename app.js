@@ -144,11 +144,13 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
     .addValidator('input14', 'alpha|required')
     .addValidator('input15', 'alpha|min_len:3|required')
     .addValidator('input16', 'match:input15,Password|required')
-    .addValidator({elmName: 'input17', rules: 'alpha_spaces|exact_len:3|required', debounce: 3000})
-    .addValidator('input18', 'date_iso_min:2001-01-01|required')
-    .addValidator('input19', 'date_us_short_between:11/28/99,12/31/15|required')
+    .addValidator('input17', 'different:input15,Password|required')
+    .addValidator({elmName: 'input18', rules: 'alpha_spaces|exact_len:3|required', debounce: 3000})
+    .addValidator('input19', 'date_iso_min:2001-01-01|required')
+    .addValidator('input20', 'date_us_short_between:11/28/99,12/31/15|required')
+    .addValidator('input21', 'in_list:banana,orange,ice cream|required')
     .addValidator('area1', 'alpha_dash_spaces|min_len:15|required')
-    .addValidator('input20', 'alpha_dash|min_len:2|required');
+    .addValidator('input22', 'alpha_dash|min_len:2|required');
 
   // remove a single element ($scope.form1, string)
   // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])

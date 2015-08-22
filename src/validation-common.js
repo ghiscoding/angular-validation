@@ -26,7 +26,8 @@ angular
           displayOnlyLastErrorMsg: false,   // reset the option of displaying only the last error message
           preValidateFormElements: false,   // reset the option of pre-validate all form elements, false by default
           isolatedScope: null,              // reset used scope on route change
-          scope: null                       // reset used scope on route change
+          scope: null,                      // reset used scope on route change
+          resetGlobalOptionsOnRouteChange: true
         };
         _formElements = [];                 // array containing all form elements, valid or invalid
         _validationSummary = [];            // array containing the list of invalid fields inside a validationSummary
@@ -51,6 +52,11 @@ angular
       if (!!scope && (!!_globalOptions.isolatedScope || !!_globalOptions.scope)) {
         this.scope = _globalOptions.isolatedScope || _globalOptions.scope;  // overwrite original scope (isolatedScope/scope are equivalent arguments)
         _globalOptions = mergeObjects(scope.$validationOptions, _globalOptions);                              // reuse the validationOption from original scope
+      }
+
+      // if the resetGlobalOptionsOnRouteChange doesn't exist, make sure to set it to True by default
+      if(typeof _globalOptions.resetGlobalOptionsOnRouteChange === "undefined") {
+        _globalOptions.resetGlobalOptionsOnRouteChange = true;
       }
 
       // only the angular-validation Directive can possibly reach this condition with all properties filled
@@ -410,6 +416,29 @@ angular
       for (var j = 0, jln = self.validators.length; j < jln; j++) {
         validator = self.validators[j];
 
+        // the AutoDetect type is a special case and will detect if the given value is of type numeric or not.
+        // then it will rewrite the conditions or regex pattern, depending on type found
+        if (validator.type === "autoDetect") {
+          if (isNumeric(strValue)) {
+            validator = {
+              condition: validator.conditionNum,
+              message: validator.messageNum,
+              params: validator.params,
+              type: "conditionalNumber"
+            };
+          }else {
+            validator = {
+              pattern: validator.patternLength,
+              message: validator.messageLength,
+              params: validator.params,
+              type: "regex"
+            };
+          }
+        }
+
+        // now that we have a Validator type, we can now validate our value
+        // there is multiple type that can influence how the value will be validated
+
         if (validator.type === "conditionalDate") {
           var isWellFormed = isValid = false;
 
@@ -458,11 +487,23 @@ angular
           }
         }
         // it might be a match input checking
-        else if (validator.type === "match") {
+        else if (validator.type === "matching") {
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
           var otherNgModel = validator.params[0];
           var otherNgModelVal = self.scope.$eval(otherNgModel);
-          isValid = (otherNgModelVal === strValue && !!strValue);
+          var elm = angular.element(document.querySelector('[name="'+otherNgModel+'"]'));
+
+          isValid = (testCondition(validator.condition, strValue, otherNgModelVal) && !!strValue);
+
+          // if element to compare against has a friendlyName or if matching 2nd argument was passed, we will use that as a new friendlyName
+          // ex.: <input name='input1' friendly-name='Password1'/> :: we would use the friendlyName of 'Password1' not input1
+          // or <input name='confirm_pass' validation='match:input1,Password2' /> :: we would use Password2 not input1
+          if(!!elm && !!elm.attr('friendly-name')) {
+            validator.params[1] = elm.attr('friendly-name');
+          }
+          else if(validator.params.length > 1)  {
+            validator.params[1] = validator.params[1];
+          }
         }
         // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
         else if (validator.type === "remote") {
@@ -842,6 +883,14 @@ angular
       return null;
     }
 
+    /** Check if the given argument is numeric
+     * @param mixed n
+     * @return bool
+     */
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
     /** Parse a date from a String and return it as a Date Object to be valid for all browsers following ECMA Specs
      * Date type ISO (default), US, UK, Europe, etc... Other format could be added in the switch case
      * @param String dateStr: date String
@@ -957,8 +1006,10 @@ angular
         case '>=': result = (value1 >= value2) ? true : false; break;
         case '!=':
         case '<>': result = (value1 != value2) ? true : false; break;
+        case '!==': result = (value1 !== value2) ? true : false; break;
         case '=':
         case '==': result = (value1 == value2) ? true : false; break;
+        case '===': result = (value1 === value2) ? true : false; break;
         default: result = false; break;
       }
       return result;

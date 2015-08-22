@@ -1,7 +1,7 @@
 ﻿describe('Angular-Validation Tests:', function () {
   // global variables
-  var formElementNames = ['input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10', 'input11', 'input12', 'select1', 'input13', 'input14', 'input15', 'input16', 'input17', 'input18', 'input19', 'area1'];
-  var formElementSummaryNames = ['input2', 'input3', 'input4', 'Email', 'input6', 'input7', 'Credit Card', 'input9', 'input10', 'input11', 'select1', 'input13', 'input15', 'input16', 'input17', 'input18', 'input19', 'area1'];
+  var formElementNames = ['input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10', 'input11', 'input12', 'select1', 'input13', 'input14', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];
+  var formElementSummaryNames = ['input2', 'input3', 'input4', 'Email', 'input6', 'input7', 'Credit Card', 'input9', 'input10', 'input11', 'select1', 'input13', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];
   var formElementTexts = [
     'Number positive or negative -- input type="number" -- Error on non-numeric characters',
     'Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y',
@@ -19,11 +19,13 @@
     'Alphanumeric + Required -- NG-DISABLED',
     'Password',
     'Password Confirmation',
+    'Different Password',
     'Alphanumeric + Exactly(3) + Required -- debounce(3sec)',
     'Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01',
     'Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15',
+    'Choice IN this list (banana,orange,ice cream)',
     'TextArea: Alphanumeric + Minimum(15) + Required',
-    'Input20 - ngDisabled =>'
+    'Input22 - ngDisabled =>'
   ];
   var errorMessages = [
     'Must be a positive or negative number. Field is required.',
@@ -41,10 +43,12 @@
     'Must be at least 5 characters. May only contain letters, numbers, dashes and spaces. Field is required.',
     '',
     'May only contain letters. Must be at least 3 characters. Field is required.',
-    'Confirmation field does not match specified field "input15". Field is required.',
+    'Confirmation field does not match specified field "Password". Field is required.',
+    'Field must be different from specified field "Password". Field is required.',
     'May only contain letters and spaces. Must have a length of exactly 3 characters. Field is required.',
     'Needs to be a valid date format (yyyy-mm-dd), equal to, or higher than 2001-01-01. Field is required.',
     'Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy) between 11/28/99 and 12/31/15. Field is required.',
+    'Must be a choice inside this list: (banana,orange,ice cream). Field is required.',
     'May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required.'
   ];
   var validInputTexts = [
@@ -64,9 +68,11 @@
     '',
     'pass',
     'pass',
+    'diff',
     'abc',
     '2001-01-01',
     '01/01/12',
+    'ice cream',
     'This is a great tool'
   ];
   var types = ['Directive', 'Service'];
@@ -282,13 +288,13 @@
           expect(elmSubmit1.isEnabled()).toBe(true);
         });
 
-        it('Should make input20 editable & should be without error until we focus later on it', function() {
+        it('Should make input22 editable & should be without error until we focus later on it', function() {
           // click on the radio button OFF, that will make the input editable
-          element(by.id('radioDisableInput20_off')).click();
+          element(by.id('radioDisableInput22_off')).click();
           browser.waitForAngular();
 
           // error should not exist yet
-          var elmError = element(by.css('.validation-input20'));
+          var elmError = element(by.css('.validation-input22'));
           expect(elmError.isPresent()).toBeFalsy();
 
           // Save button should become disable
@@ -297,14 +303,14 @@
         });
 
 
-        it('Should focus and blur out of input20 & error should appear', function() {
-          var elmInput = $('[name=input20]');
+        it('Should focus and blur out of input22 & error should appear', function() {
+          var elmInput = $('[name=input22]');
           elmInput.click();
           elmInput.sendKeys(protractor.Key.TAB);
-          //$('[for=input20]').click(); // click on label to blur away
+          //$('[for=input22]').click(); // click on label to blur away
 
           // error should appear
-          var elmError = $('.validation-input20');
+          var elmError = $('.validation-input22');
           expect(elmError.getText()).toEqual(errorMessages2FormsExtra);
 
           // Save button should still be disabled
@@ -312,7 +318,7 @@
           expect(elmSubmit1.isEnabled()).toBe(false);
         });
 
-        it('Should show input20 error in ValidationSummary', function () {
+        it('Should show input22 error in ValidationSummary', function () {
           var btnShowSummary = $('[name=btn_showValidation]');
           btnShowSummary.click();
           browser.waitForAngular();
@@ -327,18 +333,18 @@
             var inputName;
 
             for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
-              expect(itemRows.get(i).getText()).toEqual('input20: May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.');
+              expect(itemRows.get(i).getText()).toEqual('input22: May only contain letters, numbers and dashes. Must be at least 2 characters. Field is required.');
             }
           });
         });
 
-        it('Should disable input20, error go away from input & validation summary', function() {
+        it('Should disable input22, error go away from input & validation summary', function() {
           // click on the radio button OFF, that will make the input editable
-          element(by.id('radioDisableInput20_on')).click();
+          element(by.id('radioDisableInput22_on')).click();
           browser.waitForAngular();
 
           // error should appear
-          var elmError = $('.validation-input20');
+          var elmError = $('.validation-input22');
           expect(elmError.getText()).toEqual('');
 
           // validation summary should become empty
@@ -346,7 +352,7 @@
           expect(itemRows.count()).toBe(0);
         });
 
-        it('Should check that ngDisabled button is now enabled (after input20 check)', function() {
+        it('Should check that ngDisabled button is now enabled (after input22 check)', function() {
           var elmSubmit1 = $('[name=btn_ngDisabled]');
           expect(elmSubmit1.isEnabled()).toBe(true);
         });
@@ -399,7 +405,7 @@
           }
         });
 
-        it('Should check that ngDisabled button is now enabled (after input20 check)', function() {
+        it('Should check that ngDisabled button is now enabled (after input22 check)', function() {
           var elmSubmit1 = $('[name=btn_ngDisabled]');
           expect(elmSubmit1.isEnabled()).toBe(false);
         });

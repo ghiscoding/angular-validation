@@ -6,7 +6,7 @@
  * @desc: angular-validation rules definition
  * Each rule objects must have 3 properties {pattern, message, type}
  * and in some cases you could also define a 4th properties {params} to pass extras, for example: max_len will know his maximum length by this extra {params}
- * Rule.type can be {conditionalDate, conditionalNumber, match, regex}
+ * Rule.type can be {autoDetect, conditionalDate, conditionalNumber, match, regex}
  *
  * WARNING: Rule patterns are defined as String type so don't forget to escape your characters: \\
  */
@@ -37,6 +37,13 @@ angular
 			var validator = {};
 
       switch(rule) {
+        case "accepted":
+          validator = {
+            pattern: /^(yes|on|1|true)$/i,
+            message: "INVALID_ACCEPTED",
+            type: "regex"
+          };
+          break;
         case "alpha" :
           validator = {
             pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ])+$/i,
@@ -84,6 +91,20 @@ angular
             type: "regex"
           };
           break;
+        case "between" :
+          var ranges = ruleParams.split(',');
+          if (ranges.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: between:1,5";
+          }
+          validator = {
+            patternLength: "^(.|[\\r\\n]){" + ranges[0] + "," + ranges[1] + "}$",
+            messageLength: "INVALID_BETWEEN_CHAR",
+            conditionNum: [">=","<="],
+            messageNum: "INVALID_BETWEEN_NUM",
+            params: [ranges[0], ranges[1]],
+            type: "autoDetect"
+          };
+          break;
         case "betweenLen" :
         case "between_len" :
           var ranges = ruleParams.split(',');
@@ -91,7 +112,7 @@ angular
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_len:1,5";
           }
           validator = {
-            pattern: "^(.|[\r\n]){" + ranges[0] + "," + ranges[1] + "}$",
+            pattern: "^(.|[\\r\\n]){" + ranges[0] + "," + ranges[1] + "}$",
             message: "INVALID_BETWEEN_CHAR",
             params: [ranges[0], ranges[1]],
             type: "regex"
@@ -387,6 +408,38 @@ angular
             type: "conditionalDate"
           };
           break;
+        case "different" :
+        case "differentInput" :
+        case "different_input" :
+          var args = ruleParams.split(',');
+          validator = {
+            condition: "!=",
+            message: "INVALID_INPUT_DIFFERENT",
+            params: args,
+            type: "matching"
+          };
+          break;
+        case "digits" :
+          validator = {
+            pattern: "^\\d{" + ruleParams + "}$",
+            message: "INVALID_DIGITS",
+            params: [ruleParams],
+            type: "regex"
+          };
+          break;
+        case "digitsBetween" :
+        case "digits_between" :
+          var ranges = ruleParams.split(',');
+          if (ranges.length !== 2) {
+            throw "This validation must include exactly 2 params separated by a comma (,) ex.: digits_between:1,5";
+          }
+          validator = {
+            pattern: "^\\d{" + ranges[0] + "," + ranges[1] + "}$",
+            message: "INVALID_DIGITS_BETWEEN",
+            params: [ranges[0], ranges[1]],
+            type: "regex"
+          };
+          break;
         case "email" :
           validator = {
             // Email RFC 5322, pattern pulled from  http://www.regular-expressions.info/email.html
@@ -399,7 +452,7 @@ angular
         case "exactLen" :
         case "exact_len" :
           validator = {
-            pattern: "^(.|[\r\n]){" + ruleParams + "}$",
+            pattern: "^(.|[\\r\\n]){" + ruleParams + "}$",
             message: "INVALID_EXACT_LEN",
             params: [ruleParams],
             type: "regex"
@@ -427,6 +480,17 @@ angular
             type: "regex"
           };
           break;
+        case "in" :
+        case "inList" :
+        case "in_list" :
+          var list = ruleParams.replace(/,/g, '|'); // replace ',' by '|'
+          validator = {
+            pattern: "^(\\b(" + list + ")\\b)$",
+            message: "INVALID_IN_LIST",
+            params: [ruleParams],
+            type: "regex"
+          };
+          break;
         case "int" :
         case "integer" :
           validator = {
@@ -445,6 +509,7 @@ angular
             type: "regex"
           };
           break;
+        case "ip" :
         case "ipv4" :
           validator = {
             pattern: /^(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$/,
@@ -460,17 +525,31 @@ angular
           };
           break;
         case "match" :
+        case "matchInput" :
+        case "match_input" :
+        case "same" :
           var args = ruleParams.split(',');
           validator = {
+            condition: "===",
             message: "INVALID_INPUT_MATCH",
             params: args,
-            type: "match"
+            type: "matching"
+          };
+          break;
+        case "max" :
+          validator = {
+            patternLength: "^(.|[\\r\\n]){0," + ruleParams + "}$",
+            messageLength: "INVALID_MAX_CHAR",
+            conditionNum: "<=",
+            messageNum: "INVALID_MAX_NUM",
+            params: [ruleParams],
+            type: "autoDetect"
           };
           break;
         case "maxLen" :
         case "max_len" :
           validator = {
-            pattern: "^(.|[\r\n]){0," + ruleParams + "}$",
+            pattern: "^(.|[\\r\\n]){0," + ruleParams + "}$",
             message: "INVALID_MAX_CHAR",
             params: [ruleParams],
             type: "regex"
@@ -485,10 +564,20 @@ angular
             type: "conditionalNumber"
           };
           break;
+        case "min" :
+          validator = {
+            patternLength: "^(.|[\\r\\n]){" + ruleParams + ",}$",
+            messageLength: "INVALID_MIN_CHAR",
+            conditionNum: ">=",
+            messageNum: "INVALID_MIN_NUM",
+            params: [ruleParams],
+            type: "autoDetect"
+          };
+          break;
         case "minLen" :
         case "min_len" :
           validator = {
-            pattern: "^(.|[\r\n]){" + ruleParams + ",}$",
+            pattern: "^(.|[\\r\\n]){" + ruleParams + ",}$",
             message: "INVALID_MIN_CHAR",
             params: [ruleParams],
             type: "regex"
@@ -501,6 +590,18 @@ angular
             message: "INVALID_MIN_NUM",
             params: [ruleParams],
             type: "conditionalNumber"
+          };
+          break;
+        case "notIn" :
+        case "not_in" :
+        case "notInList" :
+        case "not_in_list" :
+          var list = ruleParams.replace(/,/g, '|'); // replace ',' by '|'
+          validator = {
+            pattern: "^((?!\\b(" + list + ")\\b).)+$",
+            message: "INVALID_NOT_IN_LIST",
+            params: [ruleParams],
+            type: "regex"
           };
           break;
         case "numeric" :
@@ -540,6 +641,16 @@ angular
             pattern: /\S+/,
             message: "INVALID_REQUIRED",
             type: "regex"
+          };
+          break;
+        case "size" :
+          validator = {
+            patternLength: "^(.|[\\r\\n]){" + ruleParams + "}$",
+            messageLength: "INVALID_EXACT_LEN",
+            conditionNum: "==",
+            messageNum: "INVALID_EXACT_NUM",
+            params: [ruleParams],
+            type: "autoDetect"
           };
           break;
         case "url" :

@@ -255,6 +255,15 @@ function loadData() {
       'params': '01/01/90'
     },
     {
+        'validator': 'digits',
+        'params': '3'
+      },
+      {
+        'validator': 'digitsBetween',
+        'aliases': ['digits_between'],
+        'params': '1,5'
+      },
+    {
       'validator': 'email'
     },
     {
@@ -273,6 +282,11 @@ function loadData() {
       'validator': 'iban'
     },
     {
+      'validator': 'in',
+      'aliases': ['inList', 'in_list'],
+      'params': 'chocolate,apple pie,ice cream'
+    },
+    {
       'validator': 'int',
       'aliases': ['integer']
     },
@@ -281,7 +295,8 @@ function loadData() {
       'aliases': ['integerSigned', 'int_signed', 'integer_signed']
     },
     {
-      'validator': 'ipv4'
+      'validator': 'ipv4',
+      'aliases': ['ip']
     },
     {
       'validator': 'ipv6'
@@ -307,14 +322,16 @@ function loadData() {
       'params': '1'
     },
     {
+      'validator': 'notIn',
+      'aliases': ['not_in', 'notInList', 'not_in_list'],
+      'params': 'chocolate,apple pie,ice cream'
+    },
+    {
       'validator': 'numeric'
     },
     {
       'validator': 'numericSigned',
       'aliases': ['numeric_signed']
-    },
-    {
-      'validator': 'required'
     },
     {
       'validator': 'url'

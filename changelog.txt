@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.4 (2015-08-21) Enhancement #59 - Added few Validators that are like Laravel for reusability. The `in` and `not_in` Validators are the most interesting.
 1.4.3 (2015-08-18) Fixed issue #58 - multiple ControllerAs with Route change giving error of 'undefined' on $validationSummary.
 1.4.2 (2015-08-09) Fixed Bootstrap UI (or any other tool) interference with Angular-Validation, in relation to issue #55.
 1.4.1 (2015-08-09) Fixed issue #56 - TextArea validation problem with ENTER key (newline).

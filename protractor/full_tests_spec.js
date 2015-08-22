@@ -53,7 +53,7 @@
             //$('[for=input' + i + ']').click();
 
             var elmError = $('.validation-input' + i);
-            var errorMsg = (validations[i].validator === 'maxLen' || validations[i].validator === 'max_len' || validations[i].validator === 'required')
+            var errorMsg = (validations[i].validator === 'maxLen' || validations[i].validator === 'max_len')
               ? requiredErrorMessages[languages[0]]
               : requiredErrorMessages[languages[0]] + ' ' + validations[i].error_message[languages[0]]
             expect(elmError.getText()).toEqual(errorMsg);
@@ -81,7 +81,7 @@
                 })(elmInput, data, i);
               }
           }
-        }, 420000);
+        }, 620000);
 
         it('Should check that ngDisabled button is now enabled', function() {
           var elmSubmit1 = $('[name=btn_ngDisabled]');
@@ -108,7 +108,7 @@
                 })(elmInput, data, i);
               }
           }
-        }, 420000);
+        }, 620000);
 
       });         // describe: When clicking on top menu ...
     })(types, k); // closure
@@ -560,6 +560,33 @@ function loadData() {
         }
       },
       {
+        'validator': 'digits',
+        'params': '3',
+        'invalid_data': ['12a', '12.2', '12', '12,3'],
+        'valid_data': ['123'],
+        'error_message': {
+          'en': "Must be 3 digits.",
+          'es': "Debe ser 3 dígitos.",
+          'fr': "Doit être 3 chiffres.",
+          'no': "Må være 3 sifre.",
+          'ru': "Должно быть 3 цифры."
+        }
+      },
+      {
+        'validator': 'digitsBetween',
+        'aliases': ['digits_between'],
+        'params': '1,5',
+        'invalid_data': ['123456', 'abc', '12.5', '-2'],
+        'valid_data': ['12345', '9'],
+        'error_message': {
+          'en': "Must be between 1 and 5 digits.",
+          'es': "Debe ser entre 1 y 5 dígitos.",
+          'fr': "Doit être entre 1 et 5 chiffres.",
+          'no': "Må være mellom 1 og 5 siffer.",
+          'ru': "Должно быть между 1 и 5 цифр."
+        }
+      },
+      {
         'validator': 'email',
         'invalid_data': ['g$g.com', 'g@g,com', '.my@email.com.', 'some space@hotmail.com'],
         'valid_data': ['nickname@domain', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф', 'hola.àáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿ@español.com'],
@@ -623,6 +650,20 @@ function loadData() {
         }
       },
       {
+        'validator': 'in',
+        'aliases': ['inList', 'in_list'],
+        'params': 'chocolate,apple pie,ice cream',
+        'invalid_data': ['choco', 'carrot', 'apple'],
+        'valid_data': ['chocolate', 'apple pie', 'ice cream'],
+        'error_message': {
+          'en': "Must be a choice inside this list: (chocolate,apple pie,ice cream).",
+          'es': "Debe ser una opción dentro de esta lista: (chocolate,apple pie,ice cream).",
+          'fr': "Doit être un choix dans cette liste: (chocolate,apple pie,ice cream).",
+          'no': "Må være et valg inne i denne listen: (chocolate,apple pie,ice cream).",
+          'ru': "Должно бытьвыбор в этом списке: (chocolate,apple pie,ice cream)."
+        }
+      },
+      {
         'validator': 'int',
         'aliases': ['integer'],
         'invalid_data': ['12.5', '.5', 'abc', '12,4', '-12.3', '+12.3'],
@@ -650,6 +691,7 @@ function loadData() {
       },
       {
         'validator': 'ipv4',
+        'aliases': ['ip'],
         'invalid_data': ['192.0.0.256', '256.0.0.256', '192.0.0'],
         'valid_data': ['192.0.0.1', '127.0.0.1', '255.255.255.0'],
         'error_message': {
@@ -676,8 +718,8 @@ function loadData() {
         'validator': 'maxLen',
         'aliases': ['max_len'],
         'params': '11',
-        'invalid_data': ['123456789012', 'abcdefghijkl', 'abcdefghijklmnopqrstuvwxyz'],
-        'valid_data': ['1234567890', '12345678901', 'abcdefghijk', '12345\r67890'],
+        'invalid_data': ['abcdefghijkl', 'abcdefghijklmnopqrstuvwxyz'],
+        'valid_data': ['abcdefghij$', 'abcdef!@#$', 'abcdefghijk', '12345\r67890'],
         'error_message': {
           'en': "May not be greater than 11 characters.",
           'es': "No puede contener mas de 11 caracteres.",
@@ -704,8 +746,8 @@ function loadData() {
         'validator': 'minLen',
         'aliases': ['min_len'],
         'params': '3',
-        'invalid_data': ['12', 'ab'],
-        'valid_data': ['123', 'abc', 'word', '1\r23'],
+        'invalid_data': ['@@', 'ab'],
+        'valid_data': ['!#$', 'abc', 'word', '1\r23'],
         'error_message': {
           'en': "Must be at least 3 characters.",
           'es': "Debe contener almenos 3 caracteres.",
@@ -726,6 +768,20 @@ function loadData() {
           'fr': "Doit être une valeur numérique, égale ou supérieure à 1.",
           'no': "Må være en numerisk verdi, lik, eller større enn 1.",
           'ru': "Должно быть числовым значением, равное или большее чем 1."
+        }
+      },
+      {
+        'validator': 'notIn',
+        'aliases': ['not_in', 'notInList', 'not_in_list'],
+        'params': 'chocolate,apple pie,ice cream',
+        'invalid_data': ['chocolate', 'apple pie', 'ice cream'],
+        'valid_data': ['choco', 'carrot', 'apple'],
+        'error_message': {
+          'en': "Must be a choice outside this list: (chocolate,apple pie,ice cream).",
+          'es': "Debe ser una elección fuera de esta lista: (chocolate,apple pie,ice cream).",
+          'fr': "Doit être un choix en dehors de cette liste: (chocolate,apple pie,ice cream).",
+          'no': "Må være et valg utenfor denne listen: (chocolate,apple pie,ice cream).",
+          'ru': "Должно бытьвыбор за этот список: (chocolate,apple pie,ice cream)."
         }
       },
       {
@@ -751,18 +807,6 @@ function loadData() {
           'fr': "Doit être un nombre positif ou négatif.",
           'no': "Må være et positivt eller negativt tall.",
           'ru': "Должно быть положительным или отрицательным числом."
-        }
-      },
-      {
-        'validator': 'required',
-        'invalid_data': ['', ' '],
-        'valid_data': ['a', '1'],
-        'error_message': {
-          'en': "Field is required.",
-          'es': "El campo es requerido.",
-          'fr': "Le champ est requis.",
-          'no': "Feltet er påkrevd.",
-          'ru': "Поле обязательно для заполнения."
         }
       },
       {

@@ -120,25 +120,33 @@
         </div>
         <div class="form-group">
             <label for="input17">{{ 'INPUT17' | translate }}</label>
-            <input type="text" class="form-control" name="input17" placeholder="alpha_spaces|exact_len:3" ng-model="input17" />
+            <input type="password" class="form-control" name="input17" placeholder="different:input15|required" ng-model="input17" />
         </div>
         <div class="form-group">
             <label for="input18">{{ 'INPUT18' | translate }}</label>
-            <input type="text" class="form-control" name="input18" placeholder="date_iso_min:2001-01-01|required" ng-model="input18" />
+            <input type="text" class="form-control" name="input18" placeholder="alpha_spaces|exact_len:3" ng-model="input18" />
         </div>
         <div class="form-group">
             <label for="input19">{{ 'INPUT19' | translate }}</label>
-            <input type="text" class="form-control" name="input19" placeholder="date_us_short_between:12/01/99,12/31/15|required" ng-model="input19" />
+            <input type="text" class="form-control" name="input19" placeholder="date_iso_min:2001-01-01|required" ng-model="input19" />
+        </div>
+        <div class="form-group">
+            <label for="input20">{{ 'INPUT20' | translate }}</label>
+            <input type="text" class="form-control" name="input20" placeholder="date_us_short_between:12/01/99,12/31/15|required" ng-model="input20" />
+        </div>
+        <div class="form-group">
+            <label for="input21">{{ 'INPUT21' | translate }}</label>
+            <input type="text" class="form-control" name="input21" placeholder="in_list:banana,orange,berry|required" ng-model="input21" />
         </div>
         <div class="form-group">
             <label for="area1">{{ 'AREA1' | translate }}</label>
             <textarea class="form-control" name="area1" rows="2" placeholder="alpha_dash_spaces|min_len:15|required" ng-model="area1"></textarea>
         </div>
         <div class="form-group">
-            <label for="input20">ngDisabled =></label>
-            ON <input type="radio" id="radioDisableInput20_on" ng-model="disableInput20" value="on" ng-init="disableInput20 = 'on'">
-            OFF <input type="radio" id="radioDisableInput20_off" ng-model="disableInput20" value="off">
-            <input type="text" class="form-control" name="input20" placeholder="alpha_dash|min_len:2|required" ng-model="input20" ng-disabled="disableInput20 == 'on'" />
+            <label for="input22">ngDisabled =></label>
+            ON <input type="radio" id="radioDisableInput22_on" ng-model="disableInput22" value="on" ng-init="disableInput22 = 'on'">
+            OFF <input type="radio" id="radioDisableInput22_off" ng-model="disableInput22" value="off">
+            <input type="text" class="form-control" name="input22" placeholder="alpha_dash|min_len:2|required" ng-model="input22" ng-disabled="disableInput22 == 'on'" />
         </div>
     </fieldset>
 

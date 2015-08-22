@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.3`
+`Version: 1.4.4`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -24,7 +24,7 @@ If you like the Angular-Validation project and you use it, please click on the *
 [Plunker](http://plnkr.co/jADq7H)
 
 ## Tested with Protractor
-Angular-validation now has a full set of **End-to-End tests** with **Protractor**, there is over 1700+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
+Angular-validation now has a full set of **End-to-End tests** with **Protractor**, there is over 1800+ assertions, it starts by testing the original live demo page and then goes on with a complete test suite of All Validators in both the Angular-Validation Directive and Service.
 
 <a name="whyuseit"></a>
 Why use angular-validation?
@@ -124,20 +124,22 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 
 ##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
 
+* `accepted` The field under validation must be `yes`, `on`, `1`, or `true`. Useful for validating "Terms of Service" acceptance.
 * `alpha` Only alpha characters (including latin) are present (a-z, A-Z)
 * `alpha_spaces` Only alpha characters (including latin) and spaces are present (a-z, A-Z)
 * `alpha_num` Only alpha-numeric characters (including latin) are present (a-z, A-Z, 0-9)
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
+* `between:min,max` will auto-detect value type then use proper validator. Numbers use `between_num`, string use `between_len`.
 * `between_date_iso:d1,d2` alias of `between_date_iso`.
 * `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
 * `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
 * `between_date_us_long:d1,d2` alias of `date_us_long_between`.
 * `between_date_us_short:d1,d2` alias of `date_us_short_between`.
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
-* `between_num:min,max` Ensures the numeric value is between a min,max number.
-* `boolean` Ensures the value is `True` or `False` (0 or 1 is also valid).
+* `between_num:min,max` Ensures the numeric value (int or float) is between a min,max number.
+* `boolean` Ensures the value is `true` or `false` (`0` or `1` is also valid).
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
@@ -159,19 +161,30 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `date_us_short_between:d1,d2` Date must follow the US short format and is between (d1) &amp; (d2)
 * `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
 * `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
+* `different` alias of `different_input`
+* `different_input:f` Must be different from another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the input name or the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: Confirmation field does not match specified field "Password".
+Confirmation field does not match specified field "Password".
+* `different_input:f,t` Must be different from another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
+* `digits:n` Ensures that field only has integer numbers and length precisely matches the specified length (n).
+* `digits_between:min,max` Ensures that field only has integer numbers and is between a min,max length.
 * `email` Checks for a valid email address
 * `exact_len:n` Ensures that field length precisely matches the specified length (n).
 * `float` as to be floating value (excluding integer)
 * `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
 * `iban` Check for a valid IBAN.
+* `in` alias of `in_list`
+* `in_list:foo,bar,..` Ensures the value is included inside the given list of values. The list must be separated by ',' and also accept words with spaces for example "ice cream".
 * `int` Only positive integer (alias to `integer`).
 * `integer` Only positive integer.
 * `int_signed` Only integer, could be signed (-/+) positive/negative (alias to `integer_signed`).
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
+* `ip` alias of `ipv4`
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
-* `match:n` Match another input field(n), where (n) must be the exact ngModel attribute of input field to compare to.
-* `match:n,t` Match another input field(n), same as (match:n) but also include (t) for alternate input name to be displayed in the error message (it still uses default translated text, if you really wish to replace the complete text error, then use [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
+* `match:f` Match another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: Confirmation field does not match specified field "Password".
+* `match:f,t` Match another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
+* `match_input` alias of `match`.
+* `max:n` will auto-detect value type then use proper validator. Numbers use `max_num`, string use `max_len`.
 * `max_date_iso` alias of `date_iso_max`.
 * `max_date_euro_long` alias of `date_euro_long_max`.
 * `max_date_euro_short` alias of `date_euro_short_max`.
@@ -179,6 +192,7 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `max_date_us_short` alias of `date_us_short_max`.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
+* `min:n` will auto-detect value type then use proper validator. Numbers use `min_num`, string use `min_len`.
 * `min_date_iso` alias of `date_iso_min`.
 * `min_date_euro_long` alias of `date_euro_long_min`.
 * `min_date_euro_short` alias of `date_euro_short_min`.
@@ -186,9 +200,13 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `min_date_us_short` alias of `date_us_short_min`.
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).
+* `not_in` alias of `not_in_list`
+* `not_in_list:foo,bar,..` Ensures the value is included inside the given list of values. The list must be separated by ',' and also accept words with spaces for example "ice cream".
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
 * `pattern` Ensure it follows a regular expression pattern... please see [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
 * `required` Ensures the specified key value exists and is not empty
+* `same` alias of `match`.
+* `size` will auto-detect value type then use proper validator. Numbers use `exact_num`, string use `exact_len`.
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
 * `url` Check for valid URL or subdomain
