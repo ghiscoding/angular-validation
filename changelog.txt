@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.6 (2015-09-04) Accepted pull #64 - Update `es.json` translation file.
 1.4.5 (2015-09-03) Fixed issue #63 - Custom Regex pattern should be greedy (instead of non-greedy), this was causing a problem when user add a `/` in his pattern and was stopping on first occurence.
 1.4.4 (2015-08-21) Enhancement #59 - Added few Validators that are like Laravel for reusability. The `in` and `not_in` Validators are the most interesting.
 1.4.3 (2015-08-18) Fixed issue #58 - multiple ControllerAs with Route change giving error of 'undefined' on $validationSummary.
