@@ -1029,7 +1029,7 @@ angular
     function stringPrototypeFormat() {
       var args = (Array.isArray(arguments[0])) ? arguments[0] : arguments;
       return this.replace(/{(\d+)}/g, function (match, number) {
-        return (!!args[number]) ? args[number] : match;
+        return (typeof args[number] !== "undefined") ? args[number] : match;
       });
     }
 
@@ -1043,7 +1043,7 @@ angular
       var args = (Array.isArray(arguments[1])) ? arguments[1] : Array.prototype.slice.call(arguments, 1);
 
       return format.replace(/{(\d+)}/g, function (match, number) {
-        return (!!args[number]) ? args[number] : match;
+        return (typeof args[number] !== "undefined") ? args[number] : match;
       });
     }
 
