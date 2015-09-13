@@ -489,21 +489,50 @@ angular
         // it might be a match input checking
         else if (validator.type === "matching") {
           // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
-          var otherNgModel = validator.params[0];
-          var otherNgModelVal = self.scope.$eval(otherNgModel);
-          var elm = angular.element(document.querySelector('[name="'+otherNgModel+'"]'));
+          // for code purpose we'll name the other parent element "parent..."
+          // and we will name the current element "matching..."
+          var parentNgModel = validator.params[0];
+          var parentNgModelVal = self.scope.$eval(parentNgModel);
+          var otherElm = angular.element(document.querySelector('[name="'+parentNgModel+'"]'));
+          var matchingValidator = validator;  // keep reference of matching confirmation validator
+          var matchingCtrl = self.ctrl;       // keep reference of matching confirmation controller
+          var formElmMatchingObj = getFormElementByName(self.ctrl.$name);
 
-          isValid = (testCondition(validator.condition, strValue, otherNgModelVal) && !!strValue);
+          isValid = (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
 
           // if element to compare against has a friendlyName or if matching 2nd argument was passed, we will use that as a new friendlyName
           // ex.: <input name='input1' friendly-name='Password1'/> :: we would use the friendlyName of 'Password1' not input1
           // or <input name='confirm_pass' validation='match:input1,Password2' /> :: we would use Password2 not input1
-          if(!!elm && !!elm.attr('friendly-name')) {
-            validator.params[1] = elm.attr('friendly-name');
+          if(!!otherElm && !!otherElm.attr('friendly-name')) {
+            validator.params[1] = otherElm.attr('friendly-name');
           }
           else if(validator.params.length > 1)  {
             validator.params[1] = validator.params[1];
           }
+
+          // Watch for the parent ngModel, if it change we need to re-validate the child (confirmation)
+          self.scope.$watch(parentNgModel, function(newVal, oldVal) {
+            var isWatchValid = testCondition(matchingValidator.condition, matchingCtrl.$viewValue, newVal);
+
+            // only inspect on a parent input value change
+            if(newVal !== oldVal) {
+              // If Valid then erase error message ELSE make matching field Invalid
+              if(isWatchValid) {
+                addToValidationAndDisplayError(self, formElmMatchingObj, '', true, true);
+              }else {
+                formElmMatchingObj.isValid = false;
+                var msgToTranslate = matchingValidator.message;
+                if (!!matchingValidator.altText && matchingValidator.altText.length > 0) {
+                  msgToTranslate = matchingValidator.altText.replace("alt=", "");
+                }
+                $translate(msgToTranslate).then(function (translation) {
+                  message = ' ' + ((!!matchingValidator && !!matchingValidator.params) ? String.format(translation, matchingValidator.params) : translation);
+                  addToValidationAndDisplayError(self, formElmMatchingObj, message, isWatchValid, true);
+                });
+              }
+              matchingCtrl.$setValidity('validation', isWatchValid); // change the validity of the matching input
+            }
+          }, true); // .$watch()
         }
         // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
         else if (validator.type === "remote") {
@@ -709,7 +738,7 @@ angular
 
       // error Display
       if (showError && !!formElmObj && !formElmObj.isValid) {
-        self.updateErrorMsg(message, { isValid: isFieldValid });
+        self.updateErrorMsg(message, { isValid: isFieldValid, obj: formElmObj });
       } else if (!!formElmObj && formElmObj.isValid) {
         addToValidationSummary(formElmObj, '');
       }

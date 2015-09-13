@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.8 (2015-09-12) Fixed issue #68 - Matching validation issue (password confirmation).
 1.4.7 (2015-09-08) Fixed issue #65 - invalid return value on function String.format()
 1.4.6 (2015-09-04) Accepted pull #64 - Update Spanish `es.json` translation file.
 1.4.5 (2015-09-03) Fixed issue #63 - Custom Regex pattern should be greedy (instead of non-greedy), this was causing a problem when user add a `/` in his pattern and was stopping on first occurence.
