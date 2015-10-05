@@ -6,7 +6,7 @@
  * @desc: angular-validation rules definition
  * Each rule objects must have 3 properties {pattern, message, type}
  * and in some cases you could also define a 4th properties {params} to pass extras, for example: max_len will know his maximum length by this extra {params}
- * Rule.type can be {autoDetect, conditionalDate, conditionalNumber, match, regex}
+ * Rule.type can be {autoDetect, conditionalDate, conditionalNumber, matching, regex}
  *
  * WARNING: Rule patterns are defined as String type so don't forget to escape your characters: \\
  */
@@ -483,9 +483,10 @@ angular
         case "in" :
         case "inList" :
         case "in_list" :
-          var list = ruleParams.replace(/,/g, '|'); // replace ',' by '|'
+          var list = ruleParams.replace(/,/g, '|'); // replace comma (,) by pipe (|)
           validator = {
             pattern: "^(\\b(" + list + ")\\b)$",
+            patternFlag: 'i',
             message: "INVALID_IN_LIST",
             params: [ruleParams],
             type: "regex"
@@ -596,9 +597,10 @@ angular
         case "not_in" :
         case "notInList" :
         case "not_in_list" :
-          var list = ruleParams.replace(/,/g, '|'); // replace ',' by '|'
+          var list = ruleParams.replace(/,/g, '|'); // replace comma (,) by pipe (|)
           validator = {
             pattern: "^((?!\\b(" + list + ")\\b).)+$",
+            patternFlag: 'i',
             message: "INVALID_NOT_IN_LIST",
             params: [ruleParams],
             type: "regex"

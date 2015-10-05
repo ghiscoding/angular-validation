@@ -68,6 +68,7 @@ angular
     };
 
     // list of available published public functions of this object
+    validationCommon.prototype.addToValidationSummary = addToValidationSummary;                     // add an element to the $validationSummary
     validationCommon.prototype.arrayFindObject = arrayFindObject;                                   // search an object inside an array of objects
     validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
     validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
@@ -94,6 +95,65 @@ angular
     //----
     // Public functions declaration
     //----------------------------------
+
+    /** Add the error to the validation summary
+     * @param object self
+     * @param string message: error message
+     */
+    function addToValidationSummary(self, message) {
+      if (typeof self === "undefined" || self == null) {
+        return;
+      }
+
+      // get the element name, whichever we find it
+      var elmName = (!!self.ctrl && !!self.ctrl.$name)
+        ? self.ctrl.$name
+        : (!!self.attrs && !!self.attrs.name)
+          ? self.attrs.name
+          : self.elm.attr('name');
+
+      var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
+      var index = arrayFindObjectIndex(_validationSummary, 'field', elmName);  // find index of object in our array
+
+      // if message is empty, remove it from the validation summary
+      if (index >= 0 && message === '') {
+        _validationSummary.splice(index, 1);
+      } else if (message !== '') {
+        var friendlyName = (!!self.attrs && !!self.friendlyName) ? $translate.instant(self.friendlyName) : '';
+        var errorObj = { field: elmName, friendlyName: friendlyName, message: message, formName: (!!form) ? form.$name : null };
+
+        // if error already exist then refresh the error object inside the array, else push it to the array
+        if (index >= 0) {
+          _validationSummary[index] = errorObj;
+        } else {
+          _validationSummary.push(errorObj);
+        }
+      }
+
+      // save validation summary into scope root
+      self.scope.$validationSummary = _validationSummary;
+
+      // and also save it inside the current scope form (if found)
+      if (!!form) {
+        // since validationSummary contain errors of all forms
+        // we need to find only the errors of current form and them into the current scope form object
+        form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+      }
+
+      // also save it inside the ControllerAs alias if it was passed in the global options
+      if (!!_globalOptions && !!_globalOptions.controllerAs) {
+        _globalOptions.controllerAs.$validationSummary = _validationSummary;
+
+        // also save it inside controllerAs form (if found)
+        if (!!form) {
+          var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
+          var ctrlForm = (!!_globalOptions.controllerAs[formName]) ? _globalOptions.controllerAs[formName] : self.elm.controller()[formName];
+          ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+        }
+      }
+
+      return _validationSummary;
+    }
 
     /** Define our validation object
      * @return object self
@@ -614,12 +674,11 @@ angular
             isValid = true;
           } else {
             // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
-            if (typeof strValue === "string" && strValue === "" && self.elm.prop('type').toUpperCase() === "NUMBER") {
+            if (typeof strValue === "string" && strValue === "" && !!self.elm.prop('type') && self.elm.prop('type').toUpperCase() === "NUMBER") {
               isValid = false;
-              //message = $translate.instant("INVALID_KEY_CHAR");
             } else {
               // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-              regex = new RegExp(validator.pattern);
+              regex = new RegExp(validator.pattern, validator.patternFlag);
               isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
             }
           }
@@ -640,7 +699,11 @@ angular
               msgToTranslate = validator.altText.replace("alt=", "");
             }
 
-            $translate(msgToTranslate).then(function (translation) {
+            var trsltPromise = $translate(msgToTranslate);
+            formElmObj.translatePromise = trsltPromise;
+            formElmObj.validator = validator;
+
+            trsltPromise.then(function (translation) {
               // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
               // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
               if (message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
@@ -716,6 +779,11 @@ angular
       // trim any white space
       message = message.trim();
 
+      // if validation is cancelled, then erase error message
+      if(!!formElmObj && formElmObj.isValidationCancelled === true) {
+        message = '';
+      }
+
       // log the invalid message in the $validationSummary
       addToValidationSummary(formElmObj, message);
 
@@ -742,65 +810,6 @@ angular
       } else if (!!formElmObj && formElmObj.isValid) {
         addToValidationSummary(formElmObj, '');
       }
-    }
-
-    /** Add the error to the validation summary
-     * @param object self
-     * @param string message: error message
-     */
-    function addToValidationSummary(self, message) {
-      if (typeof self === "undefined" || self == null) {
-        return;
-      }
-
-      // get the element name, whichever we find it
-      var elmName = (!!self.ctrl && !!self.ctrl.$name)
-        ? self.ctrl.$name
-        : (!!self.attrs && !!self.attrs.name)
-          ? self.attrs.name
-          : self.elm.attr('name');
-
-      var form = getElementParentForm(elmName, self);                         // find the parent form (only found if it has a name)
-      var index = arrayFindObjectIndex(_validationSummary, 'field', elmName);  // find index of object in our array
-
-      // if message is empty, remove it from the validation summary
-      if (index >= 0 && message === '') {
-        _validationSummary.splice(index, 1);
-      } else if (message !== '') {
-        var friendlyName = (!!self.attrs && !!self.friendlyName) ? $translate.instant(self.friendlyName) : '';
-        var errorObj = { field: elmName, friendlyName: friendlyName, message: message, formName: (!!form) ? form.$name : null };
-
-        // if error already exist then refresh the error object inside the array, else push it to the array
-        if (index >= 0) {
-          _validationSummary[index] = errorObj;
-        } else {
-          _validationSummary.push(errorObj);
-        }
-      }
-
-      // save validation summary into scope root
-      self.scope.$validationSummary = _validationSummary;
-
-      // and also save it inside the current scope form (if found)
-      if (!!form) {
-        // since validationSummary contain errors of all forms
-        // we need to find only the errors of current form and them into the current scope form object
-        form.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
-      }
-
-      // also save it inside the ControllerAs alias if it was passed in the global options
-      if (!!_globalOptions && !!_globalOptions.controllerAs) {
-        _globalOptions.controllerAs.$validationSummary = _validationSummary;
-
-        // also save it inside controllerAs form (if found)
-        if (!!form) {
-          var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
-          var ctrlForm = (!!_globalOptions.controllerAs[formName]) ? _globalOptions.controllerAs[formName] : self.elm.controller()[formName];
-          ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
-        }
-      }
-
-      return _validationSummary;
     }
 
     /** Quick function to find an object inside an array by it's given field name and value, return the object found or null
@@ -877,6 +886,13 @@ angular
      * @return object scope form
      */
     function getElementParentForm(elmName, self) {
+      // get the parentForm directly by it's formName if it was passed in the global options
+      if(!!_globalOptions && !!_globalOptions.formName) {
+        var parentForm = document.querySelector('[name="'+_globalOptions.formName+'"]');
+        parentForm.$name = _globalOptions.formName; // make sure it has a $name, since we use that variable later on
+        return parentForm;
+      }
+
       // from the element passed, get his parent form
       var forms = document.getElementsByName(elmName);
       var parentForm = null;

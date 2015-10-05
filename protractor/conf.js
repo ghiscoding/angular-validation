@@ -22,17 +22,19 @@
   // Spec patterns are relative to the current working directory when protractor is called
   specs: [
     'mixed_validation_spec.js',
+    'angularUI_spec.js',
     'dynamic_spec.js',
     'controllerAsWithRoute_spec.js',
     'interpolate_spec.js',
     'ngIfDestroy_spec.js',
+    'thirdParty_spec.js',
     'full_tests_spec.js'
   ],
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: 650000
+    defaultTimeoutInterval: 800000
   },
-  allScriptsTimeout: 650000,
+  allScriptsTimeout: 800000,
   seleniumAddress: 'http://localhost:4444/wd/hub',
 
   // format the output when tests are run with Team City

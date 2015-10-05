@@ -12,16 +12,26 @@
  */
  angular
   .module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', ['$timeout', 'validationCommon', function($timeout, validationCommon) {
+  .directive('validation', ['$q', '$timeout', 'validationCommon', function($q, $timeout, validationCommon) {
     return {
       restrict: "A",
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
         // create an object of the common validation
         var commonObj = new validationCommon(scope, elm, attrs, ctrl);
-        var timer;
-        var blurHandler;
-        var isValidationCancelled = false;
+        var _arrayErrorMessage = '';
+        var _promises = [];
+        var _timer;
+        var _watchers = [];
+
+        // Possible element attributesW
+        var _elmName = attrs.name;
+
+        //-- Possible validation-array attributes
+        // on a validation array, how many does it require to be valid?
+        // As soon as 'one' is valid, or does it need 'all' array values to make the input valid?
+        var _validArrayRequireHowMany = (attrs.hasOwnProperty('validArrayRequireHowMany')) ? attrs.validArrayRequireHowMany : "one";
+        var _validationArrayObjprop = (attrs.hasOwnProperty('validationArrayObjprop')) ? attrs.validationArrayObjprop : null;
 
         // construct the functions, it's just to make the code cleaner and put the functions at bottom
         var construct = {
@@ -29,12 +39,15 @@
           cancelValidation : cancelValidation
         }
 
-        // attach the attemptToValidate function to the element
-        // wrap the calls into a $evalAsync so that if falls at the end of the $digest, because other tool like Bootstrap UI might interfere with our validation
-        scope.$evalAsync(function() {
-          ctrl.$formatters.unshift(attemptToValidate);
-          ctrl.$parsers.unshift(attemptToValidate);
-        });
+        // watch the element for any value change, validate it once that happen
+        var validationWatcher = scope.$watch(function() {
+            return ctrl.$modelValue;
+        }, function(newValue, oldValue) {
+            attemptToValidate(newValue);
+        }, true);
+
+        // save the watcher inside an array in case we want to deregister it when removing a validator
+        _watchers.push({ elmName: _elmName, watcherHandler: validationWatcher});
 
         // watch the `disabled` attribute for changes
         // if it become disabled then skip validation else it becomes enable then we need to revalidate it
@@ -42,7 +55,7 @@
           if (disabled) {
             // Turn off validation when element is disabled & remove it from validation summary
             cancelValidation();
-            commonObj.removeFromValidationSummary(attrs.name);
+            commonObj.removeFromValidationSummary(_elmName);
           } else {
             // revalidate & re-attach the onBlur event
             revalidateAndAttachOnBlur();
@@ -54,7 +67,7 @@
           cancelAndUnbindValidation();
         });
 
-        // watch for a validation becoming empty, if that is the case, unbind everything from it
+        // watch for a validation attribute changing to empty, if that is the case, unbind everything from it
         scope.$watch(function() {
           return elm.attr('validation');
         }, function(validation) {
@@ -70,20 +83,8 @@
           }
         });
 
-        // onBlur make validation without waiting
+        // attach the onBlur event handler on the element
         elm.bind('blur', blurHandler);
-
-        function blurHandler(event) {
-          // get the form element custom object and use it after
-          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
-
-          if (!formElmObj.isValidationCancelled) {
-            // validate without delay
-            attemptToValidate(event.target.value, 10);
-          }else {
-            ctrl.$setValidity('validation', true);
-          }
-        }
 
         //----
         // Private functions declaration
@@ -92,22 +93,52 @@
         /** Validator function to attach to the element, this will get call whenever the input field is updated
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
+         * @param int typingLimit: when user stop typing, in how much time it will start validating
          */
         function attemptToValidate(value, typingLimit) {
+          var deferred = $q.defer();
+          var isValid = false;
+
           // get the waiting delay time if passed as argument or get it from common Object
           var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : commonObj.typingLimit;
 
           // get the form element custom object and use it after
           var formElmObj = commonObj.getFormElementByName(ctrl.$name);
 
+          // if the input value is an array (like a 3rd party addons) then attempt to validate
+          // by exploding the array into individual input values and then validate them one value by one
+          if(Array.isArray(value)) {
+            // reset the promises array
+            _promises = [];
+            _arrayErrorMessage = '';
+            waitingLimit = 0;
+
+            // If we get a filled array, we will explode the array and try to validate each input value independently and
+            // Else when array is or become empty, we still want to validate it but without waiting time,
+            //   a "required" validation needs to be invalid right away.
+            // NOTE: because most 3rd party addons support AngularJS older than 1.3, the $touched property on the element is most often not implemented
+            //   but is required for Angular-Validation to properly display error messages and I have to force a $setTouched and by doing so force to show error message instantly on screen.
+            //   unless someone can figure out a better approach that is universal to all addons. I could in fact also use $dirty but even that is most often not implement by adons either.
+            if(value.length > 0) {
+              // make the element as it was touched for CSS, only works in AngularJS 1.3+
+              if (typeof formElmObj.ctrl.$setTouched === "function") {
+                formElmObj.ctrl.$setTouched();
+              }
+              return explodeArrayAndAttemptToValidate(value, typeof value);
+            }else {
+              waitingLimit = 0;
+            }
+          }
+
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
-          // passing false as 2nd argument for not showing any errors on screen
+          // passing False as the 2nd argument to hide errors from being displayed on screen
           commonObj.validate(value, false);
 
           // if field is not required and his value is empty, cancel validation and exit out
           if(!commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
-            return value;
+            deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
+            return deferred.promise;
           }else if(!!formElmObj) {
             formElmObj.isValidationCancelled = false;
           }
@@ -119,40 +150,159 @@
 
           // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
           // we will still call the `.validate()` function so that it shows also the possible other error messages
-          if((value === "" || typeof value === "undefined") && elm.prop('type').toUpperCase() === "NUMBER") {
-            $timeout.cancel(timer);
-            ctrl.$setValidity('validation', commonObj.validate(value, true));
-            return value;
+          if((value === "" || typeof value === "undefined") && !!elm.prop('type') && elm.prop('type').toUpperCase() === "NUMBER") {
+            $timeout.cancel(_timer);
+            isValid = commonObj.validate(value, true);
+            ctrl.$setValidity('validation', isValid);
+            deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+            return deferred.promise;
           }
 
           // select(options) will be validated on the spot
           if(elm.prop('tagName').toUpperCase() === "SELECT") {
-            ctrl.$setValidity('validation', commonObj.validate(value, true));
-            return value;
+            isValid = commonObj.validate(value, true);
+            ctrl.$setValidity('validation', isValid);
+            deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+            return deferred.promise;
           }
 
           // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
           // in case the field is already pre-filled, we need to validate it without looking at the event binding
           if(typeof value !== "undefined") {
-            // Make the validation only after the user has stopped activity on a field
-            // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
-            commonObj.updateErrorMsg('');
-            $timeout.cancel(timer);
-            timer = $timeout(function() {
-              scope.$evalAsync(ctrl.$setValidity('validation', commonObj.validate(value, true) ));
-            }, waitingLimit);
+            // when no timer, validate right away without a $timeout. This seems quite important on the array input value check
+            if(typingLimit === 0) {
+              isValid = commonObj.validate(value, true);
+              scope.$evalAsync(ctrl.$setValidity('validation', isValid ));
+              deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+            }else {
+              // Start validation only after the user has stopped typing in a field
+              // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
+              commonObj.updateErrorMsg('');
+              $timeout.cancel(_timer);
+              _timer = $timeout(function() {
+                isValid = commonObj.validate(value, true);
+                scope.$evalAsync(ctrl.$setValidity('validation', isValid ));
+                deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+              }, waitingLimit);
+            }
           }
 
-          return value;
+          return deferred.promise;
         } // attemptToValidate()
+
+        /** Attempt to validate an input value that was previously exploded fromn the input array
+         * Each attempt will return a promise but only after reaching the last index, will we analyze the final validation.
+         * @param string: input value
+         * @param int: position index
+         * @param int: size of original array
+         */
+        function attemptToValidateArrayInput(inputValue, index, arraySize) {
+          var promise = attemptToValidate(inputValue, 0);
+          if(!!promise && typeof promise.then === "function") {
+            _promises.push(promise);
+
+            // if we reached the last index
+            // then loop through all promises to run validation on each array input values
+            if(parseInt(index) === (arraySize - 1)) {
+              _promises.forEach(function(promise) {
+                promise.then(function(result) {
+                  // user requires how many values of the array to make the form input to be valid?
+                  // If require "one", as soon as an array value changes is valid, the complete input becomes valid
+                  // If require "all", as soon as an array value changes is invalid, the complete input becomes invalid
+                  switch(_validArrayRequireHowMany) {
+                    case "all" :
+                      if(result.isFieldValid === false) {
+                        var globalOptions = commonObj.getGlobalOptions();
+                        result.formElmObj.translatePromise.then(function(translation) {
+                          // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
+                          // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
+                          if (_arrayErrorMessage.length > 0 && globalOptions.displayOnlyLastErrorMsg) {
+                            _arrayErrorMessage = '[' + result.value + '] :: ' + ((!!result.formElmObj.validator && !!result.formElmObj.validator.params) ? String.format(translation, result.formElmObj.validator.params) : translation);
+                          } else {
+                            _arrayErrorMessage += ' [' + result.value + '] :: ' + ((!!result.formElmObj.validator && !!result.formElmObj.validator.params) ? String.format(translation, result.formElmObj.validator.params) : translation);
+                          }
+                          commonObj.updateErrorMsg(_arrayErrorMessage, { isValid: false });
+                          commonObj.addToValidationSummary(result.formElmObj, _arrayErrorMessage);
+                        });
+                      }
+                      break;
+                    case "one" :
+                    default :
+                      if(result.isFieldValid === true) {
+                        ctrl.$setValidity('validation', true);
+                        cancelValidation();
+                      }
+                  }
+                });
+              });
+            }
+          }
+        }
+
+        /** Definition of our blur event handler that will be used to attached on an element
+         * @param object event
+         */
+        function blurHandler(event) {
+          // get the form element custom object and use it after
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+          var value = (typeof event.target.value !== "undefined") ? event.target.value : ctrl.$modelValue;
+
+          if (!formElmObj.isValidationCancelled) {
+            attemptToValidate(value, 10);
+          }else {
+            ctrl.$setValidity('validation', true);
+          }
+        }
+
+        /** Explode the input array and attempt to validate every single input values that comes out of it.
+         * Input array could be passed as 2 different types (array of string, array of objects)
+         * If we are dealing with an array of strings, we will consider the strings being the input value to validate
+         * But if instead it is an array of objects, we need to user to provide which object property name to use
+         * ex. : array of objects, var arrObj = [{ id: 1, label: 'tag1' }, { id: 2, label: 'tag2' }]
+         *       --> we want the user to tell the directive that the input values are in the property name 'label'
+         * @param Array: input array
+         * @param string: array type
+         */
+        function explodeArrayAndAttemptToValidate(inputArray, arrayType) {
+          var arraySize = inputArray.length;
+
+          // array of strings, 1 for loop to get all input values
+          if(arrayType === "string") {
+            for (var key in inputArray) {
+              attemptToValidateArrayInput(inputArray[key], key, arraySize);
+            }
+          }
+          // array of objects, 2 for loops to get all input values via an object property name defined by the user
+          else if(arrayType === "object") {
+            for (var key in inputArray) {
+              if (inputArray.hasOwnProperty(key)) {
+                var obj = inputArray[key];
+                for (var prop in obj) {
+                  // check if there's a property on the object, compare it to what the user defined as the object property label
+                  // then attempt to validate the array input value
+                  if(obj.hasOwnProperty(prop)) {
+                    if(!!_validationArrayObjprop && prop !== _validationArrayObjprop) {
+                      continue;
+                    }
+                    attemptToValidateArrayInput(obj[prop], key, arraySize);
+                  }
+                }
+              }
+            }
+          }
+        }
 
         /** Cancel the validation, unbind onBlur and remove from $validationSummary */
         function cancelAndUnbindValidation() {
           // unbind everything and cancel the validation
-          ctrl.$formatters.shift();
-          ctrl.$parsers.shift();
           cancelValidation();
-          commonObj.removeFromValidationSummary(attrs.name);
+          commonObj.removeFromValidationSummary(_elmName);
+
+          // deregister the $watch from the _watchers array we kept it
+          var foundWatcher = commonObj.arrayFindObject(_watchers, 'elmName', ctrl.$name);
+          if(!!foundWatcher) {
+            foundWatcher.watcherHandler(); // deregister the watch by calling his handler
+          }
         }
 
         /** Cancel current validation test and blank any leftover error message */
@@ -162,7 +312,7 @@
           if(!!formElmObj) {
             formElmObj.isValidationCancelled = true;
           }
-          $timeout.cancel(timer);
+          $timeout.cancel(_timer);
           commonObj.updateErrorMsg('');
           ctrl.$setValidity('validation', true);
 
@@ -176,15 +326,20 @@
         function revalidateAndAttachOnBlur() {
           // Revalidate the input when enabled (without displaying the error)
           var value = ctrl.$viewValue || '';
-          ctrl.$setValidity('validation', commonObj.validate(value, false));
+          if(!Array.isArray(value)) {
+            ctrl.$setValidity('validation', commonObj.validate(value, false));
+          }
 
           // get the form element custom object and use it after
           var formElmObj = commonObj.getFormElementByName(ctrl.$name);
           if(!!formElmObj) {
-            formElmObj.isValidationCancelled = false; // make sure it's renable validation as well
+            formElmObj.isValidationCancelled = false; // make sure validation re-enabled as well
           }
 
-          // re-attach the onBlur handler
+          // unbind previous handler (if any) not to have double handlers and then re-attach just 1 handler
+          if(typeof blurHandler === "function") {
+            elm.unbind('blur', blurHandler);
+          }
           elm.bind('blur', blurHandler);
         }
 

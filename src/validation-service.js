@@ -124,7 +124,7 @@ angular
       });
 
       // watch the element for any value change, validate it once that happen
-			var watcherHandler = scope.$watch(attrs.elmName, function (newVal, oldVal) {
+			var validationWatcher = scope.$watch(attrs.elmName, function (newVal, oldVal) {
         // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
         // we will still call the `.validate()` function so that it shows also the possible other error messages
         if(newVal === undefined && oldVal !== undefined) {
@@ -141,7 +141,7 @@ angular
 		  }, true); // $watch()
 
       // save the watcher inside an array in case we want to deregister it when removing a validator
-      _watchers.push({ elmName: attrs.elmName, watcherHandler: watcherHandler});
+      _watchers.push({ elmName: attrs.elmName, watcherHandler: validationWatcher});
 
       return self;
 		} // addValidator()
