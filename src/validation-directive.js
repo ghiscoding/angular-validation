@@ -41,9 +41,16 @@
 
         // watch the element for any value change, validate it once that happen
         var validationWatcher = scope.$watch(function() {
-            return ctrl.$modelValue;
+          if(isKeyTypedBadInput()) {
+            return { badInput: true };
+          }
+          return ctrl.$modelValue;
         }, function(newValue, oldValue) {
-            attemptToValidate(newValue);
+          if(!!newValue && !!newValue.badInput) {
+            unbindBlurHandler();
+            return invalidateBadInputField();
+          }
+          attemptToValidate(newValue);
         }, true);
 
         // save the watcher inside an array in case we want to deregister it when removing a validator
@@ -130,6 +137,12 @@
             }
           }
 
+          // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
+          // we will still call the `.validate()` function so that it shows also the possible other error messages
+          if(!!value && !!value.badInput) {
+            return invalidateBadInputField();
+          }
+
           // pre-validate without any events just to pre-fill our validationSummary with all field errors
           // passing False as the 2nd argument to hide errors from being displayed on screen
           commonObj.validate(value, false);
@@ -146,16 +159,6 @@
           // invalidate field before doing any validation
           if(!!value || commonObj.isFieldRequired()) {
             ctrl.$setValidity('validation', false);
-          }
-
-          // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
-          // we will still call the `.validate()` function so that it shows also the possible other error messages
-          if((value === "" || typeof value === "undefined") && !!elm.prop('type') && elm.prop('type').toUpperCase() === "NUMBER") {
-            $timeout.cancel(_timer);
-            isValid = commonObj.validate(value, true);
-            ctrl.$setValidity('validation', isValid);
-            deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
-            return deferred.promise;
           }
 
           // select(options) will be validated on the spot
@@ -317,15 +320,30 @@
           ctrl.$setValidity('validation', true);
 
           // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-          if(typeof blurHandler === "function") {
-            elm.unbind('blur', blurHandler);
-          }
+          unbindBlurHandler();
+        }
+
+        /** Invalidate the field that was tagged as bad input, cancel the timer validation,
+         * display an invalid key error and add it as well to the validation summary.
+         */
+        function invalidateBadInputField() {
+          $timeout.cancel(_timer);
+          var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+          commonObj.updateErrorMsg('INVALID_KEY_CHAR', { isValid: false, translate: true });
+          commonObj.addToValidationSummary(formElmObj, 'INVALID_KEY_CHAR', true);
+        }
+
+        /** Was the characters typed by the user bad input or not?
+         * @return bool
+         */
+        function isKeyTypedBadInput() {
+          return (!!elm.prop('validity') && elm.prop('validity').badInput === true);
         }
 
         /** Re-evaluate the element and revalidate it, also re-attach the onBlur event on the element */
         function revalidateAndAttachOnBlur() {
           // Revalidate the input when enabled (without displaying the error)
-          var value = ctrl.$viewValue || '';
+          var value = ctrl.$modelValue || '';
           if(!Array.isArray(value)) {
             ctrl.$setValidity('validation', commonObj.validate(value, false));
           }
@@ -337,10 +355,15 @@
           }
 
           // unbind previous handler (if any) not to have double handlers and then re-attach just 1 handler
+          unbindBlurHandler();
+          elm.bind('blur', blurHandler);
+        }
+
+        /** If found unbind the blur handler */
+        function unbindBlurHandler() {
           if(typeof blurHandler === "function") {
             elm.unbind('blur', blurHandler);
           }
-          elm.bind('blur', blurHandler);
         }
 
       } // link()

@@ -1,5 +1,7 @@
 Angular-Validation change logs
 
+1.4.10 (2015-10-12) Sanitized error messages. Fixed issue #69 - Stop when invalid characters typed on input[number].
+1.4.9 (2015-10-05) Enhancement #57, #66, #67 - Added 3rd party addon validation (like ngTagsInput, Angular Multiselect, Dropdown multi-select, etc...)
 1.4.8 (2015-09-12) Fixed issue #68 - Matching validation issue (password confirmation).
 1.4.7 (2015-09-08) Fixed issue #65 - invalid return value on function String.format()
 1.4.6 (2015-09-04) Accepted pull #64 - Update Spanish `es.json` translation file.

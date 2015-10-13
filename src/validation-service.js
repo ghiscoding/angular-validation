@@ -85,7 +85,7 @@ angular
       // user could pass his own scope, useful in a case of an isolate scope
       if (!!self.validationAttrs.isolatedScope) {
         var tempValidationOptions = scope.$validationOptions || null; // keep global validationOptions
-        scope = self.validationAttrs.isolatedScope;                                  // rewrite original scope
+        scope = self.validationAttrs.isolatedScope;                   // rewrite original scope
         if(!!tempValidationOptions) {
           scope.$validationOptions = tempValidationOptions;           // reuse the validationOption from original scope
         }
@@ -124,20 +124,32 @@ angular
       });
 
       // watch the element for any value change, validate it once that happen
-			var validationWatcher = scope.$watch(attrs.elmName, function (newVal, oldVal) {
+			var validationWatcher = scope.$watch(function() {
+        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
+
+        if(isKeyTypedBadInput(self, attrs.elmName)) {
+          return { badInput: true };
+        }
+        return attrs.ctrl.$modelValue;
+      }, function (newValue, oldValue) {
+        if(!!newValue && !!newValue.badInput) {
+          var formElmObj = self.commonObj.getFormElementByName(attrs.elmName);
+          unbindBlurHandler(self, formElmObj);
+          return invalidateBadInputField(self, attrs.name);
+        }
         // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
         // we will still call the `.validate()` function so that it shows also the possible other error messages
-        if(newVal === undefined && oldVal !== undefined) {
+        if(newValue === undefined && (oldValue !== undefined && !isNaN(oldValue))) {
           $timeout.cancel(self.timer);
           self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate('', true));
           return;
         }
         // from the DOM element, find the Angular controller of this element & add value as well to list of attribtues
         attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
-        attrs.value = newVal;
+        attrs.value = newValue;
 
         self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-        attemptToValidate(self, newVal);
+        attemptToValidate(self, newValue);
 		  }, true); // $watch()
 
       // save the watcher inside an array in case we want to deregister it when removing a validator
@@ -205,7 +217,7 @@ angular
 
     /** Remove a validator and also any withstanding error message from that element
      * @param object Angular Form or Scope Object
-     * @param array/string of element name(s) (name attribute)
+     * @param object arguments that could be passed to the function
      * @return object self
      */
     function removeValidator(obj, args) {
@@ -243,7 +255,7 @@ angular
 
     /** Reset a Form, reset all input element to Pristine, Untouched & remove error dislayed (if any)
      * @param object Angular Form or Scope Object
-     * @param bool empty also the element values? (True by default)
+     * @param object arguments that could be passed to the function
      */
     function resetForm(obj, args) {
       var self = this;
@@ -295,7 +307,7 @@ angular
     }
 
     /** Set and initialize global options used by all validators
-     * @param object attrs: global options
+     * @param object: global options
      * @return object self
      */
     function setGlobalOptions(options) {
@@ -314,6 +326,7 @@ angular
      *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
      * @param object self
      * @param string value: value of the input field
+     * @param int typingLimit: when user stop typing, in how much time it will start validating
      */
     function attemptToValidate(self, value, typingLimit) {
       // get the waiting delay time if passed as argument or get it from common Object
@@ -321,6 +334,12 @@ angular
 
       // get the form element custom object and use it after
       var formElmObj = self.commonObj.getFormElementByName(self.commonObj.ctrl.$name);
+
+      // if a field holds invalid characters which are not numbers inside an `input type="number"`, then it's automatically invalid
+      // we will still call the `.validate()` function so that it shows also the possible other error messages
+      if(!!value && !!value.badInput) {
+        return invalidateBadInputField(self, attrs.name);
+      }
 
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
@@ -370,6 +389,7 @@ angular
 
     /** Cancel current validation test and blank any leftover error message
      * @param object obj
+     * @param object formElmObj: form element object
      */
     function cancelValidation(obj, formElmObj) {
       // get the form element custom object and use it after
@@ -383,10 +403,29 @@ angular
       obj.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });
 
       // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
-      if(typeof _blurHandler === "function") {
-        var elm = (!!formElmObj && !!formElmObj.elm) ? formElmObj.elm : obj.commonObj.elm;
-        elm.unbind('blur', _blurHandler);
-      }
+      unbindBlurHandler(obj, formElmObj);
+    }
+
+    /** Invalidate the field that was tagged as bad input, cancel the timer validation,
+     * display an invalid key error and add it as well to the validation summary.
+     * @param object self
+     * @param string: element input name
+     */
+    function invalidateBadInputField(self, elmName) {
+      $timeout.cancel(self.timer);
+      var formElmObj = self.commonObj.getFormElementByName(elmName);
+      self.commonObj.updateErrorMsg('INVALID_KEY_CHAR', { isValid: false, translate: true, obj: formElmObj });
+      self.commonObj.addToValidationSummary(formElmObj, 'INVALID_KEY_CHAR', true);
+    }
+
+    /** Was the characters typed by the user bad input or not?
+     * @param object self
+     * @param string: element input name
+     * @return bool
+     */
+    function isKeyTypedBadInput(self, elmName) {
+      var formElmObj = self.commonObj.getFormElementByName(elmName);
+      return (!!formElmObj && !!formElmObj.elm.prop('validity') && formElmObj.elm.prop('validity').badInput === true);
     }
 
     /** Remove a watcher and any withstanding error message from the element
@@ -428,6 +467,24 @@ angular
       self.commonObj.removeFromValidationSummary(formElmObj.fieldName, validationSummary);
     }
 
+    /** If found unbind the blur hanlder
+     * @param object self
+     * @param object formElmObj: form element object
+     */
+    function unbindBlurHandler(obj, formElmObj) {
+      formElmObj.isValidationCancelled = true;
+      if(typeof _blurHandler === "function") {
+        var elm = (!!formElmObj && !!formElmObj.elm) ? formElmObj.elm : obj.commonObj.elm;
+        elm.unbind('blur', _blurHandler);
+      }
+    }
+
+    /** Watch for an disabled/ngDisabled attribute change,
+     * if it become disabled then skip validation else it becomes enable then we need to revalidate it
+     * @param object self
+     * @param object scope
+     * @param object attributes
+     */
     function watchNgDisabled(self, scope, attrs) {
       scope.$watch(function() {
         return (typeof attrs.elm.attr('ng-disabled') === "undefined") ? null : scope.$eval(attrs.elm.attr('ng-disabled')); //this will evaluate attribute value `{{}}``

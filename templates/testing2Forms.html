@@ -12,7 +12,7 @@
 
 <div class="checkbox text-right" style="margin-top:-25px">
     <label>
-      <input type="checkbox" ng-model="vm.displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
+      <input type="checkbox" name="chkbox_validationSummary" ng-model="vm.displayValidationSummary"> {{ 'SHOW_VALIDATION_SUMMARY' | translate }}
     </label>
     &nbsp;|&nbsp;
     <input type="button" name="btn_resetForm" class="btn btn-info btn-xs" ng-click="vm.resetForm(vm.form01)" value="{{ 'RESET_FORM' | translate }}" title="params: { emptyAllInputValues: false, removeAllValidators: true }" />

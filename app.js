@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', ['ngRoute', 'ghiscoding.validation', 'pascalprecht.translate']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngSanitize', 'ghiscoding.validation', 'pascalprecht.translate']);
 
 myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', function ($compileProvider, $locationProvider, $routeProvider) {
     $compileProvider.debugInfoEnabled(false);
@@ -19,6 +19,7 @@ myApp.config(['$compileProvider', '$locationProvider', '$routeProvider', functio
 
   	// load English ('en') table on startup
 		$translateProvider.preferredLanguage('en');
+    $translateProvider.useSanitizeValueStrategy('escapeParameters');
 	}]);
 
 // -- Main page Controller

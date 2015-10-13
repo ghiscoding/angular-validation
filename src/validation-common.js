@@ -99,8 +99,9 @@ angular
     /** Add the error to the validation summary
      * @param object self
      * @param string message: error message
+     * @param bool need to translate: false by default
      */
-    function addToValidationSummary(self, message) {
+    function addToValidationSummary(self, message, needToTranslate) {
       if (typeof self === "undefined" || self == null) {
         return;
       }
@@ -119,6 +120,9 @@ angular
       if (index >= 0 && message === '') {
         _validationSummary.splice(index, 1);
       } else if (message !== '') {
+        if(!!needToTranslate) {
+          message = $translate.instant(message);
+        }
         var friendlyName = (!!self.attrs && !!self.friendlyName) ? $translate.instant(self.friendlyName) : '';
         var errorObj = { field: elmName, friendlyName: friendlyName, message: message, formName: (!!form) ? form.$name : null };
 
@@ -245,6 +249,7 @@ angular
     } // defineValidation()
 
     /** Return a Form element object by it's name
+     * @param string element input name
      * @return array object elements
      */
     function getFormElementByName(elmName) {
@@ -252,6 +257,7 @@ angular
     }
 
     /** Return all Form elements
+     * @param string form name
      * @return array object elements
      */
     function getFormElements(formName) {
@@ -262,8 +268,7 @@ angular
     }
 
     /** Get global options used by all validators
-     * @param object attrs: global options
-     * @return object self
+     * @return object global options
      */
     function getGlobalOptions() {
       return _globalOptions;
@@ -307,7 +312,7 @@ angular
     }
 
     /** Remove objects from FormElement list.
-     * @param elementName to remove
+     * @param element input name to remove
      */
     function removeFromFormElementObjectList(elmName) {
       var index = arrayFindObjectIndex(_formElements, 'fieldName', elmName); // find index of object in our array
@@ -317,8 +322,8 @@ angular
     }
 
     /** Remove an element from the $validationSummary array
-     * @param object validationSummary
      * @param string elmName: element name
+     * @param object validationSummary
      */
     function removeFromValidationSummary(elmName, validationSummaryObj) {
       var self = this;
@@ -387,7 +392,7 @@ angular
     /** in general we will display error message at the next element after our input as <span class="validation validation-inputName text-danger">
       * but in some cases user might want to define which DOM id to display error (as validation attribute)
       * @param string message: error message to display
-      * @param object attributes
+      * @param object arguments that could be passed to the function
       */
     function updateErrorMsg(message, attrs) {
       var self = this;
@@ -457,7 +462,7 @@ angular
       var validator;
 
       // to make proper validation, our element value cannot be an undefined variable (we will at minimum make it an empty string)
-      // For example, in some particular cases "undefined" returns always True on regex.test() which is incorrect especiall on max_len:x
+      // For example, in some particular cases "undefined" returns always True on regex.test() which is incorrect especially on max_len:x
       if (typeof strValue === "undefined") {
         strValue = '';
       }
@@ -754,6 +759,7 @@ angular
      * @param object elm
      * @param object attrs
      * @param object ctrl
+     * @param object scope
      */
     function addToFormElementObjectList(elm, attrs, ctrl, scope) {
       var elmName = (!!attrs.name) ? attrs.name : elm.attr('name');
@@ -773,6 +779,7 @@ angular
      * @param object self
      * @param object formElmObj
      * @param string message: error message
+     * @param bool is field valid?
      * @param bool showError
      */
     function addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError) {
@@ -882,6 +889,7 @@ angular
     }
 
     /** Get the element's parent Angular form (if found)
+     * @param string: element input name
      * @param object self
      * @return object scope form
      */
@@ -889,8 +897,10 @@ angular
       // get the parentForm directly by it's formName if it was passed in the global options
       if(!!_globalOptions && !!_globalOptions.formName) {
         var parentForm = document.querySelector('[name="'+_globalOptions.formName+'"]');
-        parentForm.$name = _globalOptions.formName; // make sure it has a $name, since we use that variable later on
-        return parentForm;
+        if(!!parentForm) {
+          parentForm.$name = _globalOptions.formName; // make sure the parentForm as a $name for later usage
+          return parentForm;
+        }
       }
 
       // from the element passed, get his parent form

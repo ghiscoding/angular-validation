@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-cloak="">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation Example with Interpolation</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../style.css">
+  </head>
+
+<body>
+  <div class="form-group">
+      <label for="input2">{{ 'INPUT2' | translate }}</label>
+      <input type="number" class="form-control" name="input2" placeholder="numeric_signed|required" ng-model="input2" validation="numeric_signed|required" />
+  </div>
+  <div ng-controller="ListController">
+    {{items}}
+    <div ng-controller="ModalController">
+      <div tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+        <script type="text/ng-template" id="myModalContent.html">
+          <form name="itemsEdit" novalidate>
+            <div class="modal-header">
+              <button type="button" class="close" ng-click="cancel()" aria-label="Close"><span
+                      aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="createModalLabel">Test Intramodal Validation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-xs-12">
+                        Edit the values below to test numeric validation. For some reason, it is only
+                        testing the min/max values and not testing for letters, multiple decimals, etc.
+                          <div class="form-group">
+                            <div class="row" ng-repeat="item in items">
+                                <div class="radio">
+                                    <div class="col-xs-6">
+                                    {{item.id}}
+                                        <input dynamic-name="'createItemType' + item.id + 'Amount'"
+                                               class="form-control"
+                                               id="createItemType{{item.id}}Amount"
+                                               type="number"
+                                               ng-model="item.no"
+                                               aria-label="Item Amount"
+                                               placeholder="numeric|between_num:0,9999.99"
+                                               validation="numeric|between_num:0,9999.99"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div><!-- modal-body -->
+            <div class="modal-footer">
+            </div>
+          </form>
+        </script>
+      </div>
+      <button type="button" class="btn btn-default" ng-click="open()">Test Intramodal Validation</button>
+
+    </div>
+  </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-sanitize.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
+
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular-translate/2.8.1/angular-translate.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/angular-translate-loader-static-files/2.8.1/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-Validation -->
+    <!--<script type="text/javascript" src="../../dist/angular-validation.min.js"></script>-->
+    
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

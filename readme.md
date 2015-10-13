@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.9`
+`Version: 1.4.10`
 ### Form validation after user inactivity of default 1sec. (customizable timeout)
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -58,7 +58,9 @@ The Angular-Validation will create, by itself, the necessary error message. Now 
 
 Let's not forget the [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
 
-Another awesome feature recently added is the [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX)) which is so convenient.
+Another awesome feature recently added is the [Wiki - Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX)) which is useful for backend server validation.
+
+Again another recently added feature, external 3rd party addon validation (like ngTagsInput or Angular Multi-Select), take a look at the [Wiki - 3rd party addon validation](https://github.com/ghiscoding/angular-validation/wiki/3rd-Party-Addons)
 
 
 ## Angular-Validation Wiki

@@ -3,77 +3,77 @@
   var formElementNames = ['input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10', 'input11', 'input12', 'select1', 'input13', 'input14', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];
   var formElementSummaryNames = ['input2', 'input3', 'input4', 'Email', 'input6', 'input7', 'Credit Card', 'input9', 'input10', 'input11', 'select1', 'input13', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];
   var formElementTexts = [
-    'Number positive or negative -- input type="number" -- Error on non-numeric characters',
-    'Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y',
-    'Multiple Validations + Custom Regex of Date Code (YYWW)',
-    'Email',
-    'URL',
-    'IP (IPV4)',
-    'Credit Card',
-    'Between(2,6) Characters',
-    'Date ISO (yyyy-mm-dd)',
-    'Date US LONG (mm/dd/yyyy)',
-    'Time (hh:mm OR hh:mm:ss) -- NOT Required',
-    'Required (select) -- validation with (blur) EVENT',
-    'AlphaDashSpaces + Required + Minimum(5) Characters -- MUST USE: validation-error-to=" "',
-    'Alphanumeric + Required -- NG-DISABLED',
-    'Password',
-    'Password Confirmation',
-    'Different Password',
-    'Alphanumeric + Exactly(3) + Required -- debounce(3sec)',
-    'Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01',
-    'Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15',
-    'Choice IN this list (banana,orange,ice cream)',
-    'TextArea: Alphanumeric + Minimum(15) + Required',
-    'Input22 - ngDisabled =>'
+    "Number positive or negative -- input type='number' -- Error on non-numeric characters",
+    "Floating number range (integer excluded) -- between_num:x,y OR min_num:x|max_num:y",
+    "Multiple Validations + Custom Regex of Date Code (YYWW)",
+    "Email",
+    "URL",
+    "IP (IPV4)",
+    "Credit Card",
+    "Between(2,6) Characters",
+    "Date ISO (yyyy-mm-dd)",
+    "Date US LONG (mm/dd/yyyy)",
+    "Time (hh:mm OR hh:mm:ss) -- NOT Required",
+    "Required (select) -- validation with (blur) EVENT",
+    "AlphaDashSpaces + Required + Minimum(5) Characters -- MUST USE: validation-error-to=' '",
+    "Alphanumeric + Required -- NG-DISABLED",
+    "Password",
+    "Password Confirmation",
+    "Different Password",
+    "Alphanumeric + Exactly(3) + Required -- debounce(3sec)",
+    "Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01",
+    "Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15",
+    "Choice IN this list (banana,orange,ice cream)",
+    "TextArea: Alphanumeric + Minimum(15) + Required",
+    "Input22 - ngDisabled =>"
   ];
   var errorMessages = [
-    'Must be a positive or negative number. Field is required.',
-    'May only contain a positive or negative float value (integer excluded). Needs to be a numeric value, between -0.6 and 99.5. Field is required.',
-    'Must have a length of exactly 4 characters. Field is required. Must be a positive integer. Must be following this format "YYWW".',
-    'Must be a valid email address. Field is required. Must be at least 6 characters.',
-    'Must be a valid URL. Field is required.',
-    'Must be a valid IP (IPV4). Field is required.',
-    'Must be a valid credit card number. Field is required.',
-    'Text must be between 2 and 6 characters in length. Field is required.',
-    'Must be a valid date format (yyyy-mm-dd). Field is required.',
-    'Must be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy). Field is required.',
-    'Must be a valid time format (hh:mm) OR (hh:mm:ss).',
-    'May only contain letters. Change language',
-    'Must be at least 5 characters. May only contain letters, numbers, dashes and spaces. Field is required.',
-    '',
-    'May only contain letters. Must be at least 3 characters. Field is required.',
-    'Confirmation field does not match specified field "Password". Field is required.',
-    'Field must be different from specified field "Password". Field is required.',
-    'May only contain letters and spaces. Must have a length of exactly 3 characters. Field is required.',
-    'Needs to be a valid date format (yyyy-mm-dd), equal to, or higher than 2001-01-01. Field is required.',
-    'Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy) between 11/28/99 and 12/31/15. Field is required.',
-    'Must be a choice inside this list: (banana,orange,ice cream). Field is required.',
-    'May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required.'
+    "Must be a positive or negative number. Field is required.",
+    "May only contain a positive or negative float value (integer excluded). Needs to be a numeric value, between -0.6 and 99.5. Field is required.",
+    "Must have a length of exactly 4 characters. Field is required. Must be a positive integer. Must be following this format YYWW.",
+    "Must be a valid email address. Field is required. Must be at least 6 characters.",
+    "Must be a valid URL. Field is required.",
+    "Must be a valid IP (IPV4). Field is required.",
+    "Must be a valid credit card number. Field is required.",
+    "Text must be between 2 and 6 characters in length. Field is required.",
+    "Must be a valid date format (yyyy-mm-dd). Field is required.",
+    "Must be a valid date format (mm/dd/yyyy) OR (mm-dd-yyyy). Field is required.",
+    "Must be a valid time format (hh:mm) OR (hh:mm:ss).",
+    "May only contain letters. Change language",
+    "Must be at least 5 characters. May only contain letters, numbers, dashes and spaces. Field is required.",
+    "",
+    "May only contain letters. Must be at least 3 characters. Field is required.",
+    "Confirmation field does not match specified field [Password]. Field is required.",
+    "Field must be different from specified field [Password]. Field is required.",
+    "May only contain letters and spaces. Must have a length of exactly 3 characters. Field is required.",
+    "Needs to be a valid date format (yyyy-mm-dd), equal to, or higher than 2001-01-01. Field is required.",
+    "Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy) between 11/28/99 and 12/31/15. Field is required.",
+    "Must be a choice inside this list: (banana,orange,ice cream). Field is required.",
+    "May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required."
   ];
   var validInputTexts = [
-    '10',
-    '2.5',
-    '1212',
-    'g@g.com',
-    'http://ww.com',
-    '192.10.10.10',
-    '4538121220024545',
-    'text',
-    '2010-01-01',
-    '02/02/2012',
-    '10:10',
-    'en',
-    'qwerty',
-    '',
-    'pass',
-    'pass',
-    'diff',
-    'abc',
-    '2001-01-01',
-    '01/01/12',
-    'ice cream',
-    'This is a great tool'
+    "10",
+    "2.5",
+    "1212",
+    "g@g.com",
+    "http://ww.com",
+    "192.10.10.10",
+    "4538121220024545",
+    "text",
+    "2010-01-01",
+    "02/02/2012",
+    "10:10",
+    "en",
+    "qwerty",
+    "",
+    "pass",
+    "pass",
+    "diff",
+    "abc",
+    "2001-01-01",
+    "01/01/12",
+    "ice cream",
+    "This is a great tool"
   ];
   var types = ['Directive', 'Service'];
 
@@ -227,8 +227,8 @@
             //$('[for=input3]').click(); // click on label to blur away
 
             // error should appear on input3
-            var elmError2 = $('.validation-input3');
-            expect(elmError2.getText()).toEqual(input3error);
+            var elmError3 = $('.validation-input3');
+            expect(elmError3.getText()).toEqual(input3error);
           });
         });
 
@@ -624,6 +624,10 @@
   }); // describe 2forms
 });   // describe Angular-Validation tests
 
+
+/** From a given input name, clear the input
+ * @param string input name
+ */
 function clearInput(elem) {
   elem.getAttribute('value').then(function (text) {
     var len = text.length
