@@ -248,7 +248,7 @@
         function blurHandler(event) {
           // get the form element custom object and use it after
           var formElmObj = commonObj.getFormElementByName(ctrl.$name);
-          var value = (typeof event.target.value !== "undefined") ? event.target.value : ctrl.$modelValue;
+          var value = (typeof ctrl.$modelValue !== "undefined") ? ctrl.$modelValue : event.target.value;
 
           if (!formElmObj.isValidationCancelled) {
             attemptToValidate(value, 10);
