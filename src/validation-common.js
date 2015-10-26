@@ -455,11 +455,17 @@ angular
      */
     function validate(strValue, showError) {
       var self = this;
-      var isValid = true;
+      var isConditionValid = true;
       var isFieldValid = true;
-      var message = '';
       var regex;
       var validator;
+      var validatedObject = {};
+
+      // make an object to hold the message so that we can reuse the object by reference
+      // in some of the validation check (for example "matching" and "remote")
+      var validationElmObj = {
+        message: ''
+      }
 
       // to make proper validation, our element value cannot be an undefined variable (we will at minimum make it an empty string)
       // For example, in some particular cases "undefined" returns always True on regex.test() which is incorrect especially on max_len:x
@@ -481,224 +487,44 @@ angular
       for (var j = 0, jln = self.validators.length; j < jln; j++) {
         validator = self.validators[j];
 
-        // the AutoDetect type is a special case and will detect if the given value is of type numeric or not.
-        // then it will rewrite the conditions or regex pattern, depending on type found
+        // When AutoDetect it will auto-detect the type and rewrite the conditions or regex pattern, depending on type found
         if (validator.type === "autoDetect") {
-          if (isNumeric(strValue)) {
-            validator = {
-              condition: validator.conditionNum,
-              message: validator.messageNum,
-              params: validator.params,
-              type: "conditionalNumber"
-            };
-          }else {
-            validator = {
-              pattern: validator.patternLength,
-              message: validator.messageLength,
-              params: validator.params,
-              type: "regex"
-            };
-          }
+          validator = validatorAutoDetectType(validator);
         }
+
+        // get the ngDisabled attribute if found
+        var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
 
         // now that we have a Validator type, we can now validate our value
         // there is multiple type that can influence how the value will be validated
-
-        if (validator.type === "conditionalDate") {
-          var isWellFormed = isValid = false;
-
-          // 1- make sure Date is well formed (if it's already a Date object then it's already good, else check that with Regex)
-          if((strValue instanceof Date)) {
-            isWellFormed = true;
-          }else {
-            // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-            regex = new RegExp(validator.pattern);
-            isWellFormed = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
-          }
-
-          // 2- date is well formed, then go ahead with conditional date check
-          if (isWellFormed) {
-            // For Date comparison, we will need to construct a Date Object that follows the ECMA so then it could work in all browser
-            // Then convert to timestamp & finally we can compare both dates for filtering
-            var dateType = validator.dateType;                   // date type (ISO, EURO, US-SHORT, US-LONG)
-            var timestampValue = (strValue instanceof Date) ? strValue : parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
-
-            // if 2 params, then it's a between condition
-            if (validator.params.length == 2) {
-              // this is typically a "between" condition, a range of number >= and <=
-              var timestampParam0 = parseDate(validator.params[0], dateType).getTime();
-              var timestampParam1 = parseDate(validator.params[1], dateType).getTime();
-              var isValid1 = testCondition(validator.condition[0], timestampValue, timestampParam0);
-              var isValid2 = testCondition(validator.condition[1], timestampValue, timestampParam1);
-              isValid = (isValid1 && isValid2) ? true : false;
-            } else {
-              // else, 1 param is a simple conditional date check
-              var timestampParam = parseDate(validator.params[0], dateType).getTime();
-              isValid = testCondition(validator.condition, timestampValue, timestampParam);
-            }
-          }
-        }
-        // it might be a conditional number checking
-        else if (validator.type === "conditionalNumber") {
-          // if 2 params, then it's a between condition
-          if (validator.params.length == 2) {
-            // this is typically a "between" condition, a range of number >= and <=
-            var isValid1 = testCondition(validator.condition[0], parseFloat(strValue), parseFloat(validator.params[0]));
-            var isValid2 = testCondition(validator.condition[1], parseFloat(strValue), parseFloat(validator.params[1]));
-            isValid = (isValid1 && isValid2) ? true : false;
-          } else {
-            // else, 1 param is a simple conditional number check
-            isValid = testCondition(validator.condition, parseFloat(strValue), parseFloat(validator.params[0]));
-          }
-        }
-        // it might be a match input checking
-        else if (validator.type === "matching") {
-          // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
-          // for code purpose we'll name the other parent element "parent..."
-          // and we will name the current element "matching..."
-          var parentNgModel = validator.params[0];
-          var parentNgModelVal = self.scope.$eval(parentNgModel);
-          var otherElm = angular.element(document.querySelector('[name="'+parentNgModel+'"]'));
-          var matchingValidator = validator;  // keep reference of matching confirmation validator
-          var matchingCtrl = self.ctrl;       // keep reference of matching confirmation controller
-          var formElmMatchingObj = getFormElementByName(self.ctrl.$name);
-
-          isValid = (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
-
-          // if element to compare against has a friendlyName or if matching 2nd argument was passed, we will use that as a new friendlyName
-          // ex.: <input name='input1' friendly-name='Password1'/> :: we would use the friendlyName of 'Password1' not input1
-          // or <input name='confirm_pass' validation='match:input1,Password2' /> :: we would use Password2 not input1
-          if(!!otherElm && !!otherElm.attr('friendly-name')) {
-            validator.params[1] = otherElm.attr('friendly-name');
-          }
-          else if(validator.params.length > 1)  {
-            validator.params[1] = validator.params[1];
-          }
-
-          // Watch for the parent ngModel, if it change we need to re-validate the child (confirmation)
-          self.scope.$watch(parentNgModel, function(newVal, oldVal) {
-            var isWatchValid = testCondition(matchingValidator.condition, matchingCtrl.$viewValue, newVal);
-
-            // only inspect on a parent input value change
-            if(newVal !== oldVal) {
-              // If Valid then erase error message ELSE make matching field Invalid
-              if(isWatchValid) {
-                addToValidationAndDisplayError(self, formElmMatchingObj, '', true, true);
-              }else {
-                formElmMatchingObj.isValid = false;
-                var msgToTranslate = matchingValidator.message;
-                if (!!matchingValidator.altText && matchingValidator.altText.length > 0) {
-                  msgToTranslate = matchingValidator.altText.replace("alt=", "");
-                }
-                $translate(msgToTranslate).then(function (translation) {
-                  message = ' ' + ((!!matchingValidator && !!matchingValidator.params) ? String.format(translation, matchingValidator.params) : translation);
-                  addToValidationAndDisplayError(self, formElmMatchingObj, message, isWatchValid, true);
-                });
-              }
-              matchingCtrl.$setValidity('validation', isWatchValid); // change the validity of the matching input
-            }
-          }, true); // .$watch()
-        }
-        // it might be a remote validation, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
-        else if (validator.type === "remote") {
-          if (!!strValue && !!showError) {
-            self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
-
-            var fct = null;
-            var fname = validator.params[0];
-            if (fname.indexOf(".") === -1) {
-              fct = self.scope[fname];
-            } else {
-              // function name might also be declared with the Controller As alias, for example: vm.customRemote()
-              // split the name and flatten it to find it inside the scope
-              var split = fname.split('.');
-              fct = self.scope;
-              for (var k = 0, kln = split.length; k < kln; k++) {
-                fct = fct[split[k]];
-              }
-            }
-            var promise = (typeof fct === "function") ? fct() : null;
-
-            // if we already have previous promises running, we might want to abort them (if user specified an abort function)
-            if (_remotePromises.length > 1) {
-              while (_remotePromises.length > 0) {
-                var previousPromise = _remotePromises.pop();
-                if (typeof previousPromise.abort === "function") {
-                  previousPromise.abort(); // run the abort if user declared it
-                }
-              }
-            }
-            _remotePromises.push(promise); // always add to beginning of array list of promises
-
-            if (!!promise && typeof promise.then === "function") {
-              self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
-
-              // process the promise
-              (function (altText) {
-                promise.then(function (result) {
-                  result = result.data || result;
-                  _remotePromises.pop();                 // remove the last promise from array list of promises
-
-                  self.ctrl.$processing = false;  // finished resolving, no more pending
-                  var errorMsg = message + ' ';   // use the global error message
-
-                  if (typeof result === "boolean") {
-                    isValid = (!!result) ? true : false;
-                  } else if (typeof result === "object") {
-                    isValid = (!!result.isValid) ? true : false;
-                  }
-
-                  if (isValid === false) {
-                    formElmObj.isValid = false;
-                    errorMsg += result.message || altText;
-
-                    // is field is invalid and we have an error message given, then add it to validationSummary and display error
-                    addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
-                  }
-                  if (isValid === true && isFieldValid === true) {
-                    // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
-                    // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
-                    formElmObj.isValid = true;
-                    self.ctrl.$setValidity('remote', true);
-                    addToValidationAndDisplayError(self, formElmObj, '', true, showError);
-                  }
-                });
-              })(validator.altText);
-            } else {
-              throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
-            }
-          }
-        }
-        // or finally it might be a regular regex pattern checking
-        else {
-          // get the ngDisabled attribute if found
-          var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
-
-          // a 'disabled' element should always be valid, there is no need to validate it
-          if (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled)) {
-            isValid = true;
-          } else {
-            // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
-            if (typeof strValue === "string" && strValue === "" && !!self.elm.prop('type') && self.elm.prop('type').toUpperCase() === "NUMBER") {
-              isValid = false;
-            } else {
-              // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-              regex = new RegExp(validator.pattern, validator.patternFlag);
-              isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
-            }
-          }
+        switch(validator.type) {
+          case "conditionalDate":
+            isConditionValid = validateConditionalDate(strValue, validator, rules);
+            break;
+          case "conditionalNumber":
+            isConditionValid = validateConditionalNumber(strValue, validator);
+            break;
+          case "matching":
+            isConditionValid = validateMatching(strValue, validator, self, validationElmObj);
+            break;
+          case "remote":
+            isConditionValid = validateRemote(strValue, validator, self, formElmObj, showError, validationElmObj);
+            break;
+          default:
+            isConditionValid = validateWithRegex(strValue, validator, rules, self);
+            break;
         }
 
         // not required and not filled is always valid & 'disabled', 'ng-disabled' elements should always be valid
         if ((!self.bFieldRequired && !strValue) || (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled))) {
-          isValid = true;
+          isConditionValid = true;
         }
 
-        if (!isValid) {
+        if (!isConditionValid) {
           isFieldValid = false;
 
           // run $translate promise, use closures to keep access to all necessary variables
-          (function (formElmObj, isValid, validator) {
+          (function (formElmObj, isConditionValid, validator) {
             var msgToTranslate = validator.message;
             if (!!validator.altText && validator.altText.length > 0) {
               msgToTranslate = validator.altText.replace("alt=", "");
@@ -711,12 +537,12 @@ angular
             trsltPromise.then(function (translation) {
               // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
               // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
-              if (message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
-                message = ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
+              if (validationElmObj.message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
+                validationElmObj.message = ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               } else {
-                message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
+                validationElmObj.message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               }
-              addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
+              addToValidationAndDisplayError(self, formElmObj, validationElmObj.message, isFieldValid, showError);
             })
             ["catch"](function (data) {
               // error caught:
@@ -724,22 +550,22 @@ angular
               // so just send it directly into the validation summary.
               if (!!validator.altText && validator.altText.length > 0) {
                 // if user is requesting to see only the last error message
-                if (message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
-                  message = ' ' + msgToTranslate;
+                if (validationElmObj.message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
+                  validationElmObj.message = ' ' + msgToTranslate;
                 } else {
-                  message += ' ' + msgToTranslate;
+                  validationElmObj.message += ' ' + msgToTranslate;
                 }
-                addToValidationAndDisplayError(self, formElmObj, message, isFieldValid, showError);
+                addToValidationAndDisplayError(self, formElmObj, validationElmObj.message, isFieldValid, showError);
               }
             });
-          })(formElmObj, isValid, validator);
-        } // if(!isValid)
+          })(formElmObj, isConditionValid, validator);
+        } // if(!isConditionValid)
       }   // for() loop
 
       // only log the invalid message in the $validationSummary
-      if (isValid) {
+      if (isConditionValid) {
         addToValidationSummary(self, '');
-        self.updateErrorMsg('', { isValid: isValid });
+        self.updateErrorMsg('', { isValid: isConditionValid });
       }
 
       if (!!formElmObj) {
@@ -796,7 +622,7 @@ angular
 
       // change the Form element object boolean flag from the `formElements` variable, used in the `checkFormValidity()`
       if (!!formElmObj) {
-        formElmObj.message = message;
+        //formElmObj.message = message;
       }
 
       // if user is pre-validating all form elements, display error right away
@@ -1100,6 +926,266 @@ angular
       return format.replace(/{(\d+)}/g, function (match, number) {
         return (typeof args[number] !== "undefined") ? args[number] : match;
       });
+    }
+
+    /** Validating a Conditional Date, user want to valid if his date is smaller/higher compare to another.
+     * @param string value
+     * @param object validator
+     * @param object rules
+     * @return bool isValid
+     */
+    function validateConditionalDate(strValue, validator, rules) {
+      var isValid = true;
+      var isWellFormed = isValid = false;
+
+      // 1- make sure Date is well formed (if it's already a Date object then it's already good, else check that with Regex)
+      if((strValue instanceof Date)) {
+        isWellFormed = true;
+      }else {
+        // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
+        regex = new RegExp(validator.pattern);
+        isWellFormed = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+      }
+
+      // 2- date is well formed, then go ahead with conditional date check
+      if (isWellFormed) {
+        // For Date comparison, we will need to construct a Date Object that follows the ECMA so then it could work in all browser
+        // Then convert to timestamp & finally we can compare both dates for filtering
+        var dateType = validator.dateType;                   // date type (ISO, EURO, US-SHORT, US-LONG)
+        var timestampValue = (strValue instanceof Date) ? strValue : parseDate(strValue, dateType).getTime(); // our input value parsed into a timestamp
+
+        // if 2 params, then it's a between condition
+        if (validator.params.length == 2) {
+          // this is typically a "between" condition, a range of number >= and <=
+          var timestampParam0 = parseDate(validator.params[0], dateType).getTime();
+          var timestampParam1 = parseDate(validator.params[1], dateType).getTime();
+          var isValid1 = testCondition(validator.condition[0], timestampValue, timestampParam0);
+          var isValid2 = testCondition(validator.condition[1], timestampValue, timestampParam1);
+          isValid = (isValid1 && isValid2) ? true : false;
+        } else {
+          // else, 1 param is a simple conditional date check
+          var timestampParam = parseDate(validator.params[0], dateType).getTime();
+          isValid = testCondition(validator.condition, timestampValue, timestampParam);
+        }
+      }
+
+      return isValid;
+    }
+
+    /** Validating a Conditional Number, user want to valid if his number is smaller/higher compare to another.
+     * @param string value
+     * @param object validator
+     * @return bool isValid
+     */
+    function validateConditionalNumber(strValue, validator) {
+      var isValid = true;
+
+      // if 2 params, then it's a between condition
+      if (validator.params.length == 2) {
+        // this is typically a "between" condition, a range of number >= and <=
+        var isValid1 = testCondition(validator.condition[0], parseFloat(strValue), parseFloat(validator.params[0]));
+        var isValid2 = testCondition(validator.condition[1], parseFloat(strValue), parseFloat(validator.params[1]));
+        isValid = (isValid1 && isValid2) ? true : false;
+      } else {
+        // else, 1 param is a simple conditional number check
+        isValid = testCondition(validator.condition, parseFloat(strValue), parseFloat(validator.params[0]));
+      }
+
+      return isValid;
+    }
+
+    /** Validating a match input checking, it could a check to be the same as another input or even being different.
+     * @param string value
+     * @param object validator
+     * @param object self
+     * @return bool isValid
+     */
+    function validateMatching(strValue, validator, self, validationElmObj) {
+      var isValid = true;
+
+      // get the element 'value' ngModel to compare to (passed as params[0], via an $eval('ng-model="modelToCompareName"')
+      // for code purpose we'll name the other parent element "parent..."
+      // and we will name the current element "matching..."
+      var parentNgModel = validator.params[0];
+      var parentNgModelVal = self.scope.$eval(parentNgModel);
+      var otherElm = angular.element(document.querySelector('[name="'+parentNgModel+'"]'));
+      var matchingValidator = validator;  // keep reference of matching confirmation validator
+      var matchingCtrl = self.ctrl;       // keep reference of matching confirmation controller
+      var formElmMatchingObj = getFormElementByName(self.ctrl.$name);
+
+      isValid = (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
+
+      // if element to compare against has a friendlyName or if matching 2nd argument was passed, we will use that as a new friendlyName
+      // ex.: <input name='input1' friendly-name='Password1'/> :: we would use the friendlyName of 'Password1' not input1
+      // or <input name='confirm_pass' validation='match:input1,Password2' /> :: we would use Password2 not input1
+      if(!!otherElm && !!otherElm.attr('friendly-name')) {
+        validator.params[1] = otherElm.attr('friendly-name');
+      }
+      else if(validator.params.length > 1)  {
+        validator.params[1] = validator.params[1];
+      }
+
+      // Watch for the parent ngModel, if it change we need to re-validate the child (confirmation)
+      self.scope.$watch(parentNgModel, function(newVal, oldVal) {
+        var isWatchValid = testCondition(matchingValidator.condition, matchingCtrl.$viewValue, newVal);
+
+        // only inspect on a parent input value change
+        if(newVal !== oldVal) {
+          // If Valid then erase error message ELSE make matching field Invalid
+          if(isWatchValid) {
+            addToValidationAndDisplayError(self, formElmMatchingObj, '', true, true);
+          }else {
+            formElmMatchingObj.isValid = false;
+            var msgToTranslate = matchingValidator.message;
+            if (!!matchingValidator.altText && matchingValidator.altText.length > 0) {
+              msgToTranslate = matchingValidator.altText.replace("alt=", "");
+            }
+            $translate(msgToTranslate).then(function (translation) {
+              validationElmObj.message = ' ' + ((!!matchingValidator && !!matchingValidator.params) ? String.format(translation, matchingValidator.params) : translation);
+              addToValidationAndDisplayError(self, formElmMatchingObj, validationElmObj.message, isWatchValid, true);
+            });
+          }
+          matchingCtrl.$setValidity('validation', isWatchValid); // change the validity of the matching input
+        }
+      }, true); // .$watch()
+
+      return isValid;
+    }
+
+    /** Make an AJAX Remote Validation with a backend server,
+     * this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+     * @param string value
+     * @param object validator
+     * @param object self
+     * @return bool isValid
+     */
+    function validateRemote(strValue, validator, self, formElmObj, showError, validationElmObj) {
+      var isValid = true;
+
+      if (!!strValue && !!showError) {
+        self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
+
+        var fct = null;
+        var fname = validator.params[0];
+        if (fname.indexOf(".") === -1) {
+          fct = self.scope[fname];
+        } else {
+          // function name might also be declared with the Controller As alias, for example: vm.customRemote()
+          // split the name and flatten it so that we can find it inside the scope
+          var split = fname.split('.');
+          fct = self.scope;
+          for (var k = 0, kln = split.length; k < kln; k++) {
+            fct = fct[split[k]];
+          }
+        }
+        var promise = (typeof fct === "function") ? fct() : null;
+
+        // if we already have previous promises running, we might want to abort them (if user specified an abort function)
+        if (_remotePromises.length > 1) {
+          while (_remotePromises.length > 0) {
+            var previousPromise = _remotePromises.pop();
+            if (typeof previousPromise.abort === "function") {
+              previousPromise.abort(); // run the abort if user declared it
+            }
+          }
+        }
+        _remotePromises.push(promise); // always add to beginning of array list of promises
+
+        if (!!promise && typeof promise.then === "function") {
+          self.ctrl.$setValidity('remote', false); // make the field invalid before processing it
+
+          // process the promise
+          (function (altText) {
+            promise.then(function (result) {
+              result = result.data || result;
+              _remotePromises.pop();                // remove the last promise from array list of promises
+
+              self.ctrl.$processing = false;        // finished resolving, no more pending
+              var errorMsg = validationElmObj.message + ' ';
+
+              if (typeof result === "boolean") {
+                isValid = (!!result) ? true : false;
+              } else if (typeof result === "object") {
+                isValid = (!!result.isValid) ? true : false;
+              }
+
+              if (isValid === false) {
+                formElmObj.isValid = false;
+                errorMsg += result.message || altText;
+
+                // is field is invalid and we have an error message given, then add it to validationSummary and display error
+                addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
+              }
+              if (isValid === true) {
+                // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
+                // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
+                formElmObj.isValid = true;
+                self.ctrl.$setValidity('remote', true);
+                addToValidationAndDisplayError(self, formElmObj, '', true, showError);
+              }
+            });
+          })(validator.altText);
+        } else {
+          throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
+        }
+      }
+
+      return isValid;
+    }
+
+    /** Validating through a regular regex pattern checking
+     * @param string value
+     * @param object validator
+     * @param object rules
+     * @param object self
+     * @return bool isValid
+     */
+    function validateWithRegex(strValue, validator, rules, self) {
+      var isValid = true;
+
+      // get the ngDisabled attribute if found
+      var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
+
+      // a 'disabled' element should always be valid, there is no need to validate it
+      if (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled)) {
+        isValid = true;
+      } else {
+        // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
+        if (typeof strValue === "string" && strValue === "" && !!self.elm.prop('type') && self.elm.prop('type').toUpperCase() === "NUMBER") {
+          isValid = false;
+        } else {
+          // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
+          regex = new RegExp(validator.pattern, validator.patternFlag);
+          isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
+        }
+      }
+
+      return isValid;
+    }
+
+    /** AutoDetect type is a special case and will detect if the given value is of type numeric or not.
+     * then it will rewrite the conditions or regex pattern, depending on type found
+     * @param object validator
+     * @return object rewritten validator
+     */
+    function validatorAutoDetectType(validator) {
+      if (isNumeric(strValue)) {
+        return {
+          condition: validator.conditionNum,
+          message: validator.messageNum,
+          params: validator.params,
+          type: "conditionalNumber"
+        };
+      }else {
+        return {
+          pattern: validator.patternLength,
+          message: validator.messageLength,
+          params: validator.params,
+          type: "regex"
+        };
+      }
+
+      return {};
     }
 
   }]); // validationCommon service
