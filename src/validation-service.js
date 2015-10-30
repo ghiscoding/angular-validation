@@ -149,7 +149,9 @@ angular
         attrs.value = newValue;
 
         self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-        attemptToValidate(self, newValue);
+
+        var waitingTimer = (typeof newValue === "undefined" || (typeof newValue === "number" && isNaN(newValue))) ? 0 : undefined;
+        attemptToValidate(self, newValue, waitingTimer);
 		  }, true); // $watch()
 
       // save the watcher inside an array in case we want to deregister it when removing a validator
@@ -375,13 +377,18 @@ angular
       // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
       // in case the field is already pre-filled, we need to validate it without looking at the event binding
       if(typeof value !== "undefined") {
-        // Make the validation only after the user has stopped activity on a field
-        // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
-        self.commonObj.updateErrorMsg('');
-        $timeout.cancel(self.timer);
-        self.timer = $timeout(function() {
+        // when no timer, validate right away without a $timeout. This seems quite important on the array input value check
+        if(typingLimit === 0) {
           self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
-        }, waitingLimit);
+        }else {
+          // Make the validation only after the user has stopped activity on a field
+          // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
+          self.commonObj.updateErrorMsg('');
+          $timeout.cancel(self.timer);
+          self.timer = $timeout(function() {
+            self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
+          }, waitingLimit);
+        }
       }
 
       return value;

@@ -83,7 +83,7 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
 // -- Controller to use Angular-Validation Directive with 2 forms
 // on this page we will pre-validate the form and show all errors on page load
 // ---------------------------------------------------------------
-myApp.controller('Ctrl2forms', ['$scope', 'validationService', function ($scope, validationService) {
+myApp.controller('Ctrl2forms', ['validationService', function (validationService) {
   var vm = this; // use the ControllerAs alias syntax
 
   // set the global options BEFORE any function declarations, we will prevalidate current form

@@ -8,7 +8,7 @@
  */
 angular
   .module('ghiscoding.validation')
-  .factory('validationCommon', ['$rootScope', '$translate', 'validationRules', function ($rootScope, $translate, validationRules) {
+  .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
     // global variables of our object (start with _var), these variables are shared between the Directive & Service
     var _bFieldRequired = false;            // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
     var _INACTIVITY_LIMIT = 1000;           // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
@@ -504,6 +504,9 @@ angular
           case "conditionalNumber":
             isConditionValid = validateConditionalNumber(strValue, validator);
             break;
+          case "javascript":
+            isConditionValid = validateCustomJavascript(strValue, validator, self, formElmObj, showError, validationElmObj);
+            break;
           case "matching":
             isConditionValid = validateMatching(strValue, validator, self, validationElmObj);
             break;
@@ -994,10 +997,89 @@ angular
       return isValid;
     }
 
-    /** Validating a match input checking, it could a check to be the same as another input or even being different.
+    /** Make a Custom Javascript Validation, this should return a boolean or an object as { isValid: bool, message: msg }
+     * The argument of `validationElmObj` is mainly there only because it's passed by reference (pointer reference) and
+     * by the time the $translate promise is done with the translation then the promise in our function will have the latest error message.
      * @param string value
      * @param object validator
      * @param object self
+     * @param object formElmObj
+     * @param bool showError
+     * @param object element validation object (passed by reference)
+     * @return bool isValid
+     */
+    function validateCustomJavascript(strValue, validator, self, formElmObj, showError, validationElmObj) {
+      var isValid = true;
+      var missingErrorMsg = "Custom Javascript Validation requires an error message defined as 'alt=' in your validator or defined in your custom javascript function as { isValid: bool, message: 'your error' }"
+      var invalidResultErrorMsg = 'Custom Javascript Validation requires a declared function (in your Controller), please review your code.';
+
+      if (!!strValue) {
+        var fct = null;
+        var fname = validator.params[0];
+        if (fname.indexOf(".") === -1) {
+          fct = self.scope[fname];
+        } else {
+          // function name might also be declared with the Controller As alias, for example: vm.customJavascript()
+          // split the name and flatten it so that we can find it inside the scope
+          var split = fname.split('.');
+          fct = self.scope;
+          for (var k = 0, kln = split.length; k < kln; k++) {
+            fct = fct[split[k]];
+          }
+        }
+        var result = (typeof fct === "function") ? fct() : null;
+
+        // analyze the result, could be a boolean or object type, anything else will throw an error
+        if (typeof result === "boolean") {
+          isValid = (!!result) ? true : false;
+        }
+        else if (typeof result === "object") {
+          isValid = (!!result.isValid) ? true : false;
+        }
+        else {
+          throw invalidResultErrorMsg;
+        }
+
+        if (isValid === false) {
+          formElmObj.isValid = false;
+
+          // is field is invalid and we have an error message given, then add it to validationSummary and display error
+          // use of $timeout to make sure we are always at the end of the $digest
+          // if user passed the error message from inside the custom js function, $translate would come and overwrite this error message and so being sure that we are at the end of the $digest removes this issue.
+          $timeout(function() {
+            var errorMsg = validationElmObj.message + ' ';
+            if(!!result.message) {
+              errorMsg += result.message;
+            }
+            if(errorMsg === ' ') {
+              throw missingErrorMsg;
+            }
+
+            addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
+          });
+        }
+        else if (isValid === true) {
+          // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
+          // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
+          formElmObj.isValid = true;
+          addToValidationAndDisplayError(self, formElmObj, '', true, showError);
+        }
+
+        if(typeof result === "undefined") {
+          throw invalidResultErrorMsg;
+        }
+      }
+
+      return isValid;
+    }
+
+    /** Validating a match input checking, it could a check to be the same as another input or even being different.
+     * The argument of `validationElmObj` is mainly there only because it's passed by reference (pointer reference) and
+     * by the time the $translate promise is done with the translation then the promise in our function will have the latest error message.
+     * @param string value
+     * @param object validator
+     * @param object self
+     * @param object element validation object (passed by reference)
      * @return bool isValid
      */
     function validateMatching(strValue, validator, self, validationElmObj) {
@@ -1052,15 +1134,21 @@ angular
       return isValid;
     }
 
-    /** Make an AJAX Remote Validation with a backend server,
-     * this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+    /** Make an AJAX Remote Validation with a backend server, this should return a promise with the result as a boolean or a { isValid: bool, message: msg }
+     * The argument of `validationElmObj` is mainly there only because it's passed by reference (pointer reference) and
+     * by the time the $translate promise is done with the translation then the promise in our function will have the latest error message.
      * @param string value
      * @param object validator
      * @param object self
+     * @param object formElmObj
+     * @param bool showError
+     * @param object element validation object (passed by reference)
      * @return bool isValid
      */
     function validateRemote(strValue, validator, self, formElmObj, showError, validationElmObj) {
       var isValid = true;
+      var missingErrorMsg = "Remote Javascript Validation requires an error message defined as 'alt=' in your validator or defined in your custom remote function as { isValid: bool, message: 'your error' }"
+      var invalidResultErrorMsg = 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.';
 
       if (!!strValue && !!showError) {
         self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
@@ -1099,24 +1187,32 @@ angular
             promise.then(function (result) {
               result = result.data || result;
               _remotePromises.pop();                // remove the last promise from array list of promises
-
               self.ctrl.$processing = false;        // finished resolving, no more pending
+
               var errorMsg = validationElmObj.message + ' ';
 
+              // analyze the result, could be a boolean or object type, anything else will throw an error
               if (typeof result === "boolean") {
                 isValid = (!!result) ? true : false;
-              } else if (typeof result === "object") {
+              }
+              else if (typeof result === "object") {
                 isValid = (!!result.isValid) ? true : false;
+              }
+              else {
+                throw invalidResultErrorMsg;
               }
 
               if (isValid === false) {
                 formElmObj.isValid = false;
                 errorMsg += result.message || altText;
+                if(errorMsg === ' ') {
+                  throw missingErrorMsg;
+                }
 
                 // is field is invalid and we have an error message given, then add it to validationSummary and display error
                 addToValidationAndDisplayError(self, formElmObj, errorMsg, false, showError);
               }
-              if (isValid === true) {
+              else if (isValid === true) {
                 // if field is valid from the remote check (isValid) and from the other validators check (isFieldValid)
                 // clear up the error message and make the field directly as Valid with $setValidity since remote check arrive after all other validators check
                 formElmObj.isValid = true;
@@ -1126,7 +1222,7 @@ angular
             });
           })(validator.altText);
         } else {
-          throw 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.'
+          throw invalidResultErrorMsg;
         }
       }
 

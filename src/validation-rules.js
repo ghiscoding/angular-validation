@@ -153,6 +153,14 @@ angular
             type: "regex"
           };
           break;
+        case "custom" :
+        case "javascript" :
+          validator = {
+            message: '', // there is no error message defined on this one since user will provide his own error message via remote response or `alt=`
+            params: [ruleParams],
+            type: "javascript"
+          };
+          break;
         case "dateEuroLong" :
         case "date_euro_long" :
           validator = {
