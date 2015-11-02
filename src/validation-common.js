@@ -149,10 +149,12 @@ angular
         _globalOptions.controllerAs.$validationSummary = _validationSummary;
 
         // also save it inside controllerAs form (if found)
-        if (!!form) {
+        if (!!form && !!form.$name) {
           var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
           var ctrlForm = (!!_globalOptions.controllerAs[formName]) ? _globalOptions.controllerAs[formName] : self.elm.controller()[formName];
-          ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+          if(!!ctrlForm) {
+            ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
+          }
         }
       }
 
@@ -738,15 +740,16 @@ angular
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
+        var formName = form.getAttribute("name");
 
-        if (!!form && !!form.name) {
-          parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && form.name.indexOf('.') >= 0)
-            ? explodedDotNotationStringToObject(form.name, self.scope)
-            : self.scope[form.name];
+        if (!!form && !!formName) {
+          parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
+            ? explodedDotNotationStringToObject(formName, self.scope)
+            : self.scope[formName];
 
           if(!!parentForm) {
             if (typeof parentForm.$name === "undefined") {
-              parentForm.$name = form.name; // make sure it has a $name, since we use that variable later on
+              parentForm.$name = formName; // make sure it has a $name, since we use that variable later on
             }
             return parentForm;
           }
@@ -755,14 +758,17 @@ angular
 
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
       // we can hack it and define our own form inside this isolate scope, in that way we can still use something like: isolateScope.form1.$validationSummary
-      if (!!form && !!form.name) {
-        var obj = { $name: form.name, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
+      if (!!form) {
+        var formName = form.getAttribute("name");
+        if(!!formName) {
+          var obj = { $name: formName, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
 
-        if (!!_globalOptions && !!_globalOptions.controllerAs && form.name.indexOf('.') >= 0) {
-          var formSplit = form.name.split('.');
-          return self.scope[formSplit[0]][formSplit[1]] = obj
+          if (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0) {
+            var formSplit = formName.split('.');
+            return self.scope[formSplit[0]][formSplit[1]] = obj
+          }
+          return self.scope[formName] = obj;
         }
-        return self.scope[form.name] = obj;
       }
       return null;
     }
