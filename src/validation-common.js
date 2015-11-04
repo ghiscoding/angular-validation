@@ -491,7 +491,7 @@ angular
 
         // When AutoDetect it will auto-detect the type and rewrite the conditions or regex pattern, depending on type found
         if (validator.type === "autoDetect") {
-          validator = validatorAutoDetectType(validator);
+          validator = validatorAutoDetectType(validator, strValue);
         }
 
         // get the ngDisabled attribute if found
@@ -1270,7 +1270,7 @@ angular
      * @param object validator
      * @return object rewritten validator
      */
-    function validatorAutoDetectType(validator) {
+    function validatorAutoDetectType(validator, strValue) {
       if (isNumeric(strValue)) {
         return {
           condition: validator.conditionNum,

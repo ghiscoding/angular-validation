@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.13 (2015-11-04) Fixed issue #76 - 'strValue is not defined' error when using `max` auto-detect validator.
 1.4.12 (2015-11-01) Fixed a small issue with pulling the form name when trying to find the parent form of an input element.
 1.4.11 (2015-10-29) Enhancement #75 - Added custom rules validation through custom functions. Fixed issue #76 - problem with ui-mask in directive.
 1.4.10 (2015-10-12) Sanitized error messages. Fixed issue #69 - Stop when invalid characters typed on input[number].
