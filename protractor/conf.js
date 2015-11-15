@@ -22,7 +22,9 @@
   // Spec patterns are relative to the current working directory when protractor is called
   specs: [
     'badInput_spec.js',
+    'callback_spec.js',
     'custom_spec.js',
+    'remote_spec.js',
     'mixed_validation_spec.js',
     'angularUI_spec.js',
     'dynamic_spec.js',

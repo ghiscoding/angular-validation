@@ -117,7 +117,7 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
     // friendlyName: $translate.instant('FIRST_NAME'),
     debounce: 1000,
     scope: $scope,
-    rules: 'alpha|min_len:2|remote:customRemoteValidationCall|required'
+    rules: 'alpha|min_len:2|remote:customRemoteValidationCall()|required'
   });
 
   // you can also chain validation service and add multiple validators at once

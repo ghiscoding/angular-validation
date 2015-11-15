@@ -24,8 +24,9 @@
         var _timer;
         var _watchers = [];
 
-        // Possible element attributesW
+        // Possible element attributes
         var _elmName = attrs.name;
+        var _validationCallback = (attrs.hasOwnProperty('validationCallback')) ? attrs.validationCallback : null;
 
         //-- Possible validation-array attributes
         // on a validation array, how many does it require to be valid?
@@ -50,7 +51,11 @@
             unbindBlurHandler();
             return invalidateBadInputField();
           }
-          attemptToValidate(newValue);
+          // attempt to validate & run validation callback if user requested it
+          var validationPromise = attemptToValidate(newValue);
+          if(!!_validationCallback) {
+            commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+          }
         }, true);
 
         // save the watcher inside an array in case we want to deregister it when removing a validator
@@ -101,6 +106,7 @@
          *  and is also customizable through the (typing-limit) for which inactivity this.timer will trigger validation.
          * @param string value: value of the input field
          * @param int typingLimit: when user stop typing, in how much time it will start validating
+         * @return object validation promise
          */
         function attemptToValidate(value, typingLimit) {
           var deferred = $q.defer();
@@ -193,7 +199,7 @@
           return deferred.promise;
         } // attemptToValidate()
 
-        /** Attempt to validate an input value that was previously exploded fromn the input array
+        /** Attempt to validate an input value that was previously exploded from the input array
          * Each attempt will return a promise but only after reaching the last index, will we analyze the final validation.
          * @param string: input value
          * @param int: position index
@@ -251,7 +257,11 @@
           var value = (typeof ctrl.$modelValue !== "undefined") ? ctrl.$modelValue : event.target.value;
 
           if (!formElmObj.isValidationCancelled) {
-            attemptToValidate(value, 10);
+            // attempt to validate & run validation callback if user requested it
+            var validationPromise = attemptToValidate(value, 10);
+            if(!!_validationCallback) {
+              commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+            }
           }else {
             ctrl.$setValidity('validation', true);
           }

@@ -24,6 +24,7 @@ angular
       if (_globalOptions.resetGlobalOptionsOnRouteChange) {
         _globalOptions = {
           displayOnlyLastErrorMsg: false,   // reset the option of displaying only the last error message
+          hideErrorUnderInputs: false,      // reset the option of hiding error under element
           preValidateFormElements: false,   // reset the option of pre-validate all form elements, false by default
           isolatedScope: null,              // reset used scope on route change
           scope: null,                      // reset used scope on route change
@@ -79,6 +80,7 @@ angular
     validationCommon.prototype.mergeObjects = mergeObjects;                                         // merge 2 javascript objects, Overwrites obj1's values with obj2's (basically Object2 as higher priority over Object1)
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary;           // remove an element from the $validationSummary
     validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;   // remove named items from formElements list
+    validationCommon.prototype.runValidationCallbackOnPromise = runValidationCallbackOnPromise;     // run a validation callback method when the promise resolve
     validationCommon.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;             // setter on the behaviour of displaying only the last error message
     validationCommon.prototype.setGlobalOptions = setGlobalOptions;                                 // set global options used by all validators (usually called by the validationService)
     validationCommon.prototype.updateErrorMsg = updateErrorMsg;                                     // update on screen an error message below current form element
@@ -229,7 +231,7 @@ angular
       var validations = rules.split('|');
 
       if (validations) {
-        self.bFieldRequired = (rules.indexOf("required") >= 0) ? true : false;
+        self.bFieldRequired = (rules.indexOf("required") >= 0);
 
         // loop through all validators of the element
         for (var i = 0, ln = validations.length; i < ln; i++) {
@@ -237,7 +239,7 @@ angular
           var params = validations[i].split(':');
 
           // check if user provided an alternate text to his validator (validator:alt=Alternate Text)
-          var hasAltText = validations[i].indexOf("alt=") >= 0 ? true : false;
+          var hasAltText = validations[i].indexOf("alt=") >= 0;
 
           self.validators[i] = validationRules.getElementValidators({
             altText: hasAltText === true ? (params.length === 2 ? params[1] : params[2]) : '',
@@ -369,6 +371,42 @@ angular
       return _validationSummary;
     }
 
+    /** Evaluate a function name passed as string and run it from the scope.
+     * The function name could be passed with/without brackets "()", in any case we will run the function
+     * @param object self object
+     * @param string function passed as a string
+     * @param mixed result
+     */
+    function runEvalScopeFunction(self, fnString) {
+      var result;
+
+      // Find if our function has the brackets "()"
+      // if yes then run it through $eval else find it in the scope and then run it
+      if(/\({1}.*\){1}/gi.test(fnString)) {
+        result = self.scope.$eval(fnString);
+      }else {
+        var fct = objectFindById(self.scope, fnString, '.');
+        if(typeof fct === "function") {
+          result = fct();
+        }
+      }
+      return result;
+    }
+
+    /** Run a validation callback function once the promise return
+    * @param object validation promise
+     * @param string callback function name (could be with/without the brackets () )
+     */
+    function runValidationCallbackOnPromise(promise, callbackFct) {
+      var self = this;
+
+      if(typeof promise.then === "function") {
+        promise.then(function() {
+          runEvalScopeFunction(self, callbackFct);
+        });
+      }
+    }
+
     /** Setter on the behaviour of displaying only the last error message of each element.
      * By default this is false, so the behavior is to display all error messages of each element.
      * @param boolean value
@@ -441,7 +479,7 @@ angular
       var isSubmitted = (!!attrs && attrs.isSubmitted) ? attrs.isSubmitted : false;
 
       // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
-      if (!!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
+      if (!_globalOptions.hideErrorUnderInputs && !!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
         (errorElm.length > 0) ? errorElm.html(errorMsg) : elm.after('<span class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</span>');
       } else {
         errorElm.html('');  // element is pristine or no validation applied, error message has to be blank
@@ -703,22 +741,6 @@ angular
       return -1;
     }
 
-    /** Explode a '.' dot notation string to an object
-     * @param string str
-     * @parem object
-     * @return object
-     */
-    function explodedDotNotationStringToObject(str, obj) {
-      var split = str.split('.');
-
-      for (var k = 0, kln = split.length; k < kln; k++) {
-        if(!!obj[split[k]]) {
-          obj = obj[split[k]];
-        }
-      }
-      return obj;
-    }
-
     /** Get the element's parent Angular form (if found)
      * @param string: element input name
      * @param object self
@@ -740,11 +762,11 @@ angular
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
-        var formName = form.getAttribute("name");
+        var formName = (!!form) ? form.getAttribute("name") : null;
 
         if (!!form && !!formName) {
           parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
-            ? explodedDotNotationStringToObject(formName, self.scope)
+            ? objectFindById(self.scope, formName, '.')
             : self.scope[formName];
 
           if(!!parentForm) {
@@ -759,7 +781,7 @@ angular
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
       // we can hack it and define our own form inside this isolate scope, in that way we can still use something like: isolateScope.form1.$validationSummary
       if (!!form) {
-        var formName = form.getAttribute("name");
+        var formName = (!!form) ? form.getAttribute("name") : null;
         if(!!formName) {
           var obj = { $name: formName, specialNote: 'Created by Angular-Validation for Isolated Scope usage' };
 
@@ -779,6 +801,23 @@ angular
      */
     function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    /** Find a property inside an object.
+     * If a delimiter is passed as argument, we will split the search ID before searching
+     * @param object: source object
+     * @param string: searchId
+     * @return mixed: property found
+     */
+    function objectFindById(sourceObject, searchId, delimiter) {
+      var split = (!!delimiter) ? searchId.split(delimiter) : searchId;
+
+      for (var k = 0, kln = split.length; k < kln; k++) {
+        if(!!sourceObject[split[k]]) {
+          sourceObject = sourceObject[split[k]];
+        }
+      }
+      return sourceObject;
     }
 
     /** Parse a date from a String and return it as a Date Object to be valid for all browsers following ECMA Specs
@@ -890,16 +929,16 @@ angular
       var result = false;
 
       switch (condition) {
-        case '<': result = (value1 < value2) ? true : false; break;
-        case '<=': result = (value1 <= value2) ? true : false; break;
-        case '>': result = (value1 > value2) ? true : false; break;
-        case '>=': result = (value1 >= value2) ? true : false; break;
+        case '<': result = (value1 < value2); break;
+        case '<=': result = (value1 <= value2); break;
+        case '>': result = (value1 > value2); break;
+        case '>=': result = (value1 >= value2); break;
         case '!=':
-        case '<>': result = (value1 != value2) ? true : false; break;
-        case '!==': result = (value1 !== value2) ? true : false; break;
+        case '<>': result = (value1 != value2); break;
+        case '!==': result = (value1 !== value2); break;
         case '=':
-        case '==': result = (value1 == value2) ? true : false; break;
-        case '===': result = (value1 === value2) ? true : false; break;
+        case '==': result = (value1 == value2); break;
+        case '===': result = (value1 === value2); break;
         default: result = false; break;
       }
       return result;
@@ -970,7 +1009,7 @@ angular
           var timestampParam1 = parseDate(validator.params[1], dateType).getTime();
           var isValid1 = testCondition(validator.condition[0], timestampValue, timestampParam0);
           var isValid2 = testCondition(validator.condition[1], timestampValue, timestampParam1);
-          isValid = (isValid1 && isValid2) ? true : false;
+          isValid = (isValid1 && isValid2);
         } else {
           // else, 1 param is a simple conditional date check
           var timestampParam = parseDate(validator.params[0], dateType).getTime();
@@ -994,7 +1033,7 @@ angular
         // this is typically a "between" condition, a range of number >= and <=
         var isValid1 = testCondition(validator.condition[0], parseFloat(strValue), parseFloat(validator.params[0]));
         var isValid2 = testCondition(validator.condition[1], parseFloat(strValue), parseFloat(validator.params[1]));
-        isValid = (isValid1 && isValid2) ? true : false;
+        isValid = (isValid1 && isValid2);
       } else {
         // else, 1 param is a simple conditional number check
         isValid = testCondition(validator.condition, parseFloat(strValue), parseFloat(validator.params[0]));
@@ -1022,25 +1061,14 @@ angular
       if (!!strValue) {
         var fct = null;
         var fname = validator.params[0];
-        if (fname.indexOf(".") === -1) {
-          fct = self.scope[fname];
-        } else {
-          // function name might also be declared with the Controller As alias, for example: vm.customJavascript()
-          // split the name and flatten it so that we can find it inside the scope
-          var split = fname.split('.');
-          fct = self.scope;
-          for (var k = 0, kln = split.length; k < kln; k++) {
-            fct = fct[split[k]];
-          }
-        }
-        var result = (typeof fct === "function") ? fct() : null;
+        var result = runEvalScopeFunction(self, fname);
 
         // analyze the result, could be a boolean or object type, anything else will throw an error
         if (typeof result === "boolean") {
-          isValid = (!!result) ? true : false;
+          isValid = (!!result);
         }
         else if (typeof result === "object") {
-          isValid = (!!result.isValid) ? true : false;
+          isValid = (!!result.isValid);
         }
         else {
           throw invalidResultErrorMsg;
@@ -1161,18 +1189,7 @@ angular
 
         var fct = null;
         var fname = validator.params[0];
-        if (fname.indexOf(".") === -1) {
-          fct = self.scope[fname];
-        } else {
-          // function name might also be declared with the Controller As alias, for example: vm.customRemote()
-          // split the name and flatten it so that we can find it inside the scope
-          var split = fname.split('.');
-          fct = self.scope;
-          for (var k = 0, kln = split.length; k < kln; k++) {
-            fct = fct[split[k]];
-          }
-        }
-        var promise = (typeof fct === "function") ? fct() : null;
+        var promise = runEvalScopeFunction(self, fname);
 
         // if we already have previous promises running, we might want to abort them (if user specified an abort function)
         if (_remotePromises.length > 1) {
@@ -1199,10 +1216,10 @@ angular
 
               // analyze the result, could be a boolean or object type, anything else will throw an error
               if (typeof result === "boolean") {
-                isValid = (!!result) ? true : false;
+                isValid = (!!result);
               }
               else if (typeof result === "object") {
-                isValid = (!!result.isValid) ? true : false;
+                isValid = (!!result.isValid);
               }
               else {
                 throw invalidResultErrorMsg;

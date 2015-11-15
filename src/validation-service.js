@@ -9,10 +9,11 @@
  */
 angular
 	.module('ghiscoding.validation')
-	.service('validationService', ['$interpolate', '$timeout', 'validationCommon', function ($interpolate, $timeout, validationCommon) {
+	.service('validationService', ['$interpolate', '$q', '$timeout', 'validationCommon', function ($interpolate, $q, $timeout, validationCommon) {
     // global variables of our object (start with _var)
 	  var _blurHandler;
     var _watchers = [];
+    var _validationCallback;
 
     // service constructor
     var validationService = function (globalOptions) {
@@ -91,6 +92,8 @@ angular
         }
       }
 
+      _validationCallback = (self.validationAttrs.hasOwnProperty('validationCallback')) ? self.validationAttrs.validationCallback : null;
+
       // onBlur make validation without waiting
       attrs.elm.bind('blur', _blurHandler = function(event) {
         // get the form element custom object and use it after
@@ -99,7 +102,12 @@ angular
         if (!!formElmObj && !formElmObj.isValidationCancelled) {
           // re-initialize to use current element & validate without delay
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-          attemptToValidate(self, event.target.value, 10);
+
+          // attempt to validate & run validation callback if user requested it
+          var validationPromise = attemptToValidate(self, event.target.value, 10);
+          if(!!_validationCallback) {
+            self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+          }
         }
       });
 
@@ -151,7 +159,11 @@ angular
         self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
 
         var waitingTimer = (typeof newValue === "undefined" || (typeof newValue === "number" && isNaN(newValue))) ? 0 : undefined;
-        attemptToValidate(self, newValue, waitingTimer);
+        // attempt to validate & run validation callback if user requested it
+        var validationPromise = attemptToValidate(self, newValue, waitingTimer);
+        if(!!_validationCallback) {
+          self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+        }
 		  }, true); // $watch()
 
       // save the watcher inside an array in case we want to deregister it when removing a validator
@@ -329,8 +341,12 @@ angular
      * @param object self
      * @param string value: value of the input field
      * @param int typingLimit: when user stop typing, in how much time it will start validating
+     * @return object validation promise
      */
     function attemptToValidate(self, value, typingLimit) {
+      var deferred = $q.defer();
+      var isValid = false;
+
       // get the waiting delay time if passed as argument or get it from common Object
       var waitingLimit = (typeof typingLimit !== "undefined") ? typingLimit : self.commonObj.typingLimit;
 
@@ -350,7 +366,8 @@ angular
       // if field is not required and his value is empty, cancel validation and exit out
       if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self, formElmObj);
-        return value;
+        deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
+        return deferred.promise;
       }else {
         formElmObj.isValidationCancelled = false;
       }
@@ -364,14 +381,17 @@ angular
       // we will still call the `.validate()` function so that it shows also the possible other error messages
       if((value === "" || typeof value === "undefined") && self.commonObj.elm.prop('type').toUpperCase() === "NUMBER") {
         $timeout.cancel(self.timer);
-        self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true));
-        return value;
+        isValid = self.commonObj.validate(value, true);
+        deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+        return deferred.promise;
       }
 
       // select(options) will be validated on the spot
       if(self.commonObj.elm.prop('tagName').toUpperCase() === "SELECT") {
-        self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true));
-        return value;
+        isValid = self.commonObj.validate(value, true);
+        self.commonObj.ctrl.$setValidity('validation', isValid);
+        deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+        return deferred.promise;
       }
 
       // onKeyDown event is the default of Angular, no need to even bind it, it will fall under here anyway
@@ -379,19 +399,23 @@ angular
       if(typeof value !== "undefined") {
         // when no timer, validate right away without a $timeout. This seems quite important on the array input value check
         if(typingLimit === 0) {
-          self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
+          isValid = self.commonObj.validate(value, true);
+          self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', isValid ));
+          deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
         }else {
           // Make the validation only after the user has stopped activity on a field
           // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
           self.commonObj.updateErrorMsg('');
           $timeout.cancel(self.timer);
           self.timer = $timeout(function() {
-            self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate(value, true) ));
+            isValid = self.commonObj.validate(value, true);
+            self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', isValid ));
+            deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
           }, waitingLimit);
         }
       }
 
-      return value;
+      return deferred.promise;
     } // attemptToValidate()
 
     /** Cancel current validation test and blank any leftover error message
@@ -531,7 +555,11 @@ angular
             // re-attach the onBlur handler
             attrs.elm.bind('blur', _blurHandler = function(event) {
               if (!!formElmObj && !formElmObj.isValidationCancelled) {
-                attemptToValidate(self, event.target.value, 10);
+                // attempt to validate & run validation callback if user requested it
+                var validationPromise = attemptToValidate(self, event.target.value, 10);
+                if(!!_validationCallback) {
+                  self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+                }
               }
             });
           }

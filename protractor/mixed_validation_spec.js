@@ -145,7 +145,7 @@
           elmInput.sendKeys('ab');
           elmInput.sendKeys(protractor.Key.TAB);
           //$('[for=input1]').click();
-          browser.sleep(1500); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
+          browser.sleep(1100); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
 
           var elmError = $('.validation-input1');
           expect(elmError.getText()).toEqual('Returned error from promise.');
@@ -157,7 +157,7 @@
             elmInput.sendKeys('abc');
             elmInput.sendKeys(protractor.Key.TAB);
             //$('[for=input1]').click();
-            browser.sleep(1500); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
+            browser.sleep(1100); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
 
             var elmError = $('.validation-input1');
             expect(elmError.getText()).toEqual('');

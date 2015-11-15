@@ -1,6 +1,6 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.13`
-### Form validation after user inactivity of default 1sec. (customizable timeout)
+`Version: 1.4.14`
+### Form validation after user stop typing (default 1sec).
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
 
@@ -76,18 +76,21 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [3rd Party Addon Validation](https://github.com/ghiscoding/angular-validation/wiki/3rd-Party-Addons)
     * [Directive Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Directive-Examples)
     * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
+* Functionalities
     * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
     * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)
     * [Isolated Scope](https://github.com/ghiscoding/angular-validation/wiki/Isolated-Scope)
-    * [PreValidate Form (on page load)](https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load))
-    * [Custom Validation function](https://github.com/ghiscoding/angular-validation/wiki/Custom-Validation-functions)
-    * [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX))
-    * [Remove a Validator](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
+    * [PreValidate Form (on load)](https://github.com/ghiscoding/angular-validation/wiki/PreValidate-Form-(on-page-load))
     * [Reset Form](https://github.com/ghiscoding/angular-validation/wiki/Reset-Form)
     * [Submit and Validation](https://github.com/ghiscoding/angular-validation/wiki/Form-Submit-and-Validation)
+    * [Validation Callback](https://github.com/ghiscoding/angular-validation/wiki/Validation-Callback)
+    * [Validator Remove](https://github.com/ghiscoding/angular-validation/wiki/Remove-Validator-from-Element)
     * [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary)
+* Custom Validations
+    * [Custom Validation (JS)](https://github.com/ghiscoding/angular-validation/wiki/Custom-Validation-functions)
+    * [Remote Validation (AJAX)](https://github.com/ghiscoding/angular-validation/wiki/Remote-Validation-(AJAX))
 * Properties & Options
-    * [Inputs (all local options)](https://github.com/ghiscoding/angular-validation/wiki/Inputs-(local-options))
+    * [Attributes (all options)](https://github.com/ghiscoding/angular-validation/wiki/Inputs-(local-options))
     * [Global Options](https://github.com/ghiscoding/angular-validation/wiki/Global-Options)
     * [ControllerAs Syntax](https://github.com/ghiscoding/angular-validation/wiki/ControllerAs-Syntax)
 * Validators

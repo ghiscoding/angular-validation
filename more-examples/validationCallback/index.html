@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+  <head>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../style.css">
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Example of Validation Callback</h2>
+
+      <div  ng-controller="ctrlDirective as vmd">
+        <h3>Directive</h3>
+
+        <form name="vmd.form1" role="form"novalidate>
+          <label>First name :</label>
+          <input type="text" name="firstName1" ng-model="vmd.firstName1" validation-callback="vmd.onChange" validation="required:alt=First name is required">
+          <label>Last name :</label>
+          <input type="text" name="lastName1" ng-model="vmd.lastName1" validation="required:alt=Last name is required" validation-callback="vmd.onChange()">
+          <button type="submit" name="btn_ngDisabled1" class="btn btn-primary" ng-disabled="vmd.form1.$invalid" >Save</button>
+        </form>
+
+        <strong>Callback results</strong>
+        <div>
+          Form is valid: {{ vmd.formValid1 }}
+        </div>
+        <div>
+          Full Name: {{ vmd.fullName1 }}
+        </div>
+      </div>
+
+      <hr/>
+
+      <div  ng-controller="ctrlService as vms">
+        <h3>Service</h3>
+
+        <form name="vms.form2" role="form"novalidate>
+          <label>First name :</label>
+          <input type="text" name="firstName2" ng-model="vms.firstName2" validation-callback="vms.onChange()" validation="required:alt=First name is required">
+          <label>Last name :</label>
+          <input type="text" name="lastName2" ng-model="vms.lastName2" validation="required:alt=Last name is required" validation-callback="vms.onChange()">
+          <button type="submit" name="btn_ngDisabled2" class="btn btn-primary" ng-disabled="vms.form2.$invalid" >Save</button>
+        </form>
+
+        <strong>Callback results</strong>
+        <div>
+          Form is valid: {{ vms.formValid2 }}
+        </div>
+        <div>
+          Full Name: {{ vms.fullName2 }}
+        </div>
+      </div>
+
+    </div>
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-sanitize.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-UI -->
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
+
+    <!-- Angular-Validation -->
+    <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    -->
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+
+</html>

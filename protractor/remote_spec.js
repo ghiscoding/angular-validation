@@ -1,6 +1,7 @@
-﻿describe('Angular-Validation Custom Javascript Validation Tests:', function () {
+﻿describe('Angular-Validation Remote Validation Tests:', function () {
   // global variables
   var formElementNames = ['input1', 'input2', 'input3', 'input4'];
+  var errorFromPromise = 'Must be at least 2 characters. Returned error from promise.';
   var defaultErrorMessage = 'May only contain letters. Must be at least 2 characters. Field is required.';
   var errorTooShort = [
     'Must be at least 2 characters. Alternate error message.',
@@ -11,13 +12,13 @@
   var oneChar = ['a', 'd', 'a', 'd'];
   var validInputTexts = ['abc', 'def', 'abc', 'def'];
 
-  describe('When choosing `more-examples` custom javascript', function () {
+  describe('When choosing `more-examples` custom remote', function () {
     it('Should navigate to home page', function () {
-      browser.get('http://localhost/Github/angular-validation/more-examples/customValidation/');
+      browser.get('http://localhost/Github/angular-validation/more-examples/customRemote/');
 
       // Find the title element
       var titleElement = element(by.css('h2'));
-      expect(titleElement.getText()).toEqual('Example of Angular-Validation with Custom Javascript function');
+      expect(titleElement.getText()).toEqual('Example of Angular-Validation with Remote Validation');
     });
 
     it('Should have multiple errors in Directive & Service validation summary', function () {
@@ -53,9 +54,10 @@
         var elmInput = $('[name=' + formElementNames[i] + ']');
         elmInput.click();
         elmInput.sendKeys('a');
+        browser.sleep(1000);
 
         var elmError = $('.validation-' + formElementNames[i]);
-        expect(elmError.getText()).toEqual(errorTooShort[i]);
+        expect(elmError.getText()).toEqual(errorFromPromise);
       }
     });
 
@@ -66,6 +68,7 @@
         clearInput(elmInput);
         elmInput.sendKeys(validInputTexts[i]);
         elmInput.sendKeys(protractor.Key.TAB);
+        browser.sleep(1000);
 
         var elmError = $('.validation-' + formElementNames[i]);
         expect(elmError.getText()).toEqual('');
@@ -86,11 +89,11 @@
     });
 
     it('Should navigate to home page', function () {
-      browser.get('http://localhost/Github/angular-validation/more-examples/customValidation/');
+      browser.get('http://localhost/Github/angular-validation/more-examples/customRemote/');
 
       // Find the title element
       var titleElement = element(by.css('h2'));
-      expect(titleElement.getText()).toEqual('Example of Angular-Validation with Custom Javascript function');
+      expect(titleElement.getText()).toEqual('Example of Angular-Validation with Remote Validation');
     });
 
     it('Should click on both ngSubmit buttons', function() {

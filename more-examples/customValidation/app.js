@@ -49,7 +49,7 @@ myApp.controller('CtrlDirective', ['validationService', function (validationServ
 myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope, validationService) {
   var vms = this;
   vms.model = {};
-  //vms.model.input3 = 'a';
+
   // use the validationService only to declare the controllerAs syntax
   var vs = new validationService({ controllerAs: vms });
 
