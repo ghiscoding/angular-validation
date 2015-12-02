@@ -497,7 +497,6 @@ angular
       var self = this;
       var isConditionValid = true;
       var isFieldValid = true;
-      var regex;
       var validator;
       var validatedObject = {};
 
@@ -991,7 +990,7 @@ angular
         isWellFormed = true;
       }else {
         // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-        regex = new RegExp(validator.pattern);
+        var regex = new RegExp(validator.pattern, validator.patternFlag);
         isWellFormed = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
       }
 
@@ -1274,7 +1273,7 @@ angular
           isValid = false;
         } else {
           // run the Regex test through each iteration, if required (\S+) and is null then it's invalid automatically
-          regex = new RegExp(validator.pattern, validator.patternFlag);
+          var regex = new RegExp(validator.pattern, validator.patternFlag);
           isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) ? false : regex.test(strValue);
         }
       }
