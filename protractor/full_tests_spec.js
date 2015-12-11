@@ -1,4 +1,4 @@
-﻿describe('Angular-Validation Tests:', function () {
+﻿describe('Angular-Validation Full Tests:', function () {
   // global variables
   var requiredErrorMessages = {
     'en': 'Field is required.',

@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.15`
+`Version: 1.4.16`
 ### Form validation after user stop typing (default 1sec).
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -76,6 +76,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
     * [3rd Party Addon Validation](https://github.com/ghiscoding/angular-validation/wiki/3rd-Party-Addons)
     * [Directive Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Directive-Examples)
     * [Service Examples](https://github.com/ghiscoding/angular-validation/wiki/Working-Service-Examples)
+    * [Bootstrap Decorator (has-error)](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Decorator-(has-error))
 * Functionalities
     * [Alternate Text on Validators](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators)
     * [DisplayErrorTo](https://github.com/ghiscoding/angular-validation/wiki/Bootstrap-Input-Groups-Wrapping)

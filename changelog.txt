@@ -1,6 +1,7 @@
 Angular-Validation change logs
 
-1.4.15 (2015-12-02) Fixed issue #86 implicit global variable on regex
+1.4.16 (2015-12-11) Fixed issue #90 blinking error messages.
+1.4.15 (2015-12-02) Fixed issue #86 implicit global variable on regex.
 1.4.14 (2015-11-15) Added validation-callback (#79), added #81, #82. Added new validation-callback attribute, runs after the debounce/blur and validaiton are completed. Added possibility passing arguments to Custom & Remote validators. Added new Global Options: hideErrorUnderInputs.
 1.4.13 (2015-11-04) Fixed issue #78 - 'strValue is not defined' error when using `max` auto-detect validator.
 1.4.12 (2015-11-01) Fixed a small issue with pulling the form name when trying to find the parent form of an input element.

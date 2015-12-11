@@ -1,4 +1,4 @@
-describe('Angular-Validation Tests:', function () {
+describe('Angular-Validation badInput Tests:', function () {
   // global variables
   var input2error = "Must be a positive or negative number. Field is required.";
   var input2invalidChar = "Invalid keyboard entry on a field of type 'number'.";
@@ -53,13 +53,19 @@ describe('Angular-Validation Tests:', function () {
         });
 
         it('Should show ValidationSummary after clicking on show checkbox', function() {
-          var btnShowSummary = $('[name=btn_showValidation]');
-          btnShowSummary.click();
-          browser.waitForAngular();
-
           // showValidation checkbox should be false at first but true after
           var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
-          expect(elmCheckboxShowSummary.isSelected()).toBeTruthy();
+          expect(elmCheckboxShowSummary.isSelected()).toBeFalsy();
+
+          // go to the bottom of the form and click on the button showValidation
+          browser.executeScript('window.scrollTo(0,1500);').then(function () {
+            var btnShowSummary = $('[name=btn_showValidation]');
+            btnShowSummary.click();
+            browser.waitForAngular();
+
+            // scroll back to top
+            var elmCheckboxShowSummary = element(by.model('displayValidationSummary'));
+          });
         });
 
         it('Should show same invalid character in ValidationSummary', function() {

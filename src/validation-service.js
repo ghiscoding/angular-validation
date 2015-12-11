@@ -104,7 +104,7 @@ angular
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
 
           // attempt to validate & run validation callback if user requested it
-          var validationPromise = attemptToValidate(self, event.target.value, 10);
+          var validationPromise = attemptToValidate(self, event.target.value, 0);
           if(!!_validationCallback) {
             self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
           }
@@ -402,6 +402,7 @@ angular
           isValid = self.commonObj.validate(value, true);
           self.commonObj.scope.$evalAsync(self.commonObj.ctrl.$setValidity('validation', isValid ));
           deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+          $timeout.cancel(self.timer);
         }else {
           // Make the validation only after the user has stopped activity on a field
           // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg

@@ -183,6 +183,7 @@
               isValid = commonObj.validate(value, true);
               scope.$evalAsync(ctrl.$setValidity('validation', isValid ));
               deferred.resolve({ isFieldValid: isValid, formElmObj: formElmObj, value: value });
+              $timeout.cancel(_timer);
             }else {
               // Start validation only after the user has stopped typing in a field
               // everytime a new character is typed, it will cancel/restart the timer & we'll erase any error mmsg
@@ -258,7 +259,7 @@
 
           if (!formElmObj.isValidationCancelled) {
             // attempt to validate & run validation callback if user requested it
-            var validationPromise = attemptToValidate(value, 10);
+            var validationPromise = attemptToValidate(value, 0);
             if(!!_validationCallback) {
               commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
             }

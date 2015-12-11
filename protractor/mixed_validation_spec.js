@@ -1,4 +1,4 @@
-﻿describe('Angular-Validation Tests:', function () {
+﻿describe('Angular-Validation Mixed Tests:', function () {
   // global variables
   var formElementNames = ['input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10', 'input11', 'input12', 'select1', 'input13', 'input14', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];
   var formElementSummaryNames = ['input2', 'input3', 'input4', 'Email', 'input6', 'input7', 'Credit Card', 'input9', 'input10', 'input11', 'select1', 'input13', 'input15', 'input16', 'input17', 'input18', 'input19', 'input20', 'input21', 'area1'];

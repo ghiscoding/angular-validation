@@ -1,4 +1,4 @@
-describe('Angular-Validation Remote Validation Tests:', function () {
+describe('Angular-Validation callback Validation Tests:', function () {
   // global variables
   var formElementNames = ['firstName1', 'lastName1', 'firstName2', 'lastName2'];
   var firstNameElements = ['firstName1', 'firstName2'];
