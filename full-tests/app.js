@@ -284,7 +284,7 @@ function loadData() {
     {
       'validator': 'in',
       'aliases': ['inList', 'in_list'],
-      'params': 'chocolate,apple pie,ice cream'
+      'params': 'chocolate,apple pie,ice cream,sweet & sour,A+B'
     },
     {
       'validator': 'int',
@@ -324,7 +324,7 @@ function loadData() {
     {
       'validator': 'notIn',
       'aliases': ['not_in', 'notInList', 'not_in_list'],
-      'params': 'chocolate,apple pie,ice cream'
+      'params': 'chocolate,apple pie,ice cream,sweet & sour,A+B'
     },
     {
       'validator': 'numeric'

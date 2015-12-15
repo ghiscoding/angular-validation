@@ -652,15 +652,15 @@ function loadData() {
       {
         'validator': 'in',
         'aliases': ['inList', 'in_list'],
-        'params': 'chocolate,apple pie,ice cream',
+        'params': 'chocolate,apple pie,ice cream,sweet & sour,A+B',
         'invalid_data': ['choco', 'carrot', 'apple'],
-        'valid_data': ['chocolate', 'apple pie', 'ice cream'],
+        'valid_data': ['chocolate', 'ice cream','sweet & sour','A+B'],
         'error_message': {
-          'en': "Must be a choice inside this list: (chocolate,apple pie,ice cream).",
-          'es': "Debe ser una opción dentro de esta lista: (chocolate,apple pie,ice cream).",
-          'fr': "Doit être un choix dans cette liste: (chocolate,apple pie,ice cream).",
-          'no': "Må være et valg inne i denne listen: (chocolate,apple pie,ice cream).",
-          'ru': "Должно бытьвыбор в этом списке: (chocolate,apple pie,ice cream)."
+          'en': "Must be a choice inside this list: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'es': "Debe ser una opción dentro de esta lista: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'fr': "Doit être un choix dans cette liste: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'no': "Må være et valg inne i denne listen: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'ru': "Должно бытьвыбор в этом списке: (chocolate,apple pie,ice cream,sweet & sour,A+B)."
         }
       },
       {
@@ -773,15 +773,15 @@ function loadData() {
       {
         'validator': 'notIn',
         'aliases': ['not_in', 'notInList', 'not_in_list'],
-        'params': 'chocolate,apple pie,ice cream',
-        'invalid_data': ['chocolate', 'apple pie', 'ice cream'],
-        'valid_data': ['choco', 'carrot', 'apple'],
+        'params': 'chocolate,apple pie,ice cream,sweet & sour,A+B',
+        'invalid_data': ['chocolate', 'apple pie', 'sweet & sour', 'A+B'],
+        'valid_data': ['apple', 'sweet & sou', 'A+', 'B+A'],
         'error_message': {
-          'en': "Must be a choice outside this list: (chocolate,apple pie,ice cream).",
-          'es': "Debe ser una elección fuera de esta lista: (chocolate,apple pie,ice cream).",
-          'fr': "Doit être un choix en dehors de cette liste: (chocolate,apple pie,ice cream).",
-          'no': "Må være et valg utenfor denne listen: (chocolate,apple pie,ice cream).",
-          'ru': "Должно бытьвыбор за этот список: (chocolate,apple pie,ice cream)."
+          'en': "Must be a choice outside this list: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'es': "Debe ser una elección fuera de esta lista: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'fr': "Doit être un choix en dehors de cette liste: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'no': "Må være et valg utenfor denne listen: (chocolate,apple pie,ice cream,sweet & sour,A+B).",
+          'ru': "Должно бытьвыбор за этот список: (chocolate,apple pie,ice cream,sweet & sour,A+B)."
         }
       },
       {

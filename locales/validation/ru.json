@@ -85,7 +85,7 @@
   "INPUT18":                          "Буквенно-цифровой + Точно(3) + Обязательно  -- debounce(3sec)",
   "INPUT19":                          "Дата ISO (yyyy-mm-dd) -- минимальное условие >= 2001-01-01 ",
   "INPUT20":                          "Дата US SHORT (mm/dd/yy) --между датами 12/01/99 и 12/31/15",
-  "INPUT21":                          "Выбор в этом списке (banana,orange,ice cream)",
+  "INPUT21":                          "Выбор в этом списке (banana,orange,ice cream,sweet & sour)",
   "FIRST_NAME":                       "Имя",
   "LAST_NAME":                        "Фамилия",
   "RESET_FORM":                       "Сброс форму",

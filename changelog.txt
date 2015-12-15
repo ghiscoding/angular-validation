@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.17 (2015-12-15) Fixed issue #92 input name with '.', enhancement #94 Polish characters, issue #96 in_list wasn't accepting special characters.
 1.4.16 (2015-12-11) Fixed issue #90 blinking error messages.
 1.4.15 (2015-12-02) Fixed issue #86 implicit global variable on regex.
 1.4.14 (2015-11-15) Added validation-callback (#79), added #81, #82. Added new validation-callback attribute, runs after the debounce/blur and validaiton are completed. Added possibility passing arguments to Custom & Remote validators. Added new Global Options: hideErrorUnderInputs.

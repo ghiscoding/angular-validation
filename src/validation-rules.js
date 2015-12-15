@@ -46,7 +46,7 @@ angular
           break;
         case "alpha" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ])+$/i,
             message: "INVALID_ALPHA",
             type: "regex"
           };
@@ -54,7 +54,7 @@ angular
         case "alphaSpaces" :
         case "alpha_spaces" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ\s])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ\s])+$/i,
             message: "INVALID_ALPHA_SPACE",
             type: "regex"
           };
@@ -62,7 +62,7 @@ angular
         case "alphaNum" :
         case "alpha_num" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ0-9])+$/i,
             message: "INVALID_ALPHA_NUM",
             type: "regex"
           };
@@ -70,7 +70,7 @@ angular
         case "alphaNumSpaces" :
         case "alpha_num_spaces" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9\s])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ0-9\s])+$/i,
             message: "INVALID_ALPHA_NUM_SPACE",
             type: "regex"
           };
@@ -78,7 +78,7 @@ angular
         case "alphaDash" :
         case "alpha_dash" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9_-])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ0-9_-])+$/i,
             message: "INVALID_ALPHA_DASH",
             type: "regex"
           };
@@ -86,7 +86,7 @@ angular
         case "alphaDashSpaces" :
         case "alpha_dash_spaces" :
           validator = {
-            pattern: /^([a-zа-яàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿßÞďđ0-9\s_-])+$/i,
+            pattern: /^([a-zа-яàáâãäåąæçćèéêëęœìíïîłńðòóôõöøśùúûñüýÿżźßÞďđ0-9\s_-])+$/i,
             message: "INVALID_ALPHA_DASH_SPACE",
             type: "regex"
           };
@@ -491,9 +491,9 @@ angular
         case "in" :
         case "inList" :
         case "in_list" :
-          var list = ruleParams.replace(/,/g, '|'); // replace comma (,) by pipe (|)
+          var list = RegExp().escape(ruleParams).replace(/,/g, '|'); // escape string & replace comma (,) by pipe (|)
           validator = {
-            pattern: "^(\\b(" + list + ")\\b)$",
+            pattern: "^(" + list + ")$",
             patternFlag: 'i',
             message: "INVALID_IN_LIST",
             params: [ruleParams],
@@ -605,9 +605,9 @@ angular
         case "not_in" :
         case "notInList" :
         case "not_in_list" :
-          var list = ruleParams.replace(/,/g, '|'); // replace comma (,) by pipe (|)
+          var list = RegExp().escape(ruleParams).replace(/,/g, '|'); // escape string & replace comma (,) by pipe (|)
           validator = {
-            pattern: "^((?!\\b(" + list + ")\\b).)+$",
+            pattern: "^((?!(" + list + ")).)+$",
             patternFlag: 'i',
             message: "INVALID_NOT_IN_LIST",
             params: [ruleParams],
@@ -685,3 +685,20 @@ angular
 	    return validator;
 		} // getElementValidators()
 }]);
+
+/** extend RegExp object to have an escape function
+ * @param string text
+ * @return escaped string
+ */
+RegExp.prototype.escape = function(text) {
+  if (!arguments.callee.sRE) {
+    var specials = [
+      '/', '.', '*', '+', '?', '|',
+      '(', ')', '[', ']', '{', '}', '\\'
+    ];
+    arguments.callee.sRE = new RegExp(
+      '(\\' + specials.join('|\\') + ')', 'g'
+    );
+  }
+  return text.replace(arguments.callee.sRE, '\\$1');
+}

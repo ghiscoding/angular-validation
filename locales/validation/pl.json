@@ -85,7 +85,7 @@
     "INPUT18":                          "Alfanumeryczne + Dokładnie(3) + Wymaganae -- debounce(3sec)",
     "INPUT19":                          "Data w formacie ISO (rrrr-mm-dd) -- warunek minimum >= 2001-01-01 ",
     "INPUT20":                          "Data w formacie US SHORT (mm/dd/rr) -- pomiędzy datami 12/01/99 a 12/31/15",
-    "INPUT21":                          "Wybór w tej liście (banana,orange,ice cream)",
+    "INPUT21":                          "Wybór w tej liście (banana,orange,ice cream,sweet & sour)",
     "FIRST_NAME":                       "Imię",
     "LAST_NAME":                        "Nazwisko",
     "RESET_FORM":                       "Zresetować formularz",

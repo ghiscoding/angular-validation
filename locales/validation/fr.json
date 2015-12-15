@@ -85,7 +85,7 @@
     "INPUT18":                          "Alphanumérique + Exactement(3) + Requis  -- debounce(3sec)",
     "INPUT19":                          "Date ISO (aaaa-mm-jj ) -- condition minimal >= 2001-01-01 ",
     "INPUT20":                          "Date US COURT (mm/jj/aa) -- entre les dates 12/01/99 et 12/31/15",
-    "INPUT21":                          "Choix dans cette liste (banana,orange,ice cream)",
+    "INPUT21":                          "Choix dans cette liste (banana,orange,ice cream,sweet & sour)",
     "FIRST_NAME":                       "Prénom",
     "LAST_NAME":                        "Nom de Famille",
     "RESET_FORM":                       "Réinitialisation le formulaire",

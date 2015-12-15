@@ -87,10 +87,9 @@ angular
     validationCommon.prototype.validate = validate;                                                 // validate current element
 
     // override some default String functions
-    String.prototype.trim = stringPrototypeTrim;
-    String.prototype.format = stringPrototypeFormat;
-    String.format = stringFormat;
-
+    String.prototype.trim = stringPrototypeTrim;                                                    // extend String object to have a trim function
+    String.prototype.format = stringPrototypeFormat;                                                // extend String object to have a format function like C#
+    String.format = stringFormat;                                                                   // extend String object to have a format function like C#
     // return the service object
     return validationCommon;
 
@@ -457,7 +456,8 @@ angular
       var errorMsg = (!!attrs && !!attrs.translate) ? $translate.instant(message) : message;
 
       // get the name attribute of current element, make sure to strip dirty characters, for example remove a <input name="options[]"/>, we need to strip the "[]"
-      var elmInputName = elmName.replace(/[|&;$%@"<>()+,\[\]\{\}]/g, '');
+      // also replace any possible '.' inside the input name by '-'
+      var elmInputName = elmName.replace(/[|&;$%@"<>()+,\[\]\{\}]/g, '').replace(/\./g, '-');
       var errorElm = null;
 
       // find the element which we'll display the error message, this element might be defined by the user with 'validationErrorTo'

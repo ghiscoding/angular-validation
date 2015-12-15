@@ -23,7 +23,7 @@
     "Alphanumeric + Exactly(3) + Required -- debounce(3sec)",
     "Date ISO (yyyy-mm-dd) -- minimum condition >= 2001-01-01",
     "Date US SHORT (mm/dd/yy) -- between the dates 12/01/99 and 12/31/15",
-    "Choice IN this list (banana,orange,ice cream)",
+    "Choice IN this list (banana,orange,ice cream,sweet & sour)",
     "TextArea: Alphanumeric + Minimum(15) + Required",
     "Input22 - ngDisabled =>"
   ];
@@ -48,7 +48,7 @@
     "May only contain letters and spaces. Must have a length of exactly 3 characters. Field is required.",
     "Needs to be a valid date format (yyyy-mm-dd), equal to, or higher than 2001-01-01. Field is required.",
     "Needs to be a valid date format (mm/dd/yy) OR (mm-dd-yy) between 11/28/99 and 12/31/15. Field is required.",
-    "Must be a choice inside this list: (banana,orange,ice cream). Field is required.",
+    "Must be a choice inside this list: (banana,orange,ice cream,sweet & sour). Field is required.",
     "May only contain letters, numbers, dashes and spaces. Must be at least 15 characters. Field is required."
   ];
   var validInputTexts = [
@@ -72,7 +72,7 @@
     "abc",
     "2001-01-01",
     "01/01/12",
-    "ice cream",
+    "sweet & sour",
     "This is a great tool"
   ];
   var types = ['Directive', 'Service'];

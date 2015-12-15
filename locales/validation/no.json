@@ -85,7 +85,7 @@
     "INPUT18":                          "Alfanumerisk + Nøyaktig(3) + Påkrevd  -- debounce(3sec)",
     "INPUT19":                          "ISO dato (yyyy-mm-dd) -- minimum >= 2001-01-01 ",
     "INPUT20":                          "US SHORT dato (mm/dd/yy) -- mellom 12/01/99 og 12/31/15",
-    "INPUT21":                          "Valget i denne listen (banana,orange,ice cream)",
+    "INPUT21":                          "Valget i denne listen (banana,orange,ice cream,sweet & sour)",
     "FIRST_NAME":                       "Fornavn",
     "LAST_NAME":                        "Etternavn",
     "RESET_FORM":                       "Nullstill skjemaet",
