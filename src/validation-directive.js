@@ -23,10 +23,12 @@
         var _promises = [];
         var _timer;
         var _watchers = [];
+        var _globalOptions = commonObj.getGlobalOptions();
 
         // Possible element attributes
         var _elmName = attrs.name;
         var _validationCallback = (attrs.hasOwnProperty('validationCallback')) ? attrs.validationCallback : null;
+        var _validateOnEmpty = (attrs.hasOwnProperty('validateOnEmpty')) ? commonObj.parseBool(attrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
 
         //-- Possible validation-array attributes
         // on a validation array, how many does it require to be valid?
@@ -40,26 +42,8 @@
           cancelValidation : cancelValidation
         }
 
-        // watch the element for any value change, validate it once that happen
-        var validationWatcher = scope.$watch(function() {
-          if(isKeyTypedBadInput()) {
-            return { badInput: true };
-          }
-          return ctrl.$modelValue;
-        }, function(newValue, oldValue) {
-          if(!!newValue && !!newValue.badInput) {
-            unbindBlurHandler();
-            return invalidateBadInputField();
-          }
-          // attempt to validate & run validation callback if user requested it
-          var validationPromise = attemptToValidate(newValue);
-          if(!!_validationCallback) {
-            commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
-          }
-        }, true);
-
-        // save the watcher inside an array in case we want to deregister it when removing a validator
-        _watchers.push({ elmName: _elmName, watcherHandler: validationWatcher});
+        // create & save watcher inside an array in case we want to deregister it when removing a validator
+        _watchers.push({ elmName: _elmName, watcherHandler: createWatch() });
 
         // watch the `disabled` attribute for changes
         // if it become disabled then skip validation else it becomes enable then we need to revalidate it
@@ -92,6 +76,12 @@
             // and finally revalidate & re-attach the onBlur event
             commonObj.defineValidation();
             revalidateAndAttachOnBlur();
+
+            // if watcher not already exist, then create & save watcher inside an array in case we want to deregister it later
+            var foundWatcher = commonObj.arrayFindObject(_watchers, 'elmName', ctrl.$name);
+            if(!foundWatcher) {
+              _watchers.push({ elmName: _elmName, watcherHandler: createWatch() });
+            }
           }
         });
 
@@ -154,7 +144,7 @@
           commonObj.validate(value, false);
 
           // if field is not required and his value is empty, cancel validation and exit out
-          if(!commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
+          if(!commonObj.isFieldRequired() && !_validateOnEmpty && (value === "" || value === null || typeof value === "undefined")) {
             cancelValidation();
             deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
             return deferred.promise;
@@ -163,7 +153,7 @@
           }
 
           // invalidate field before doing any validation
-          if(!!value || commonObj.isFieldRequired()) {
+          if(!!value || commonObj.isFieldRequired() || _validateOnEmpty) {
             ctrl.$setValidity('validation', false);
           }
 
@@ -222,11 +212,10 @@
                   switch(_validArrayRequireHowMany) {
                     case "all" :
                       if(result.isFieldValid === false) {
-                        var globalOptions = commonObj.getGlobalOptions();
                         result.formElmObj.translatePromise.then(function(translation) {
                           // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
                           // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
-                          if (_arrayErrorMessage.length > 0 && globalOptions.displayOnlyLastErrorMsg) {
+                          if (_arrayErrorMessage.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
                             _arrayErrorMessage = '[' + result.value + '] :: ' + ((!!result.formElmObj.validator && !!result.formElmObj.validator.params) ? String.format(translation, result.formElmObj.validator.params) : translation);
                           } else {
                             _arrayErrorMessage += ' [' + result.value + '] :: ' + ((!!result.formElmObj.validator && !!result.formElmObj.validator.params) ? String.format(translation, result.formElmObj.validator.params) : translation);
@@ -314,8 +303,9 @@
 
           // deregister the $watch from the _watchers array we kept it
           var foundWatcher = commonObj.arrayFindObject(_watchers, 'elmName', ctrl.$name);
-          if(!!foundWatcher) {
-            foundWatcher.watcherHandler(); // deregister the watch by calling his handler
+          if(!!foundWatcher && typeof foundWatcher.watcherHandler === "function") {
+            var deregister = foundWatcher.watcherHandler(); // deregister the watch by calling his handler
+            _watchers.shift();
           }
         }
 
@@ -332,6 +322,28 @@
 
           // unbind onBlur handler (if found) so that it does not fail on a non-required element that is now dirty & empty
           unbindBlurHandler();
+        }
+
+        /** watch the element for any value change, validate it once that happen
+         * @return new watcher
+         */
+        function createWatch() {
+          return scope.$watch(function() {
+            if(isKeyTypedBadInput()) {
+              return { badInput: true };
+            }
+            return ctrl.$modelValue;
+          }, function(newValue, oldValue) {
+            if(!!newValue && !!newValue.badInput) {
+              unbindBlurHandler();
+              return invalidateBadInputField();
+            }
+            // attempt to validate & run validation callback if user requested it
+            var validationPromise = attemptToValidate(newValue);
+            if(!!_validationCallback) {
+              commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+            }
+          }, true);
         }
 
         /** Invalidate the field that was tagged as bad input, cancel the timer validation,

@@ -32,6 +32,7 @@
     'interpolate_spec.js',
     'ngIfDestroy_spec.js',
     'thirdParty_spec.js',
+    'validRequireHowMany_spec.js',
     'full_tests_spec.js'
   ],
   jasmineNodeOpts: {

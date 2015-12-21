@@ -38,5 +38,40 @@
       var itemRows = element.all(by.repeater('item in vm.test.$validationSummary'));
       expect(itemRows.count()).toBe(0);
     });
+
+    it('Should empty the field "if1" and show back the error on field & summary', function() {
+      var elmInput = $('[name=if1]');
+      clearInput(elmInput);
+
+      // validation summary should become empty
+      var firstError = element.all(by.repeater('item in vm.test.$validationSummary')).get(0);
+      expect(firstError.getText()).toEqual('if1: Field is required.');
+    });
+
+    it('Should click on toggle checkbox to inverse validation', function () {
+      var elmToggle = $('[name=toggle]');
+      elmToggle.click();
+      browser.waitForAngular();
+    });
+
+    it('Should empty the field "f1" and show back the error on field & summary', function() {
+      var elmInput = $('[name=f1]');
+      clearInput(elmInput);
+
+      // validation summary should become empty
+      var firstError = element.all(by.repeater('item in vm.test.$validationSummary')).get(0);
+      expect(firstError.getText()).toEqual('f1: Field is required.');
+    });
   });
 });
+
+/** From a given input name, clear the input
+ * @param string input name
+ */
+function clearInput(elem) {
+  elem.getAttribute('value').then(function (text) {
+    var len = text.length
+    var backspaceSeries = Array(len+1).join(protractor.Key.BACK_SPACE);
+    elem.sendKeys(backspaceSeries);
+  })
+}

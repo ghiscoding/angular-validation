@@ -156,7 +156,7 @@ function loadData() {
       {
         'validator': 'alpha',
         'invalid_data': ['abc-def', 'abc def', '@', '#', '123', '{|\\}'],
-        'valid_data': ['abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': 'May only contain letters.',
           'es': 'Unicamente puede contener letras.',
@@ -169,7 +169,7 @@ function loadData() {
         'validator': 'alphaSpaces',
         'aliases': ['alpha_spaces'],
         'invalid_data': ['abc-def', 'abc(def)', '@', '#', '123', '{|\\}'],
-        'valid_data': ['abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅ ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅ ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': 'May only contain letters and spaces.',
           'es': 'Unicamente puede contener letras y espacios.',
@@ -182,7 +182,7 @@ function loadData() {
         'validator': 'alphaNum',
         'aliases': ['alpha_num'],
         'invalid_data': ['abc-def', 'abc(def)', '@', '#', '{|\\}'],
-        'valid_data': ['1234567890', 'abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['1234567890', 'abcdefghijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': 'May only contain letters and numbers.',
           'es': 'Unicamente puede contener letras y números.',
@@ -195,7 +195,7 @@ function loadData() {
         'validator': 'alphaNumSpaces',
         'aliases': ['alpha_num_spaces'],
         'invalid_data': ['abc-def', 'abc(def)', '@', '#'],
-        'valid_data': ['1234567890', 'abcdefghijkl mnopqrstuvwxyz', 'ÀÁÂÃÄÅ ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['1234567890', 'abcdefghijkl mnopqrstuvwxyz', 'ÀÁÂÃÄÅ ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': 'May only contain letters, numbers and spaces.',
           'es': 'Unicamente puede contener letras, números y espacios.',
@@ -208,7 +208,7 @@ function loadData() {
         'validator': 'alphaDash',
         'aliases': ['alpha_dash'],
         'invalid_data': ['abc(def)', '@', '#', '{|\\}'],
-        'valid_data': ['1234567890', 'abcdefg-hijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅ--ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['1234567890', 'abcdefg-hijklmnopqrstuvwxyz', 'ÀÁÂÃÄÅ--ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäåçèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': "May only contain letters, numbers and dashes.",
           'es': "Unicamente puede contener letras, números y guiones.",
@@ -221,7 +221,7 @@ function loadData() {
         'validator': 'alphaDashSpaces',
         'aliases': ['alpha_dash_spaces'],
         'invalid_data': ['abc(def)', '@', '#', '{|\\}'],
-        'valid_data': ['123456-7890', 'abcdefg-hijklmn opqrstuvwxyz', 'ÀÁÂÃÄÅ--ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'àáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
+        'valid_data': ['123456-7890', 'abcdefg-hijklmn opqrstuvwxyz', 'ÀÁÂÃÄÅ--ÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝ', 'ążźćśłńęàáâãäå çèéêëìíîïðòóôõöùúûüýÿ'],
         'error_message': {
           'en': "May only contain letters, numbers, dashes and spaces.",
           'es': "Unicamente puede contener letras, números, guiones y espacios.",
@@ -589,7 +589,7 @@ function loadData() {
       {
         'validator': 'email',
         'invalid_data': ['g$g.com', 'g@g,com', '.my@email.com.', 'some space@hotmail.com'],
-        'valid_data': ['nickname@domain', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф', 'hola.àáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿ@español.com'],
+        'valid_data': ['nickname@domain', 'other.email-with-dash@some-company.com', 'кокер@спаниель.рф', 'hola.ążźćśłńęàáâãäåæçèéêëœìíïîðòóôõöøùúûñüýÿ@español.com'],
         'error_message': {
           'en': "Must be a valid email address.",
           'es': "Debe contener una dirección de correo electronico valida.",
@@ -705,7 +705,7 @@ function loadData() {
       {
         'validator': 'ipv6',
         'invalid_data': ['127.0.0.1', '255.255.255.0', '1762:0:0:0:0:B03:1'],
-        'valid_data': ['1762:0:0:0:0:B03:1:AF18', '2001:0db8:0100:f101:0210:a4ff:fee3:9566'],
+        'valid_data': ['2002:4559:1FE2::4559:1FE2', '2002:4559:1FE2:0:0:0:4559:1FE2', '2002:4559:1FE2:0000:0000:0000:4559:1FE2'],
         'error_message': {
           'en': "Must be a valid IP (IPV6).",
           'es': "Debe contener una dirección IP valida (IPV6).",

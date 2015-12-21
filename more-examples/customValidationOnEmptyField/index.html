@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation with Custom Javascript function</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../style.css">
+  </head>
+
+  <body ng-app="emptyCustomValidation" ng-controller="myController">
+    <div class="container">
+      <form name="inputForm" ng-submit="submit()">
+        <h1>Employess in db</h1>
+        <table>
+          <tbody>
+            <tr>
+              <th>First name</th>
+              <th>Last name</th>
+            </tr>
+            <tr ng-repeat="employee in existingEmployees">
+              <td>
+                <input type="text" name="existingEmployee_firstName_{{employee.id}}" ng-model="employee.firstName" validation="required" class="form-control" />
+              </td>
+              <td>
+                <input type="text" name="existingEmployee_lastName_{{employee.id}}" ng-model="employee.lastName" validation="required" class="form-control" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <h1>New employees</h1>
+        <table>
+          <tbody>
+            <tr>
+              <th>First name</th>
+              <th>Last name</th>
+            </tr>
+            <tr ng-repeat="employee in newEmployees">
+              <td>
+                <input type="text" name="newEmployee_firstName_{{employee.id}}" ng-model="employee.firstName" validation="custom:newEmployeeFirstNameValidation(employee)" validate-on-empty="true" class="form-control" />
+              </td>
+              <td>
+                <input type="text" name="newEmployee_lastName_{{employee.id}}" ng-model="employee.lastName" validation="custom:newEmployeeLastNameValidation(employee)" class="form-control" />
+              </td>
+            </tr>
+          </tbody>
+        </table><br /><br /><br />
+        <button class="btn btn-default">
+          Submit
+        </button>
+        </form>
+    </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-UI -->
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
+
+    <!-- Angular-Validation -->
+    <!--<script type="text/javascript" src="../../dist/angular-validation.min.js"></script>-->
+    
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

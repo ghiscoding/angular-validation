@@ -18,6 +18,7 @@ angular
     };
     var _remotePromises = [];               // keep track of promises called and running when using the Remote validator
     var _validationSummary = [];            // Array Validation Error Summary
+    var _validateOnEmpty = false;           // do we want to validate on empty field? False by default
 
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
@@ -28,6 +29,8 @@ angular
           preValidateFormElements: false,   // reset the option of pre-validate all form elements, false by default
           isolatedScope: null,              // reset used scope on route change
           scope: null,                      // reset used scope on route change
+          validateOnEmpty: false,            // reset the flag of Validate Always
+          validRequireHowMany: "all",       // how many Validators it needs to pass for the field to become valid, "all" by default
           resetGlobalOptionsOnRouteChange: true
         };
         _formElements = [];                 // array containing all form elements, valid or invalid
@@ -44,6 +47,8 @@ angular
       this.elm = elm;
       this.ctrl = ctrl;
       this.validatorAttrs = attrs;
+      this.validateOnEmpty = false;      // do we want to always validate, even when field isn't required? False by default
+      this.validRequireHowMany = "all";
 
       if(!!scope && !!scope.$validationOptions) {
         _globalOptions = scope.$validationOptions; // save the global options
@@ -78,6 +83,7 @@ angular
     validationCommon.prototype.isFieldRequired = isFieldRequired;                                   // return boolean knowing if the current field is required
     validationCommon.prototype.initialize = initialize;                                             // initialize current object with passed arguments
     validationCommon.prototype.mergeObjects = mergeObjects;                                         // merge 2 javascript objects, Overwrites obj1's values with obj2's (basically Object2 as higher priority over Object1)
+    validationCommon.prototype.parseBool = parseBool;                                               // parse a boolean value, string or bool
     validationCommon.prototype.removeFromValidationSummary = removeFromValidationSummary;           // remove an element from the $validationSummary
     validationCommon.prototype.removeFromFormElementObjectList = removeFromFormElementObjectList;   // remove named items from formElements list
     validationCommon.prototype.runValidationCallbackOnPromise = runValidationCallbackOnPromise;     // run a validation callback method when the promise resolve
@@ -170,15 +176,8 @@ angular
       var customUserRegEx = {};
       self.validators = [];        // reset the global validators
 
-      // debounce (alias of typingLimit) timeout after user stop typing and validation comes in play
-      self.typingLimit = _INACTIVITY_LIMIT;
-      if (self.validatorAttrs.hasOwnProperty('debounce')) {
-        self.typingLimit = parseInt(self.validatorAttrs.debounce, 10);
-      } else if (self.validatorAttrs.hasOwnProperty('typingLimit')) {
-        self.typingLimit = parseInt(self.validatorAttrs.typingLimit, 10);
-      } else if (!!_globalOptions && _globalOptions.hasOwnProperty('debounce')) {
-        self.typingLimit = parseInt(_globalOptions.debounce, 10);
-      }
+      // analyze the possible element attributes
+      self = analyzeElementAttributes(self);
 
       // get the rules(or validation), inside directive it's named (validation), inside service(rules)
       var rules = self.validatorAttrs.rules || self.validatorAttrs.validation;
@@ -497,6 +496,7 @@ angular
       var self = this;
       var isConditionValid = true;
       var isFieldValid = true;
+      var nbValid = 0;
       var validator;
       var validatedObject = {};
 
@@ -558,7 +558,7 @@ angular
         }
 
         // not required and not filled is always valid & 'disabled', 'ng-disabled' elements should always be valid
-        if ((!self.bFieldRequired && !strValue) || (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled))) {
+        if ((!self.bFieldRequired && !strValue && !_validateOnEmpty) || (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled))) {
           isConditionValid = true;
         }
 
@@ -602,6 +602,16 @@ angular
             });
           })(formElmObj, isConditionValid, validator);
         } // if(!isConditionValid)
+
+        if(isConditionValid) {
+          nbValid++;
+        }
+
+        // when user want the field to become valid as soon as we have 1 validator passing
+        if(self.validRequireHowMany == nbValid && !!isConditionValid) {
+          isFieldValid = true;
+          break;
+        }
       }   // for() loop
 
       // only log the invalid message in the $validationSummary
@@ -685,6 +695,34 @@ angular
       } else if (!!formElmObj && formElmObj.isValid) {
         addToValidationSummary(formElmObj, '');
       }
+    }
+
+    /** Analyse the certain attributes that the element can have or could be passed by global options
+     * @param object self
+     * @return self
+     */
+    function analyzeElementAttributes(self) {
+      // debounce (alias of typingLimit) timeout after user stop typing and validation comes in play
+      self.typingLimit = _INACTIVITY_LIMIT;
+      if (self.validatorAttrs.hasOwnProperty('debounce')) {
+        self.typingLimit = parseInt(self.validatorAttrs.debounce, 10);
+      } else if (self.validatorAttrs.hasOwnProperty('typingLimit')) {
+        self.typingLimit = parseInt(self.validatorAttrs.typingLimit, 10);
+      } else if (!!_globalOptions && _globalOptions.hasOwnProperty('debounce')) {
+        self.typingLimit = parseInt(_globalOptions.debounce, 10);
+      }
+
+      // how many Validators it needs to pass for the field to become valid, "all" by default
+      self.validRequireHowMany = self.validatorAttrs.hasOwnProperty('validRequireHowMany')
+        ? self.validatorAttrs.validRequireHowMany
+        : _globalOptions.validRequireHowMany;
+
+      // do we want to validate on empty field? Useful on `custom` and `remote`
+      _validateOnEmpty = self.validatorAttrs.hasOwnProperty('validateOnEmpty')
+        ? parseBool(self.validatorAttrs.validateOnEmpty)
+        : _globalOptions.validateOnEmpty;
+
+      return self;
     }
 
     /** Quick function to find an object inside an array by it's given field name and value, return the object found or null
@@ -817,6 +855,22 @@ angular
         }
       }
       return sourceObject;
+    }
+
+    /** Parse a boolean value, we also want to parse on string values
+     * @param string/int value
+     * @return bool
+     */
+    function parseBool(value) {
+      if(typeof value === "boolean" || typeof value === "number") {
+        return (value === true || value === 1);
+      }
+      else if (typeof value === "string") {
+         value = value.replace(/^\s+|\s+$/g, "").toLowerCase();
+         if (value === "true" || value === "1" || value === "false" || value === "0")
+           return (value === "true" || value === "1");
+      }
+      return; // returns undefined
     }
 
     /** Parse a date from a String and return it as a Date Object to be valid for all browsers following ECMA Specs
@@ -1057,7 +1111,7 @@ angular
       var missingErrorMsg = "Custom Javascript Validation requires an error message defined as 'alt=' in your validator or defined in your custom javascript function as { isValid: bool, message: 'your error' }"
       var invalidResultErrorMsg = 'Custom Javascript Validation requires a declared function (in your Controller), please review your code.';
 
-      if (!!strValue) {
+      if (!!strValue || !!_validateOnEmpty) {
         var fct = null;
         var fname = validator.params[0];
         var result = runEvalScopeFunction(self, fname);
@@ -1183,7 +1237,7 @@ angular
       var missingErrorMsg = "Remote Javascript Validation requires an error message defined as 'alt=' in your validator or defined in your custom remote function as { isValid: bool, message: 'your error' }"
       var invalidResultErrorMsg = 'Remote Validation requires a declared function (in your Controller) which also needs to return a Promise, please review your code.';
 
-      if (!!strValue && !!showError) {
+      if ((!!strValue && !!showError) || !!_validateOnEmpty) {
         self.ctrl.$processing = true; // $processing can be use in the DOM to display a remote processing message to the user
 
         var fct = null;

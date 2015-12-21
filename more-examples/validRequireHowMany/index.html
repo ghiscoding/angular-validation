@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di ng-cloak="">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation with ValidRequireHowMany</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../style.css">
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Angular-Validation with ValidRequireHowMany</h2>
+
+      <div  ng-controller="CtrlDirective as vmd">
+        <h3>Directive</h3>
+        <div class="alert alert-danger alert-dismissable" ng-show="vmd.form1.$validationSummary.length &gt; 0">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h4><strong>ERRORS!</strong></h4>
+          <ul>
+              <li ng-repeat="item in vmd.form1.$validationSummary">{{ item.field }}: {{item.message}}</li>
+          </ul>
+        </div>
+
+        <form name="vmd.form1">
+          <div class="form-group">
+            <label for="input1">Validate IPV4 or IPV6 (required + IPV4 or IPV6 --&gt; validRequireHowMany="2")</label>
+            <input type="text" class="form-control"
+              name="input1"
+              ng-model="vmd.model.input1"
+              placeholder="validation='ipv4|ipv6|required' ... validRequireHowMany='2'"
+              valid-require-how-many="2"
+              validation="ipv4|ipv6|required" />
+          </div>
+          <br/>
+          <div class="form-actions">
+            <button type="submit" name="btn_ngDisabled1" class="btn btn-primary" ng-disabled="vmd.form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
+            <button type="submit" name="btn_ngSubmit1" class="btn btn-primary" ng-click="vmd.submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+          </div>
+        </form>
+        </div>
+
+      <hr/>
+
+      <div  ng-controller="CtrlService as vms">
+        <h3>Service</h3>
+        <div class="alert alert-danger alert-dismissable" ng-show="vms.form2.$validationSummary.length &gt; 0">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <h4><strong>ERRORS!</strong></h4>
+          <ul>
+              <li ng-repeat="item in vms.form2.$validationSummary">{{ item.field }}: {{item.message}}</li>
+          </ul>
+        </div>
+
+        <form name="vms.form2">
+          <div class="form-group">
+            <label for="input2">Validate IPV4 or IPV6 (required + IPV4 or IPV6 --&gt; validRequireHowMany="2")</label>
+            <input type="text" class="form-control"
+              name="input2"
+              ng-model="vms.model.input2"
+              placeholder="validation='ipv4|ipv6|required' ... validRequireHowMany='2'"
+              valid-require-how-many="2" />
+          </div>
+          <br/>
+          <div class="form-actions">
+            <button type="submit" name="btn_ngDisabled2" class="btn btn-primary" ng-disabled="vms.form2.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
+            <button type="submit" name="btn_ngSubmit2" class="btn btn-primary" ng-click="vms.submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- Angular-UI -->
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
+
+    <!-- Angular-Validation -->
+    <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    -->
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

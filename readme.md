@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.17`
+`Version: 1.4.18`
 ### Form validation after user stop typing (default 1sec).
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!

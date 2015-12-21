@@ -13,7 +13,9 @@ angular
     // global variables of our object (start with _var)
 	  var _blurHandler;
     var _watchers = [];
+    var _validateOnEmpty;
     var _validationCallback;
+    var _globalOptions;
 
     // service constructor
     var validationService = function (globalOptions) {
@@ -26,6 +28,8 @@ angular
       if (!!globalOptions) {
         this.setGlobalOptions(globalOptions);
       }
+
+      _globalOptions = this.commonObj.getGlobalOptions();
     }
 
     // list of available published public functions of this object
@@ -92,7 +96,9 @@ angular
         }
       }
 
+      // Possible element attributes
       _validationCallback = (self.validationAttrs.hasOwnProperty('validationCallback')) ? self.validationAttrs.validationCallback : null;
+      _validateOnEmpty = (self.validationAttrs.hasOwnProperty('validateOnEmpty')) ? commonObj.parseBool(self.validationAttrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
 
       // onBlur make validation without waiting
       attrs.elm.bind('blur', _blurHandler = function(event) {
@@ -131,43 +137,8 @@ angular
         }
       });
 
-      // watch the element for any value change, validate it once that happen
-			var validationWatcher = scope.$watch(function() {
-        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
-
-        if(isKeyTypedBadInput(self, attrs.elmName)) {
-          return { badInput: true };
-        }
-        return attrs.ctrl.$modelValue;
-      }, function (newValue, oldValue) {
-        if(!!newValue && !!newValue.badInput) {
-          var formElmObj = self.commonObj.getFormElementByName(attrs.elmName);
-          unbindBlurHandler(self, formElmObj);
-          return invalidateBadInputField(self, attrs.name);
-        }
-        // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
-        // we will still call the `.validate()` function so that it shows also the possible other error messages
-        if(newValue === undefined && (oldValue !== undefined && !isNaN(oldValue))) {
-          $timeout.cancel(self.timer);
-          self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate('', true));
-          return;
-        }
-        // from the DOM element, find the Angular controller of this element & add value as well to list of attribtues
-        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
-        attrs.value = newValue;
-
-        self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
-
-        var waitingTimer = (typeof newValue === "undefined" || (typeof newValue === "number" && isNaN(newValue))) ? 0 : undefined;
-        // attempt to validate & run validation callback if user requested it
-        var validationPromise = attemptToValidate(self, newValue, waitingTimer);
-        if(!!_validationCallback) {
-          self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
-        }
-		  }, true); // $watch()
-
       // save the watcher inside an array in case we want to deregister it when removing a validator
-      _watchers.push({ elmName: attrs.elmName, watcherHandler: validationWatcher});
+      _watchers.push({ elmName: attrs.elmName, watcherHandler: createWatch(scope, attrs, self) });
 
       return self;
 		} // addValidator()
@@ -364,7 +335,7 @@ angular
       self.commonObj.validate(value, false);
 
       // if field is not required and his value is empty, cancel validation and exit out
-      if(!self.commonObj.isFieldRequired() && (value === "" || value === null || typeof value === "undefined")) {
+      if(!self.commonObj.isFieldRequired() && !_validateOnEmpty && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self, formElmObj);
         deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
         return deferred.promise;
@@ -373,7 +344,7 @@ angular
       }
 
       // invalidate field before doing any validation
-      if(self.commonObj.isFieldRequired() || !!value) {
+      if(!!value || self.commonObj.isFieldRequired() || _validateOnEmpty) {
         self.commonObj.ctrl.$setValidity('validation', false);
       }
 
@@ -438,6 +409,45 @@ angular
       unbindBlurHandler(obj, formElmObj);
     }
 
+    /** watch the element for any value change, validate it once that happen
+     * @return new watcher
+     */
+    function createWatch(scope, attrs, self) {
+      return scope.$watch(function() {
+        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
+
+        if(isKeyTypedBadInput(self, attrs.elmName)) {
+          return { badInput: true };
+        }
+        return attrs.ctrl.$modelValue;
+      }, function (newValue, oldValue) {
+        if(!!newValue && !!newValue.badInput) {
+          var formElmObj = self.commonObj.getFormElementByName(attrs.elmName);
+          unbindBlurHandler(self, formElmObj);
+          return invalidateBadInputField(self, attrs.name);
+        }
+        // when previous value was set and new value is not, this is most probably an invalid character entered in a type input="text"
+        // we will still call the `.validate()` function so that it shows also the possible other error messages
+        if(newValue === undefined && (oldValue !== undefined && !isNaN(oldValue))) {
+          $timeout.cancel(self.timer);
+          self.commonObj.ctrl.$setValidity('validation', self.commonObj.validate('', true));
+          return;
+        }
+        // from the DOM element, find the Angular controller of this element & add value as well to list of attribtues
+        attrs.ctrl = angular.element(attrs.elm).controller('ngModel');
+        attrs.value = newValue;
+
+        self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
+
+        var waitingTimer = (typeof newValue === "undefined" || (typeof newValue === "number" && isNaN(newValue))) ? 0 : undefined;
+        // attempt to validate & run validation callback if user requested it
+        var validationPromise = attemptToValidate(self, newValue, waitingTimer);
+        if(!!_validationCallback) {
+          self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+        }
+      }, true); // $watch()
+    }
+
     /** Invalidate the field that was tagged as bad input, cancel the timer validation,
      * display an invalid key error and add it as well to the validation summary.
      * @param object self
@@ -480,6 +490,7 @@ angular
       var foundWatcher = self.commonObj.arrayFindObject(_watchers, 'elmName', formElmObj.fieldName);
       if(!!foundWatcher) {
         foundWatcher.watcherHandler(); // deregister the watch by calling his handler
+        _watchers.shift();
       }
 
       // make the validation cancelled so it won't get called anymore in the blur eventHandler
