@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', ['ghiscoding.validation', 'pascalprecht.translate', 'ui.bootstrap']);
+var myApp = angular.module('myApp', ['ghiscoding.validation', 'pascalprecht.translate']);
 // --
 // configuration
 myApp.config(['$compileProvider', function ($compileProvider) {
@@ -37,6 +37,10 @@ myApp.controller('CtrlDirective', ['validationService', function (validationServ
     return { isValid: isValid, message: 'Returned error from custom function.'};
   }
 
+  vmd.myIbanCheck1 = function(inputModel) {
+    return { isValid: IBAN.isValid(inputModel), message: 'Invalid IBAN.' };
+  }
+
   vmd.submitForm = function() {
     if(vs.checkFormValidity(vmd.form1)) {
       alert('All good, proceed with submit...');
@@ -55,7 +59,8 @@ myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope
 
   vs.setGlobalOptions({ scope: $scope })
     .addValidator('input3', 'alpha|min_len:2|custom:vms.myCustomValidation3:alt=Alternate error message.|required')
-    .addValidator('input4', 'alpha|min_len:2|custom:vms.myCustomValidation4|required');
+    .addValidator('input4', 'alpha|min_len:2|custom:vms.myCustomValidation4|required')
+    .addValidator('iban2', 'custom:vms.myIbanCheck2(vms.model.iban2)|required');
 
   vms.myCustomValidation3 = function() {
     // you can return a boolean for isValid or an objec (see the next function)
@@ -69,6 +74,10 @@ myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope
     console.log(isValid);
     return { isValid: isValid, message: 'Returned error from custom function.'};
   }
+
+    vms.myIbanCheck2 = function(inputModel) {
+      return { isValid: IBAN.isValid(inputModel), message: 'Invalid IBAN.' };
+    }
 
   vms.submitForm = function() {
     if(new validationService().checkFormValidity(vms.form2)) {

@@ -43,12 +43,20 @@
               placeholder="alpha|min_len:2|custom:vmd.myCustomValidation2|required"
               validation="alpha|min_len:2|custom:vmd.myCustomValidation2|required" />
           </div>
+          <div class="form-group">
+            <label for="iban1">Valid IBAN</label>
+            <input type="text" class="form-control"
+              name="iban1"
+              ng-model="vmd.model.iban1"
+              placeholder="custom:vmd.myIbanCheck1(vmd.model.iban1)|required"
+              validation="custom:vmd.myIbanCheck1(vmd.model.iban1)|required" />
+          </div>
           <div class="form-actions">
             <button type="submit" name="btn_ngDisabled1" class="btn btn-primary" ng-disabled="vmd.form1.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
             <button type="submit" name="btn_ngSubmit1" class="btn btn-primary" ng-click="vmd.submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
           </div>
         </form>
-        </div>
+      </div>
 
       <hr/>
 
@@ -82,6 +90,13 @@
               ng-model="vms.model.input4"
               placeholder="alpha|min_len:2|custom:vms.myCustomValidation4|required" />
           </div>
+          <div class="form-group">
+            <label for="iban2">Valid IBAN</label>
+            <input type="text" class="form-control"
+              name="iban2"
+              ng-model="vms.model.iban2"
+              placeholder="custom:vms.myIbanCheck2(vms.model.iban2)|required" />
+          </div>
           <div class="form-actions">
             <button type="submit" name="btn_ngDisabled2" class="btn btn-primary" ng-disabled="vms.form2.$invalid" >{{ 'SAVE' | translate }} (ngDisabled)</button>
             <button type="submit" name="btn_ngSubmit2" class="btn btn-primary" ng-click="vms.submitForm()">{{ 'SAVE' | translate }} (ngSubmit)</button>
@@ -99,8 +114,8 @@
     <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
     <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
 
-    <!-- Angular-UI -->
-    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.2.js"></script>
+    <!-- IBAN external library -->
+    <script src="../../vendors/iban/iban.js"></script>
 
     <!-- Angular-Validation -->
     <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>

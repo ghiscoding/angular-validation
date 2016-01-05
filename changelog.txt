@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.19 (2016-01-04) Fixed issue #99 support backslash inside `alt` (alternate message). IBAN should now be validated through custom validation (Wiki updated) with help of external library like arhs/iban.js
 1.4.18 (2015-12-20) Fixed issue #91 interpolation problem with remove validation doesn't work twice. Enhancement #98 possibility to use one validation or another (tell how many Validators are required for field to become valid). Enhancement #97 possibility to validate even on empty text field (useful on `custom` and `remote` validation). Refined some Validators (IPV6 now include compressed/uncompressed addresses, added more Polish characters to other Validators)
 1.4.17 (2015-12-15) Fixed issue #92 input name with '.', enhancement #94 Polish characters, issue #96 in_list wasn't accepting special characters.
 1.4.16 (2015-12-11) Fixed issue #90 blinking error messages.

@@ -185,7 +185,7 @@ angular
       // We first need to see if the validation holds a custom user regex, if it does then deal with it first
       // So why deal with it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
       if(rules.indexOf("pattern=/") >= 0) {
-        var matches = rules.match(/pattern=(\/.*\/[igm]*)(:alt=(.*))?/);
+        var matches = rules.match(/pattern=(\/(?:(?!:alt).)*\/[igm]*)(:alt=(.*))?/);
         if (!matches || matches.length < 3) {
           throw 'Regex validator within the validation needs to be define with an opening "/" and a closing "/", please review your validator.';
         }

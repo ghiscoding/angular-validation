@@ -1,15 +1,24 @@
 ﻿describe('Angular-Validation Custom Javascript Validation Tests:', function () {
   // global variables
-  var formElementNames = ['input1', 'input2', 'input3', 'input4'];
-  var defaultErrorMessage = 'May only contain letters. Must be at least 2 characters. Field is required.';
-  var errorTooShort = [
+  var formElementNames = ['input1', 'input2', 'iban1', 'input3', 'input4', 'iban2'];
+  var errorMessages = [
+    'May only contain letters. Must be at least 2 characters. Field is required.',
+    'May only contain letters. Must be at least 2 characters. Field is required.',
+    'Field is required.',
+    'May only contain letters. Must be at least 2 characters. Field is required.',
+    'May only contain letters. Must be at least 2 characters. Field is required.',
+    'Field is required.'
+  ];
+  var errorTooShortOrInvalid = [
     'Must be at least 2 characters. Alternate error message.',
     'Must be at least 2 characters. Returned error from custom function.',
+    'Invalid IBAN.',
     'Must be at least 2 characters. Alternate error message.',
-    'Must be at least 2 characters. Returned error from custom function.'
+    'Must be at least 2 characters. Returned error from custom function.',
+    'Invalid IBAN.',
   ];
-  var oneChar = ['a', 'd', 'a', 'd'];
-  var validInputTexts = ['abc', 'def', 'abc', 'def'];
+  var oneChar = ['a', 'd', 'iban', 'a', 'd', 'iban'];
+  var validInputTexts = ['abc', 'def', 'BE68539007547034', 'abc', 'def', 'BE68539007547034'];
 
   describe('When choosing `more-examples` custom javascript', function () {
     it('Should navigate to home page', function () {
@@ -25,7 +34,7 @@
       var inputName;
 
       for (var i = 0, j = 0, ln = itemRows.length; i < ln; i++) {
-        expect(itemRows.get(i).getText()).toEqual(defaultErrorMessage);
+        expect(itemRows.get(i).getText()).toEqual(errorMessages[i]);
       }
     });
 
@@ -44,7 +53,7 @@
         elmInput.sendKeys(protractor.Key.TAB);
 
         var elmError = $('.validation-' + formElementNames[i]);
-        expect(elmError.getText()).toEqual(defaultErrorMessage);
+        expect(elmError.getText()).toEqual(errorMessages[i]);
       }
     });
 
@@ -55,7 +64,7 @@
         elmInput.sendKeys('a');
 
         var elmError = $('.validation-' + formElementNames[i]);
-        expect(elmError.getText()).toEqual(errorTooShort[i]);
+        expect(elmError.getText()).toEqual(errorTooShortOrInvalid[i]);
       }
     });
 
@@ -108,7 +117,7 @@
         elmInput.sendKeys(protractor.Key.TAB);
 
         var elmError = $('.validation-' + formElementNames[i]);
-        expect(elmError.getText()).toEqual(defaultErrorMessage);
+        expect(elmError.getText()).toEqual(errorMessages[i]);
       }
     });
 

@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.4.18`
+`Version: 1.4.19`
 ### Form validation after user stop typing (default 1sec).
 
 Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
@@ -179,7 +179,8 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `exact_len:n` Ensures that field length precisely matches the specified length (n).
 * `float` as to be floating value (excluding integer)
 * `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
-* `iban` Check for a valid IBAN.
+* ~~`iban`~~ To properly validate an IBAN please use [Wiki - Custom Validation](https://github.com/ghiscoding/angular-validation/wiki/Custom-Validation-functions) with an external library like [Github arhs/iban.js](https://github.com/arhs/iban.js)
+
 * `in` alias of `in_list`
 * `in_list:foo,bar,..` Ensures the value is included inside the given list of values. The list must be separated by ',' and also accept words with spaces for example "ice cream".
 * `int` Only positive integer (alias to `integer`).
