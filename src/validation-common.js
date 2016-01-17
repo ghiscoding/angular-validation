@@ -10,31 +10,33 @@ angular
   .module('ghiscoding.validation')
   .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
     // global variables of our object (start with _var), these variables are shared between the Directive & Service
-    var _bFieldRequired = false;            // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
-    var _INACTIVITY_LIMIT = 1000;           // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
-    var _formElements = [];                 // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
-    var _globalOptions = {                  // Angular-Validation global options, could be define by scope.$validationOptions or by validationService.setGlobalOptions()
-      resetGlobalOptionsOnRouteChange: true // do we want to reset the Global Options on a route change? True by default
+    var _bFieldRequired = false;              // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
+    var _INACTIVITY_LIMIT = 1000;             // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
+    var _formElements = [];                   // Array of all Form Elements, this is not a DOM Elements, these are custom objects defined as { fieldName, elm,  attrs, ctrl, isValid, message }
+    var _globalOptions = {                    // Angular-Validation global options, could be define by scope.$validationOptions or by validationService.setGlobalOptions()
+      resetGlobalOptionsOnRouteChange: true   // do we want to reset the Global Options on a route change? True by default
     };
-    var _remotePromises = [];               // keep track of promises called and running when using the Remote validator
-    var _validationSummary = [];            // Array Validation Error Summary
-    var _validateOnEmpty = false;           // do we want to validate on empty field? False by default
+    var _remotePromises = [];                 // keep track of promises called and running when using the Remote validator
+    var _validationSummary = [];              // Array Validation Error Summary
+    var _validateOnEmpty = false;             // do we want to validate on empty field? False by default
 
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       if (_globalOptions.resetGlobalOptionsOnRouteChange) {
         _globalOptions = {
-          displayOnlyLastErrorMsg: false,   // reset the option of displaying only the last error message
-          hideErrorUnderInputs: false,      // reset the option of hiding error under element
-          preValidateFormElements: false,   // reset the option of pre-validate all form elements, false by default
-          isolatedScope: null,              // reset used scope on route change
-          scope: null,                      // reset used scope on route change
-          validateOnEmpty: false,            // reset the flag of Validate Always
-          validRequireHowMany: "all",       // how many Validators it needs to pass for the field to become valid, "all" by default
+          displayOnlyLastErrorMsg: false,     // reset the option of displaying only the last error message
+          errorMessageSeparator: ' ',         // separator between each error messages (when multiple errors exist)
+          hideErrorUnderInputs: false,        // reset the option of hiding error under element
+          preValidateFormElements: false,     // reset the option of pre-validate all form elements, false by default
+          preValidateValidationSummary: true, // reset the option of pre-validate all form elements, false by default
+          isolatedScope: null,                // reset used scope on route change
+          scope: null,                        // reset used scope on route change
+          validateOnEmpty: false,             // reset the flag of Validate Always
+          validRequireHowMany: "all",         // how many Validators it needs to pass for the field to become valid, "all" by default
           resetGlobalOptionsOnRouteChange: true
         };
-        _formElements = [];                 // array containing all form elements, valid or invalid
-        _validationSummary = [];            // array containing the list of invalid fields inside a validationSummary
+        _formElements = [];                   // array containing all form elements, valid or invalid
+        _validationSummary = [];              // array containing the list of invalid fields inside a validationSummary
       }
     });
 
@@ -434,6 +436,7 @@ angular
       */
     function updateErrorMsg(message, attrs) {
       var self = this;
+
       // attrs.obj if set, should be a commonObj, and can be self.
       // In addition we need to set validatorAttrs, as they are defined as attrs on obj.
       if (!!attrs && attrs.obj) {
@@ -453,6 +456,7 @@ angular
 
       // user might have passed a message to be translated
       var errorMsg = (!!attrs && !!attrs.translate) ? $translate.instant(message) : message;
+      errorMsg = errorMsg.trim();
 
       // get the name attribute of current element, make sure to strip dirty characters, for example remove a <input name="options[]"/>, we need to strip the "[]"
       // also replace any possible '.' inside the input name by '-'
@@ -479,7 +483,7 @@ angular
 
       // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
       if (!_globalOptions.hideErrorUnderInputs && !!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
-        (errorElm.length > 0) ? errorElm.html(errorMsg) : elm.after('<span class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</span>');
+        (errorElm.length > 0) ? errorElm.html(errorMsg) : elm.after('<div class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</div>');
       } else {
         errorElm.html('');  // element is pristine or no validation applied, error message has to be blank
       }
@@ -568,6 +572,7 @@ angular
           // run $translate promise, use closures to keep access to all necessary variables
           (function (formElmObj, isConditionValid, validator) {
             var msgToTranslate = validator.message;
+            var errorMessageSeparator = _globalOptions.errorMessageSeparator || ' ';
             if (!!validator.altText && validator.altText.length > 0) {
               msgToTranslate = validator.altText.replace("alt=", "");
             }
@@ -580,9 +585,9 @@ angular
               // if user is requesting to see only the last error message, we will use '=' instead of usually concatenating with '+='
               // then if validator rules has 'params' filled, then replace them inside the translation message (foo{0} {1}...), same syntax as String.format() in C#
               if (validationElmObj.message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
-                validationElmObj.message = ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
+                validationElmObj.message = errorMessageSeparator + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               } else {
-                validationElmObj.message += ' ' + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
+                validationElmObj.message += errorMessageSeparator + ((!!validator && !!validator.params) ? String.format(translation, validator.params) : translation);
               }
               addToValidationAndDisplayError(self, formElmObj, validationElmObj.message, isFieldValid, showError);
             })
@@ -593,9 +598,9 @@ angular
               if (!!validator.altText && validator.altText.length > 0) {
                 // if user is requesting to see only the last error message
                 if (validationElmObj.message.length > 0 && _globalOptions.displayOnlyLastErrorMsg) {
-                  validationElmObj.message = ' ' + msgToTranslate;
+                  validationElmObj.message = errorMessageSeparator + msgToTranslate;
                 } else {
-                  validationElmObj.message += ' ' + msgToTranslate;
+                  validationElmObj.message += errorMessageSeparator + msgToTranslate;
                 }
                 addToValidationAndDisplayError(self, formElmObj, validationElmObj.message, isFieldValid, showError);
               }
@@ -670,7 +675,10 @@ angular
       }
 
       // log the invalid message in the $validationSummary
-      addToValidationSummary(formElmObj, message);
+      // that is if the preValidationSummary is set to True, non-existent or we simply want to display error)
+      if(!!_globalOptions.preValidateValidationSummary || typeof _globalOptions.preValidateValidationSummary === "undefined" || showError) {
+        addToValidationSummary(formElmObj, message);
+      }
 
       // change the Form element object boolean flag from the `formElements` variable, used in the `checkFormValidity()`
       if (!!formElmObj) {
@@ -1136,7 +1144,10 @@ angular
           $timeout(function() {
             var errorMsg = validationElmObj.message + ' ';
             if(!!result.message) {
-              errorMsg += result.message;
+              errorMsg += result.message || validator.altText;
+            }
+            if(errorMsg === ' ' && !!validator.altText) {
+              errorMsg += validator.altText;
             }
             if(errorMsg === ' ') {
               throw missingErrorMsg;
@@ -1210,7 +1221,8 @@ angular
               msgToTranslate = matchingValidator.altText.replace("alt=", "");
             }
             $translate(msgToTranslate).then(function (translation) {
-              validationElmObj.message = ' ' + ((!!matchingValidator && !!matchingValidator.params) ? String.format(translation, matchingValidator.params) : translation);
+              var errorMessageSeparator = _globalOptions.errorMessageSeparator || ' ';
+              validationElmObj.message = errorMessageSeparator + ((!!matchingValidator && !!matchingValidator.params) ? String.format(translation, matchingValidator.params) : translation);
               addToValidationAndDisplayError(self, formElmMatchingObj, validationElmObj.message, isWatchValid, true);
             });
           }
