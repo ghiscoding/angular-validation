@@ -97,7 +97,7 @@
 
               if (!elm.isValidationCancelled) {
               // attempt to validate & run validation callback if user requested it
-              var validationPromise = attemptToValidate(value, 0);
+              var validationPromise = attemptToValidate(value);
               if(!!_validationCallback) {
                 commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
               }
