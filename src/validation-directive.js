@@ -87,6 +87,26 @@
 
         // attach the onBlur event handler on the element
         elm.bind('blur', blurHandler);
+		
+		 // attach the angularValidation.revalidate event handler on the scope
+        scope.$on('angularValidation.revalidate', function(event, args){
+          if (args == ctrl.$name)
+          {
+              ctrl.revalidateCalled = true;
+              var value = ctrl.$modelValue;
+
+              if (!elm.isValidationCancelled) {
+              // attempt to validate & run validation callback if user requested it
+              var validationPromise = attemptToValidate(value);
+              if(!!_validationCallback) {
+                commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
+              }
+            }
+            else {
+              ctrl.$setValidity('validation', true);
+            }
+          }
+        });
 
         //----
         // Private functions declaration

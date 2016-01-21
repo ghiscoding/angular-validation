@@ -482,7 +482,7 @@ angular
       var isSubmitted = (!!attrs && attrs.isSubmitted) ? attrs.isSubmitted : false;
 
       // invalid & isDirty, display the error message... if <span> not exist then create it, else udpate the <span> text
-      if (!_globalOptions.hideErrorUnderInputs && !!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched)) {
+      if (!_globalOptions.hideErrorUnderInputs && !!attrs && !attrs.isValid && (isSubmitted || self.ctrl.$dirty || self.ctrl.$touched || self.ctrl.revalidateCalled)) {
         (errorElm.length > 0) ? errorElm.html(errorMsg) : elm.after('<div class="validation validation-' + elmInputName + ' text-danger">' + errorMsg + '</div>');
       } else {
         errorElm.html('');  // element is pristine or no validation applied, error message has to be blank
