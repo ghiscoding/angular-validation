@@ -87,8 +87,8 @@
 
         // attach the onBlur event handler on the element
         elm.bind('blur', blurHandler);
-		
-		 // attach the angularValidation.revalidate event handler on the scope
+
+        // attach the angularValidation.revalidate event handler on the scope
         scope.$on('angularValidation.revalidate', function(event, args){
           if (args == ctrl.$name)
           {

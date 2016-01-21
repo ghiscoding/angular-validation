@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.4.21 (2016-01-21) Merged pull request #103 (extend Directive for revalidating) to fix request #102... thanks @tpeter1985.
 1.4.20 (2016-01-17) Enhancement #100 - Add Global Option (errorMessageSeparator) for a Separator between error messages. Enhancement #101 - Add Global Option (preValidateValidationSummary) to disable pre-validation in Validation Summary if need be. Also found and fixed a problem with a try-catch throw javascript error in Custom Validation.
 1.4.19 (2016-01-04) Fixed issue #99 support backslash inside `alt` (alternate message). IBAN should now be validated through custom validation (Wiki updated) with help of external library like `Github arhs/iban.js` as it was mentioned in issue [#93](https://github.com/ghiscoding/angular-validation/issues/93) (thanks @pabx06 for providing support)
 1.4.18 (2015-12-20) Fixed issue #91 interpolation problem with remove validation doesn't work twice. Enhancement #98 possibility to use one validation or another (tell how many Validators are required for field to become valid). Enhancement #97 possibility to validate even on empty text field (useful on `custom` and `remote` validation). Refined some Validators (IPV6 now include compressed/uncompressed addresses, added more Polish characters to other Validators)
