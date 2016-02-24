@@ -70,7 +70,7 @@ All the documentation has been moved to the Wiki section, see the [github wiki](
 * [Angular-Validation Wiki](https://github.com/ghiscoding/angular-validation/wiki)
 * Installation
     * [HOWTO - Step by Step](https://github.com/ghiscoding/angular-validation/wiki/HOWTO---Step-by-Step)
-    * [Bower/NuGet Packages](https://github.com/ghiscoding/angular-validation/wiki/Download-and-Install-it)
+    * [Bower/NPM/NuGet Packages](https://github.com/ghiscoding/angular-validation/wiki/Download-and-Install-it)
     * [Locales (languages)](https://github.com/ghiscoding/angular-validation/wiki/Locales-(languages))
 * Code Samples
     * [3rd Party Addon Validation](https://github.com/ghiscoding/angular-validation/wiki/3rd-Party-Addons)
@@ -108,13 +108,13 @@ Download and Install it
 Install with **Bower**
 
 ```javascript
-// You can install with
+// bower install with
 bower install angular-validation-ghiscoding
 ```
 Install with **NPM**
 
 ```javascript
-// You can install with
+// NPM install with
 npm install angular-validation-ghiscoding
 ```
 Install with **NuGet** (see the [NuGet Package Here](http://www.nuget.org/packages/Angular-Validation-Ghiscoding))
