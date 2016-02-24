@@ -12,7 +12,7 @@
  */
 angular
 	.module('ghiscoding.validation')
-	.factory('validationRules', [function () {
+	.factory('ValidationRules', [function () {
 		// return the service object
 		var service = {
 	    getElementValidators: getElementValidators

@@ -15,13 +15,13 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 	}]);
 
 myApp.controller('Ctrl',
-['$scope', '$translate', 'validationService', '$timeout',
-function ($scope, $translate, validationService, $timeout) {
+['$scope', '$translate', 'ValidationService', '$timeout',
+function ($scope, $translate, ValidationService, $timeout) {
   var vm = this;
   vm.model = {};
 
   function next(form) {
-     var vs = new validationService();
+     var vs = new ValidationService();
      if (vs.checkFormValidity(form)) {
         // proceed to another view
      };

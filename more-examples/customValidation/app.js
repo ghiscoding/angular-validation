@@ -18,12 +18,12 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 
 // --
 // Directive
-myApp.controller('CtrlDirective', ['validationService', function (validationService) {
+myApp.controller('CtrlDirective', ['ValidationService', function (ValidationService) {
   var vmd = this;
   vmd.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vmd });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vmd });
 
   vmd.myCustomValidation1 = function() {
     // you can return a boolean for isValid or an objec (see the next function)
@@ -50,12 +50,12 @@ myApp.controller('CtrlDirective', ['validationService', function (validationServ
 
 // --
 // Service
-myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope, validationService) {
+myApp.controller('CtrlService', ['$scope', 'ValidationService', function ($scope, ValidationService) {
   var vms = this;
   vms.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vms });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vms });
 
   vs.setGlobalOptions({ scope: $scope })
     .addValidator('input3', 'alpha|min_len:2|custom:vms.myCustomValidation3:alt=Alternate error message.|required')
@@ -80,7 +80,7 @@ myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope
     }
 
   vms.submitForm = function() {
-    if(new validationService().checkFormValidity(vms.form2)) {
+    if(new ValidationService().checkFormValidity(vms.form2)) {
       alert('All good, proceed with submit...');
     }
   }

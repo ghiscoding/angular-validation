@@ -22,7 +22,7 @@ app.directive('formField',function() {
   }
 });
 
-app.controller('MainCtrl', function($scope,validationService) {
+app.controller('MainCtrl', function($scope,ValidationService) {
   $scope.name = 'World';
   $scope.items={};
   $scope.items.item1 = {
@@ -65,7 +65,7 @@ app.controller('MainCtrl', function($scope,validationService) {
     for(var key in $scope.items) {
       var formName=$scope.items[key].formName;
 
-      if(new validationService().checkFormValidity($scope[formName])) {
+      if(new ValidationService().checkFormValidity($scope[formName])) {
         $scope[formName].isValid = true;
       }
       else {

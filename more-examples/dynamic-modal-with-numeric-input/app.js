@@ -34,10 +34,10 @@ app.controller('ListController',['$scope', function($scope) {
   $scope.items = [{"id": 1},{"id": 2}];
 }]);
 
-app.controller('ModalController', ['$scope', '$modal', 'validationService', function ($scope, $modal, validationService) {
+app.controller('ModalController', ['$scope', '$modal', 'ValidationService', function ($scope, $modal, ValidationService) {
     "use strict";
 
-    var myValidation = new validationService({ formName: 'itemsEdit' });
+    var myValidation = new ValidationService({ formName: 'itemsEdit' });
 
     $scope.animationsEnabled = true;
 

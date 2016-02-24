@@ -13,10 +13,10 @@ myApp.config(['$translateProvider', function ($translateProvider) {
 		$translateProvider.preferredLanguage('en').fallbackLanguage('en');
 	}]);
 
-myApp.controller('Ctrl', ['$scope', 'validationService',
-  function($scope, validationService) {
+myApp.controller('Ctrl', ['$scope', 'ValidationService',
+  function($scope, ValidationService) {
 
-    var validate = new validationService({ debounce: 100, isolatedScope: $scope});
+    var validate = new ValidationService({ debounce: 100, isolatedScope: $scope});
 
     $scope.ModelData = {};
     $scope.ModelData.IsShowNote = false;

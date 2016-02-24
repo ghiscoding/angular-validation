@@ -1,6 +1,9 @@
-full-tests
-more-examples
-protractor
-templates
+bower_components/
+full-tests/
+more-examples/
+protractor/
+templates/
 .gitignore
 app.js
+gulpfile.js
+index.html

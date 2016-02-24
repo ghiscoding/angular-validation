@@ -15,8 +15,8 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 	}]);
 
 myApp.controller('Ctrl',
-['$scope', '$translate', 'validationService', '$timeout',
-function ($scope, $translate, validationService, $timeout) {
+['$scope', '$translate', 'ValidationService', '$timeout',
+function ($scope, $translate, ValidationService, $timeout) {
   var vm = this;
   vm.model = {};
   vm.validationRequired = false;
@@ -37,8 +37,8 @@ function ($scope, $translate, validationService, $timeout) {
     vm.isChangeDatePickerOpen = true;
   };
 
-  var validation = new validationService({ 
-    controllerAs: vm, 
+  var validation = new ValidationService({
+    controllerAs: vm,
     preValidateFormElements: false
   });
 

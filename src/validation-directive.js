@@ -12,13 +12,13 @@
  */
  angular
   .module('ghiscoding.validation', ['pascalprecht.translate'])
-  .directive('validation', ['$q', '$timeout', 'validationCommon', function($q, $timeout, validationCommon) {
+  .directive('validation', ['$q', '$timeout', 'ValidationCommon', function($q, $timeout, ValidationCommon) {
     return {
       restrict: "A",
       require: "ngModel",
       link: function(scope, elm, attrs, ctrl) {
         // create an object of the common validation
-        var commonObj = new validationCommon(scope, elm, attrs, ctrl);
+        var commonObj = new ValidationCommon(scope, elm, attrs, ctrl);
         var _arrayErrorMessage = '';
         var _promises = [];
         var _timer;

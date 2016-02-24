@@ -23,7 +23,7 @@ myApp.run(function ($rootScope) {
 });
 
 angular.module('emptyCustomValidation.controllers', []).
-controller('myController', function($scope, validationService) {
+controller('myController', function($scope, ValidationService) {
     $scope.existingEmployees = [
       {
         firstName: 'John',
@@ -44,7 +44,7 @@ controller('myController', function($scope, validationService) {
     ];
 
     $scope.submit = function() {
-       if (!new validationService().checkFormValidity($scope.inputForm)) {
+       if (!new ValidationService().checkFormValidity($scope.inputForm)) {
           var msg = '';
           $scope.inputForm.$validationSummary.forEach(function (validationItem) {
             msg += validationItem.message + '\n';

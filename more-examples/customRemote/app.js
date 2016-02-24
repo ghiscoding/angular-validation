@@ -18,12 +18,12 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 
 // --
 // Directive
-myApp.controller('CtrlDirective', ['$q', 'validationService', function ($q, validationService) {
+myApp.controller('CtrlDirective', ['$q', 'ValidationService', function ($q, ValidationService) {
   var vmd = this;
   vmd.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vmd, debounce: 500 });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vmd, debounce: 500 });
 
   vmd.myRemoteValidation1 = function() {
     var deferred = $q.defer();
@@ -54,12 +54,12 @@ myApp.controller('CtrlDirective', ['$q', 'validationService', function ($q, vali
 
 // --
 // Service
-myApp.controller('CtrlService', ['$scope', '$q', 'validationService', function ($scope, $q, validationService) {
+myApp.controller('CtrlService', ['$scope', '$q', 'ValidationService', function ($scope, $q, ValidationService) {
   var vms = this;
   vms.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vms, debounce: 500 });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vms, debounce: 500 });
 
   vs.setGlobalOptions({ scope: $scope })
     .addValidator('input3', 'alpha|min_len:2|remote:vms.myRemoteValidation3():alt=Alternate error message.|required')
@@ -86,7 +86,7 @@ myApp.controller('CtrlService', ['$scope', '$q', 'validationService', function (
   }
 
   vms.submitForm = function() {
-    if(new validationService().checkFormValidity(vms.form2)) {
+    if(new ValidationService().checkFormValidity(vms.form2)) {
       alert('All good, proceed with submit...');
     }
   }

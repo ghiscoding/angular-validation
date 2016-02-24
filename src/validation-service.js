@@ -9,7 +9,7 @@
  */
 angular
 	.module('ghiscoding.validation')
-	.service('validationService', ['$interpolate', '$q', '$timeout', 'validationCommon', function ($interpolate, $q, $timeout, validationCommon) {
+	.service('ValidationService', ['$interpolate', '$q', '$timeout', 'ValidationCommon', function ($interpolate, $q, $timeout, ValidationCommon) {
     // global variables of our object (start with _var)
 	  var _blurHandler;
     var _watchers = [];
@@ -18,11 +18,11 @@ angular
     var _globalOptions;
 
     // service constructor
-    var validationService = function (globalOptions) {
+    var ValidationService = function (globalOptions) {
       this.isValidationCancelled = false;       // is the validation cancelled?
       this.timer = null;                        // timer of user inactivity time
       this.validationAttrs = {};                // Current Validator attributes
-      this.commonObj = new validationCommon();  // Object of validationCommon service
+      this.commonObj = new ValidationCommon();  // Object of validationCommon service
 
       // if global options were passed to the constructor
       if (!!globalOptions) {
@@ -33,15 +33,15 @@ angular
     }
 
     // list of available published public functions of this object
-    validationService.prototype.addValidator = addValidator;                                          // add a Validator to current element
-    validationService.prototype.checkFormValidity = checkFormValidity;                                // check the form validity (can be called by an empty validationService and used by both Directive/Service)
-    validationService.prototype.removeValidator = removeValidator;                                    // remove a Validator from an element
-    validationService.prototype.resetForm = resetForm;                                                // reset the form (reset it to Pristine and Untouched)
-    validationService.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;              // setter on the behaviour of displaying only the last error message
-    validationService.prototype.setGlobalOptions = setGlobalOptions;                                  // set and initialize global options used by all validators
-    validationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary;    // clear clearInvalidValidatorsInSummary
+    ValidationService.prototype.addValidator = addValidator;                                          // add a Validator to current element
+    ValidationService.prototype.checkFormValidity = checkFormValidity;                                // check the form validity (can be called by an empty ValidationService and used by both Directive/Service)
+    ValidationService.prototype.removeValidator = removeValidator;                                    // remove a Validator from an element
+    ValidationService.prototype.resetForm = resetForm;                                                // reset the form (reset it to Pristine and Untouched)
+    ValidationService.prototype.setDisplayOnlyLastErrorMsg = setDisplayOnlyLastErrorMsg;              // setter on the behaviour of displaying only the last error message
+    ValidationService.prototype.setGlobalOptions = setGlobalOptions;                                  // set and initialize global options used by all validators
+    ValidationService.prototype.clearInvalidValidatorsInSummary = clearInvalidValidatorsInSummary;    // clear clearInvalidValidatorsInSummary
 
-    return validationService;
+    return ValidationService;
 
 	  //----
 		// Public Functions declaration
@@ -143,7 +143,7 @@ angular
       return self;
 		} // addValidator()
 
-    /** Check the form validity (can be called by an empty validationService and used by both Directive/Service)
+    /** Check the form validity (can be called by an empty ValidationService and used by both Directive/Service)
      * Loop through Validation Summary and if any errors found then display them and return false on current function
      * @param object Angular Form or Scope Object
      * @return bool isFormValid
@@ -590,4 +590,4 @@ angular
       });
     }
 
-}]); // validationService
+}]); // ValidationService

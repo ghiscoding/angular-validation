@@ -38,7 +38,7 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 
 // -- Controller to use Angular-Validation Directive
 // -----------------------------------------------
-myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService', function ($q, $scope, validationService) {
+myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'ValidationService', function ($q, $scope, ValidationService) {
   // you can change default debounce globally
   $scope.$validationOptions = { debounce: 1500, preValidateFormElements: false };
 
@@ -49,13 +49,13 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
   // remove a single element ($scope.form1, string)
   // OR you can also remove multiple elements through an array type .removeValidator($scope.form1, ['input2','input3'])
   $scope.removeInputValidator = function ( elmName ) {
-    new validationService().removeValidator($scope.form1, elmName);
+    new ValidationService().removeValidator($scope.form1, elmName);
   };
   $scope.resetForm = function() {
-    new validationService().resetForm($scope.form1);
+    new ValidationService().resetForm($scope.form1);
   };
   $scope.submitForm = function() {
-    if(new validationService().checkFormValidity($scope.form1)) {
+    if(new ValidationService().checkFormValidity($scope.form1)) {
       alert('All good, proceed with submit...');
     }
   }
@@ -83,11 +83,11 @@ myApp.controller('CtrlValidationDirective', ['$q', '$scope', 'validationService'
 // -- Controller to use Angular-Validation Directive with 2 forms
 // on this page we will pre-validate the form and show all errors on page load
 // ---------------------------------------------------------------
-myApp.controller('Ctrl2forms', ['validationService', function (validationService) {
+myApp.controller('Ctrl2forms', ['ValidationService', function (ValidationService) {
   var vm = this; // use the ControllerAs alias syntax
 
   // set the global options BEFORE any function declarations, we will prevalidate current form
-  var myValidationService = new validationService({ controllerAs: vm, debounce: 500, preValidateFormElements: true });
+  var myValidationService = new ValidationService({ controllerAs: vm, debounce: 500, preValidateFormElements: true });
 
   vm.submitForm = function() {
     if(myValidationService.checkFormValidity(vm.form01)) {
@@ -106,9 +106,9 @@ myApp.controller('Ctrl2forms', ['validationService', function (validationService
 // -----------------------------------------------
 
 // exact same testing form used except that all validators are programmatically added inside controller via Angular-Validation Service
-myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'validationService', function ($q, $scope, $translate, validationService) {
+myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'ValidationService', function ($q, $scope, $translate, ValidationService) {
   // start by creating the service
-  var myValidation = new validationService();
+  var myValidation = new ValidationService();
 
   // you can create indepent call to the validation service
   // also below the multiple properties available
@@ -183,7 +183,7 @@ myApp.controller('CtrlValidationService', ['$q', '$scope', '$translate', 'valida
 
 // -- Controller to use Angular-Validation with Directive and ngRepeat
 // ---------------------------------------------------------------
-myApp.controller('CtrlNgRepeat', ['$scope', 'validationService', function ($scope, validationService) {
+myApp.controller('CtrlNgRepeat', ['$scope', 'ValidationService', function ($scope, ValidationService) {
   // Form data
   $scope.people = [
     { name: 'John', age: 20 },
@@ -192,7 +192,7 @@ myApp.controller('CtrlNgRepeat', ['$scope', 'validationService', function ($scop
   ];
 
   $scope.submitForm = function() {
-    if(new validationService().checkFormValidity($scope.form01)) {
+    if(new ValidationService().checkFormValidity($scope.form01)) {
       alert('All good, proceed with submit...');
     }
   }

@@ -8,7 +8,7 @@
  */
 angular
   .module('ghiscoding.validation')
-  .factory('validationCommon', ['$rootScope', '$timeout', '$translate', 'validationRules', function ($rootScope, $timeout, $translate, validationRules) {
+  .factory('ValidationCommon', ['$rootScope', '$timeout', '$translate', 'ValidationRules', function ($rootScope, $timeout, $translate, ValidationRules) {
     // global variables of our object (start with _var), these variables are shared between the Directive & Service
     var _bFieldRequired = false;              // by default we'll consider our field not required, if validation attribute calls it, then we'll start validating
     var _INACTIVITY_LIMIT = 1000;             // constant of maximum user inactivity time limit, this is the default cosntant but can be variable through typingLimit variable
@@ -241,7 +241,7 @@ angular
           // check if user provided an alternate text to his validator (validator:alt=Alternate Text)
           var hasAltText = validations[i].indexOf("alt=") >= 0;
 
-          self.validators[i] = validationRules.getElementValidators({
+          self.validators[i] = ValidationRules.getElementValidators({
             altText: hasAltText === true ? (params.length === 2 ? params[1] : params[2]) : '',
             customRegEx: customUserRegEx,
             rule: params[0],

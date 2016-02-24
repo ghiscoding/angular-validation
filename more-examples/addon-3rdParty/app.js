@@ -15,9 +15,9 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 		$translateProvider.preferredLanguage('en').fallbackLanguage('en');
 	}]);
 
-myApp.controller('Ctrl', ['validationService', function (validationService) {
+myApp.controller('Ctrl', ['ValidationService', function (ValidationService) {
   var vm = this;
-  var myValidation = new validationService({ controllerAs: vm, formName: 'vm.test', preValidateFormElements: false });
+  var myValidation = new ValidationService({ controllerAs: vm, formName: 'vm.test', preValidateFormElements: false });
 
   vm.tags1 = [
     { id: 1, text: 'Tag1' },

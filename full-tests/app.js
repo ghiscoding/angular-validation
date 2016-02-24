@@ -38,7 +38,7 @@ myApp.controller('Ctrl', ['$location', '$route', '$scope', '$translate', functio
 
 // -- Controller to use Angular-Validation with Directive
 // -------------------------------------------------------
-myApp.controller('CtrlValidationDirective', ['$scope', '$translate', 'validationService', function ($scope, $translate, validationService) {
+myApp.controller('CtrlValidationDirective', ['$scope', '$translate', 'ValidationService', function ($scope, $translate, ValidationService) {
     $scope.$validationOptions = { debounce: 50 }; // set the debounce globally with very small time for faster Protactor sendKeys()
 
     $scope.switchLanguage = function (key) {
@@ -49,7 +49,7 @@ myApp.controller('CtrlValidationDirective', ['$scope', '$translate', 'validation
     $scope.validations = explodeAndFlattenValidatorArray(validatorDataset);
 
     $scope.submitForm = function() {
-      if(new validationService().checkFormValidity($scope.form01)) {
+      if(new ValidationService().checkFormValidity($scope.form01)) {
         alert('All good, proceed with submit...');
       }
     }
@@ -60,12 +60,12 @@ myApp.controller('CtrlValidationDirective', ['$scope', '$translate', 'validation
 
 // -- Controller to use Angular-Validation with Service
 // -------------------------------------------------------
-myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationService', function ($scope, $translate, validationService) {
+myApp.controller('CtrlValidationService', ['$scope', '$translate', 'ValidationService', function ($scope, $translate, ValidationService) {
     var validatorDataset = loadData();
     $scope.validations = explodeAndFlattenValidatorArray(validatorDataset);
 
     // start by creating the service
-    var myValidation = new validationService();
+    var myValidation = new ValidationService();
     myValidation.setGlobalOptions({ debounce: 50, scope: $scope })
 
     for(var i = 0, ln = $scope.validations.length; i < ln; i++) {
@@ -80,7 +80,7 @@ myApp.controller('CtrlValidationService', ['$scope', '$translate', 'validationSe
     };
 
     $scope.submitForm = function() {
-      if(new validationService().checkFormValidity($scope.form01)) {
+      if(new ValidationService().checkFormValidity($scope.form01)) {
         alert('All good, proceed with submit...');
       }
     }

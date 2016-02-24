@@ -1,4 +1,9 @@
 #################
+## bower Package
+#################
+bower_components/
+
+#################
 ## NPM Package
 #################
 node_modules/

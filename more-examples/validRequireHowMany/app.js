@@ -18,12 +18,12 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 
 // --
 // Directive
-myApp.controller('CtrlDirective', ['validationService', function (validationService) {
+myApp.controller('CtrlDirective', ['ValidationService', function (ValidationService) {
   var vmd = this;
   vmd.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vmd });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vmd });
 
   vmd.submitForm = function() {
     if(vs.checkFormValidity(vmd.form1)) {
@@ -34,12 +34,12 @@ myApp.controller('CtrlDirective', ['validationService', function (validationServ
 
 // --
 // Service
-myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope, validationService) {
+myApp.controller('CtrlService', ['$scope', 'ValidationService', function ($scope, ValidationService) {
   var vms = this;
   vms.model = {};
 
-  // use the validationService only to declare the controllerAs syntax
-  var vs = new validationService({ controllerAs: vms });
+  // use the ValidationService only to declare the controllerAs syntax
+  var vs = new ValidationService({ controllerAs: vms });
 
   vs.addValidator({
     elmName: 'input2',
@@ -49,7 +49,7 @@ myApp.controller('CtrlService', ['$scope', 'validationService', function ($scope
   });
 
   vms.submitForm = function() {
-    if(new validationService().checkFormValidity(vms.form2)) {
+    if(new ValidationService().checkFormValidity(vms.form2)) {
       alert('All good, proceed with submit...');
     }
   }

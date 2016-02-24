@@ -45,27 +45,27 @@ myApp.config(['$compileProvider', function ($compileProvider) {
     }]);
 
 myApp.controller('Ctrl', [
-  'validationService',
-  function (validationService) {
+  'ValidationService',
+  function (ValidationService) {
     var vm = this;
     vm.model = {};
-    var v1 = new validationService({ controllerAs: vm, resetGlobalOptionsOnRouteChange: false });
+    var v1 = new ValidationService({ controllerAs: vm, resetGlobalOptionsOnRouteChange: false });
   }]);
 
 myApp.controller('FirstCtrl', [
-  'validationService',
-  function (validationService) {
+  'ValidationService',
+  function (ValidationService) {
     var vm = this;
     vm.model = {};
-    var v2 = new validationService({ controllerAs: vm });
+    var v2 = new ValidationService({ controllerAs: vm });
   }
 ]);
 
 myApp.controller('SecondCtrl', [
-  'validationService',
-  function (validationService) {
+  'ValidationService',
+  function (ValidationService) {
     var vm = this;
     vm.model = {};
-    var v3 = new validationService({ controllerAs: vm });
+    var v3 = new ValidationService({ controllerAs: vm });
   }
 ]);

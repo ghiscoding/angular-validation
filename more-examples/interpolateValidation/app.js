@@ -15,12 +15,12 @@ myApp.config(['$compileProvider', function ($compileProvider) {
 	}]);
 
 myApp.controller('Ctrl',
-['$scope', '$translate', 'validationService',
-function ($scope, $translate, validationService) {
+['$scope', '$translate', 'ValidationService',
+function ($scope, $translate, ValidationService) {
   var vm = this;
   vm.model = {};
   vm.validationRequired = true;
-  var validation = new validationService({ controllerAs: vm, preValidateFormElements: true });
+  var validation = new ValidationService({ controllerAs: vm, preValidateFormElements: true });
 
   vm.f1Validation = function () {
     return vm.validationRequired ? 'required' : '';
