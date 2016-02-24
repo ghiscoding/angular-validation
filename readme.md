@@ -110,9 +110,12 @@ Install with **Bower**
 ```javascript
 // You can install with
 bower install angular-validation-ghiscoding
+```
+Install with **NPM**
 
-// or as another alias
-bower install ghiscoding.angular-validation
+```javascript
+// You can install with
+npm install angular-validation-ghiscoding
 ```
 Install with **NuGet** (see the [NuGet Package Here](http://www.nuget.org/packages/Angular-Validation-Ghiscoding))
 ```javascript
