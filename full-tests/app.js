@@ -334,6 +334,9 @@ function loadData() {
       'aliases': ['numeric_signed']
     },
     {
+      'validator': 'phone'
+    },
+    {
       'validator': 'url'
     },
     {

@@ -148,7 +148,7 @@ angular
         case "creditCard" :
         case "credit_card" :
           validator = {
-            pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$/,
+            pattern: /^3(?:[47]\d([ -]?)\d{4}(?:\1\d{4}){2}|0[0-5]\d{11}|[68]\d{12})$|^4(?:\d\d\d)?([ -]?)\d{4}(?:\2\d{4}){2}$|^6011([ -]?)\d{4}(?:\3\d{4}){2}$|^5[1-5]\d\d([ -]?)\d{4}(?:\4\d{4}){2}$|^2014\d{11}$|^2149\d{11}$|^2131\d{11}$|^1800\d{11}$|^3\d{15}$/,
             message: "INVALID_CREDIT_CARD",
             type: "regex"
           };
@@ -626,6 +626,13 @@ angular
           validator = {
             pattern: /^[-+]?\d*\.?\d+$/,
             message: "INVALID_NUMERIC_SIGNED",
+            type: "regex"
+          };
+          break;
+        case "phone" :
+          validator = {
+            pattern: /^([0-9]( |[-.])?)?((\(\d{3}\) ?)|(\d{3}[-.]))?\d{3}[-.]\d{4}$/,
+            message: "INVALID_PHONE_US",
             type: "regex"
           };
           break;

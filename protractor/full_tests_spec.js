@@ -273,8 +273,8 @@ function loadData() {
       {
         'validator': 'creditCard',
         'aliases': ['credit_card'],
-        'invalid_data': ['4538 1212 2020 3030', '4538-1212-2020-3030', '121233334444'],
-        'valid_data': ['4538121220203030', '4538123456789012'],
+        'invalid_data': ['30-5693-0902-5904', '31169309025904'],
+        'valid_data': ['4538 1212 2020 3030', '5431-1111-1111-1111', '30569309025904', '4538123456789012'],
         'error_message': {
           'en': "Must be a valid credit card number.",
           'es': "Debe contener un número de tarjeta de crédito valido.",
@@ -807,6 +807,18 @@ function loadData() {
           'fr': "Doit être un nombre positif ou négatif.",
           'no': "Må være et positivt eller negativt tall.",
           'ru': "Должно быть положительным или отрицательным числом."
+        }
+      },
+      {
+        'validator': 'phone',
+        'invalid_data': ['1-800-123-456', '123-456-789', '1234567890'],
+        'valid_data': ['1-800-123-4567', '123-456-7890', '(123) 456-7890'],
+        'error_message': {
+          'en': "Must be a valid phone number and must include area code.",
+          'es': "Debe ser un número de teléfono válido y debe incluir el código de área.",
+          'fr': "Doit être un numéro de téléphone valide et doit inclure le code régional.",
+          'no': "Må være et gyldig telefonnummer og inkluderer retningsnummer.",
+          'ru': "Должен быть действительный телефонный номер и включают в себя код города."
         }
       },
       {

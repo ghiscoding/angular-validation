@@ -1,14 +1,15 @@
 #Angular Validation (Directive / Service)
-`Version: 1.5.0`
-### Form validation after user stop typing (default 1sec).
+`Version: 1.5.1`
+### Forms Validation with Angular made easy!
+##### (Concept comes from the amazing Laravel)
 
-Forms Validation with Angular made easy! Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
+Form validation after user stop typing (debounce default of 1sec). Angular-Validation is an angular directive/service with locales (languages) with a very simple approach of defining your `validation=""` directly within your element to validate (input, textarea, etc) and...that's it!!! The directive/service will take care of the rest!
 
-The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They both are built in PHP and use a very simple approach, so why not use the same concept over Angular as well? Well now it is available with few more extras.
+The base concept is not new, it comes from the easy form input validation approach of Laravel Framework as well as PHP Gump Validation. They are both PHP frameworks and use a very simple approach, so why not re-use the same concept over Angular as well? Well it's now made available with a few more extras.
 
 For a smoother user experience, I also added validation on inactivity (timer/debounce). So validation will not bother the user while he is still typing... though as soon as the user pauses for a certain amount of time, then validation comes into play. It's worth knowing that this inactivity timer is only available while typing, if user focuses away from his input (onBlur) it will then validate instantly.
 
-Supporting AngularJS 1.3/1.4 branch *(current code should work with 1.2.x just the same, but is no more verified)*
+Supporting AngularJS 1.3.x-1.5.x branch *(current code should work with 1.2.x just the same, but is no more verified)*
 
 Now support <b>Service</b> using the same functionalities as the <b>Directive</b>.
 Huge rewrite to have a better code separation and also adding support to Service functionalities. Specifically the `validation-rules` was separated to add rules without affecting the core while `validation-common` is for shared functions (shared by Directive/Service).

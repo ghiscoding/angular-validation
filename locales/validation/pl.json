@@ -56,6 +56,7 @@
     "INVALID_NUMERIC_SIGNED":           "Musi być liczbą dodatnią lub ujemną. ",
     "INVALID_PATTERN":                  "Musi być zgodne z formatem: {0}. ",
     "INVALID_PATTERN_DATA":             "Musi być zgodne z formatem {{data}}. ",
+    "INVALID_PHONE_US":                 "Musi być prawidłowy numer telefonu i musi zawierać numer kierunkowy. ",
     "INVALID_REQUIRED":                 "Pole jest wymagane. ",
     "INVALID_URL":                      "Musi być poprawnym adresem URL. ",
     "INVALID_TIME":                     "Musi być poprawną godziną w formacie (gg:mm) OR (gg:mm:ss). ",

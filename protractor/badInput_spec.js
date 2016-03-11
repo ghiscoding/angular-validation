@@ -34,7 +34,7 @@ describe('Angular-Validation badInput Tests:', function () {
             // make input3 invalid, remove text
             var elmInput2 = $('[name=input2]');
             elmInput2.click();
-            elmInput2.sendKeys('2.5.');
+            elmInput2.sendKeys('2.5..');
 
             // error should appear on input2
             var elmError2 = $('.validation-input2');
@@ -94,7 +94,7 @@ describe('Angular-Validation badInput Tests:', function () {
           // make input3 invalid, remove text
           var elmInput2 = $('[name=input2]');
           elmInput2.click();
-          clearInput(elmInput2, 4);
+          clearInput(elmInput2, 5);
           elmInput2.sendKeys(protractor.Key.TAB);
 
           // error should appear on input2

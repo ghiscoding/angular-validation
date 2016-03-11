@@ -56,6 +56,7 @@
     "INVALID_NUMERIC_SIGNED":           "Må være et positivt eller negativt tall. ",
     "INVALID_PATTERN":                  "Må være på følgende format: {0}. ",
     "INVALID_PATTERN_DATA":             "Må være på følgende format {{data}}. ",
+    "INVALID_PHONE_US":                 "Må være et gyldig telefonnummer og inkluderer retningsnummer. ",
     "INVALID_REQUIRED":                 "Feltet er påkrevd. ",
     "INVALID_URL":                      "Må være en gyldig URL. ",
     "INVALID_TIME":                     "Må være et gyldig tidsformat (tt:mm) OR (tt:mm:ss). ",
