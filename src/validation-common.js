@@ -235,11 +235,20 @@ angular
 
         // loop through all validators of the element
         for (var i = 0, ln = validations.length; i < ln; i++) {
-          // params split will be:: [0]=rule, [1]=ruleExtraParams OR altText, [2] altText
-          var params = validations[i].split(':');
-
           // check if user provided an alternate text to his validator (validator:alt=Alternate Text)
-          var hasAltText = validations[i].indexOf("alt=") >= 0;
+          var posAltText = validations[i].indexOf("alt=");
+          var hasAltText = posAltText >= 0;
+          var params = [];
+
+          // alternate text might have the character ":" inside it, so we need to compensate
+          // since altText is always at the end, we can before the altText and add back this untouched altText to our params array
+          if(hasAltText) {
+            params = validations[i].substring(0,posAltText-1).split(':'); // split before altText, so we won't touch it
+            params.push(validations[i].substring(posAltText));                // add back the altText to our split params array
+          }else {
+            // params split will be:: [0]=rule, [1]=ruleExtraParams OR altText, [2] altText
+            params = validations[i].split(':');
+          }
 
           self.validators[i] = ValidationRules.getElementValidators({
             altText: hasAltText === true ? (params.length === 2 ? params[1] : params[2]) : '',
