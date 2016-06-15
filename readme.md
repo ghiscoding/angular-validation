@@ -18,7 +18,7 @@ Huge rewrite to have a better code separation and also adding support to Service
 
 For more reasons to use it, see the answered question of: [Why Use It?](#whyuseit)
 
-If you like the Angular-Validation project and you use it, please click on the **Star** and add it as a favorite. The more star ratings there is, the more chances it could be found by other users inside the popular trend section. That is the only support I ask you... thanks and enjoy it ;)
+If you like the Angular-Validation project and you use it, please click on the :star: and add it as a favorite. The more star ratings there is, the more chances it could be found by other users inside the popular trend section. That is the only support I ask you... thanks and enjoy it ;)
 
 <a name="plunker"></a>
 ## Live Demo
@@ -55,7 +55,7 @@ into the following (errors will automatically be displayed in your chosen locale
 <input type="text" name="firstname" ng-model="user.firstname" validation="alpha_dash|min_len:3|max_len:50|required"  />
 <input type="text" name="lastname" ng-model="user.lastname" validation="alpha_dash|min_len:2|max_len:50|required"  />
 ```
-The Angular-Validation will create, by itself, the necessary error message. Now imagine your form having 10 inputs, using the documented Angular way will end up being 30 lines of code, while on the other hand `Angular-Validation` will stay with 10 lines of code, no more... so what are you waiting for? Use Angular-Validation!!!  Don't forget to add it to your favorite, click on the **Star** on top :)
+The Angular-Validation will create, by itself, the necessary error message. Now imagine your form having 10 inputs, using the documented Angular way will end up being 30 lines of code, while on the other hand `Angular-Validation` will stay with 10 lines of code, no more... so what are you waiting for? Use Angular-Validation!!!  Don't forget to add it to your favorite, click on the :star: on top :)
 
 Let's not forget the [Validation Summary](https://github.com/ghiscoding/angular-validation/wiki/Validation-Summary) which is also a great and useful way of displaying your errors to the user.
 
