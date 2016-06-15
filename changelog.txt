@@ -1,6 +1,8 @@
 Angular-Validation change logs
 
-1.5.0 (2016-02-23) BREAKING CHANGE when fixing casing issue #107, ValidationService should start with uppercase. Changed to branch 1.5.x to announce major change.
+1.5.2 (2016-06-14) Fixed #121 Alternate text containing the char ":" was causing unexpected displayed message.
+1.5.1 (2016-03-10) Fixed #111 Add US phone number & tweaked credit card rules.
+1.5.0 (2016-03-10) BREAKING CHANGE when fixing casing issue #107, ValidationService should start with uppercase. Changed to branch 1.5.x to announce major change.
 1.4.22 (2016-02-02) Merged pull request #106 to add Catalan translation locale and some fixes in the Spanish locale as well.
 1.4.21 (2016-01-21) Merged pull request #103 (extend Directive for revalidating) to fix request #102... thanks @tpeter1985.
 1.4.20 (2016-01-17) Enhancement #100 - Add Global Option (errorMessageSeparator) for a Separator between error messages. Enhancement #101 - Add Global Option (preValidateValidationSummary) to disable pre-validation in Validation Summary if need be. Also found and fixed a problem with a try-catch throw javascript error in Custom Validation.
