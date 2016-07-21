@@ -91,14 +91,14 @@
       </form>
       <hr/>
       <div class="form-actions">
-        <button type="submit" name="save_btn" class="btn btn-primary" ng-disabled="vm.test.$invalid" ng-click="">{{ 'SAVE' | translate }}</button>
+        <button type="submit" name="save_btn" class="btn btn-primary" ng-click="vm.submit()">{{ 'SAVE' | translate }}</button>
       </div>
       <hr/>
 
       <div class="alert alert-warning alert-dismissable">
         <strong>We can validate an input array by 2 ways:</strong>
         <ol>
-          <li>&lt;valid-array-require-how-many="<b>one</b>"&gt; (default), if 1 value is found good, the complete input set is Valid.</li>
+          <li>&lt;valid-array-require-how-many="<b>one</b>"&gt; (default), if 1 value is found as valid, the complete input set is Valid.</li>
           <li>&lt;valid-array-require-how-many="<b>all</b>"&gt;. For the input to be Valid, we need "all" array values to be valid.</li>
         </ol>
       </div>

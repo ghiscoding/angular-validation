@@ -92,6 +92,7 @@ angular
           };
           break;
         case "between" :
+        case "range" :
           var ranges = ruleParams.split(',');
           if (ranges.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between:1,5";
@@ -107,6 +108,10 @@ angular
           break;
         case "betweenLen" :
         case "between_len" :
+        case "stringLen" :
+        case "string_len" :
+        case "stringLength" :
+        case "string_length" :
           var ranges = ruleParams.split(',');
           if (ranges.length !== 2) {
             throw "This validation must include exactly 2 params separated by a comma (,) ex.: between_len:1,5";
@@ -449,6 +454,8 @@ angular
           };
           break;
         case "email" :
+        case "emailAddress" :
+        case "email_address" :
           validator = {
             // Email RFC 5322, pattern pulled from  http://www.regular-expressions.info/email.html
             // but removed necessity of a TLD (Top Level Domain) which makes this email valid: admin@mailserver1
@@ -488,6 +495,7 @@ angular
             type: "regex"
           };
           break;
+        case "enum" :
         case "in" :
         case "inList" :
         case "in_list" :
@@ -533,6 +541,7 @@ angular
             type: "regex"
           };
           break;
+        case "compare" :
         case "match" :
         case "matchInput" :
         case "match_input" :
@@ -557,6 +566,8 @@ angular
           break;
         case "maxLen" :
         case "max_len" :
+        case "maxLength" :
+        case "max_length" :
           validator = {
             pattern: "^(.|[\\r\\n]){0," + ruleParams + "}$",
             message: "INVALID_MAX_CHAR",
@@ -585,6 +596,8 @@ angular
           break;
         case "minLen" :
         case "min_len" :
+        case "minLength" :
+        case "min_length" :
           validator = {
             pattern: "^(.|[\\r\\n]){" + ruleParams + ",}$",
             message: "INVALID_MIN_CHAR",

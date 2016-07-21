@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.3 (2016-07-20) Add C# validation annotation, (for example: maxLen => maxLength)
 1.5.2 (2016-06-14) Fixed #121 Alternate text containing the char ":" was causing unexpected displayed message.
 1.5.1 (2016-03-10) Fixed #111 Add US phone number & tweaked credit card rules.
 1.5.0 (2016-03-10) BREAKING CHANGE when fixing casing issue #107, ValidationService should start with uppercase. Changed to branch 1.5.x to announce major change.

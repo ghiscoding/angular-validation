@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.5.2`
+`Version: 1.5.3`
 ### Forms Validation with Angular made easy!
 ##### (Concept comes from the amazing Laravel)
 
@@ -144,16 +144,17 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `alpha_num_spaces` Only alpha-numeric characters (with latin & spaces) are present (a-z, A-Z, 0-9)
 * `alpha_dash` Only alpha-numeric characters + dashes, underscores are present (a-z, A-Z, 0-9, _-)
 * `alpha_dash_spaces` Alpha-numeric chars + dashes, underscores and spaces (a-z, A-Z, 0-9, _-)
-* `between:min,max` will auto-detect value type then use proper validator.
+* `between:min,max` Will auto-detect value type then use proper validator.
   * Type Number uses `between_num`, String use `between_len`.
-* `between_date_iso:d1,d2` alias of `between_date_iso`.
-* `between_date_euro_long:d1,d2` alias of `date_euro_long_between`.
-* `between_date_euro_short:d1,d2` alias of `date_euro_short_between`.
-* `between_date_us_long:d1,d2` alias of `date_us_long_between`.
-* `between_date_us_short:d1,d2` alias of `date_us_short_between`.
+* `between_date_iso:d1,d2` Alias of `between_date_iso`.
+* `between_date_euro_long:d1,d2` Alias of `date_euro_long_between`.
+* `between_date_euro_short:d1,d2` Alias of `date_euro_short_between`.
+* `between_date_us_long:d1,d2` Alias of `date_us_long_between`.
+* `between_date_us_short:d1,d2` Alias of `date_us_short_between`.
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value (int or float) is between a min,max number.
 * `boolean` Ensures the value is `true` or `false` (`0` or `1` is also valid).
+* `compare` Alias of `match`
 * `credit_card` Valid credit card number (AMEX, VISA, Mastercard, Diner's Club, Discover, JCB)
 * `date_iso` Ensure date follows the ISO format (yyyy-mm-dd)
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
@@ -175,55 +176,62 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `date_us_short_between:d1,d2` Date must follow the US short format and is between (d1) &amp; (d2)
 * `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
 * `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
-* `different` alias of `different_input`
+* `different` Alias of `different_input`
 * `different_input:f` Must be different from another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the input name or the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="First Name".../>` will display :: *Field must be different from specified field "First Name"*.
 * `different_input:f,t` Must be different from another input field(f), same as (different:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
 * `digits:n` Ensures that field only has integer numbers and length precisely matches the specified length (n).
 * `digits_between:min,max` Ensures that field only has integer numbers and is between a min,max length.
 * `email` Checks for a valid email address
+* `email_address` Alias of `email`
+* `enum` Alias of `in_list`
 * `exact_len:n` Ensures that field length precisely matches the specified length (n).
 * `float` as to be floating value (excluding integer)
 * `float_signed` Has to be floating value (excluding int), could be signed (-/+) positive/negative.
 * ~~`iban`~~ To properly validate an IBAN please use [Wiki - Custom Validation](https://github.com/ghiscoding/angular-validation/wiki/Custom-Validation-functions) with an external library like [Github arhs/iban.js](https://github.com/arhs/iban.js)
 
-* `in` alias of `in_list`
+* `in` Alias of `in_list`
 * `in_list:foo,bar,..` Ensures the value is included inside the given list of values. The list must be separated by ',' and also accept words with spaces for example "ice cream".
 * `int` Only positive integer (alias to `integer`).
 * `integer` Only positive integer.
 * `int_signed` Only integer, could be signed (-/+) positive/negative (alias to `integer_signed`).
 * `integer_signed` Only integer, could be signed (-/+) positive/negative.
-* `ip` alias of `ipv4`
+* `ip` Alias of `ipv4`
 * `ipv4` Check for valid IP (IPv4)
 * `ipv6` Check for valid IP (IPv6)
 * `match:f` Match another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="Password".../>` will display :: *Confirmation field does not match specified field "Password"*.
 * `match:f,t` Match another input field(f), same as (match:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
-* `match_input` alias of `match`.
-* `max:n` will auto-detect value type then use proper validator.
+* `match_input` Alias of `match`.
+* `max:n` Will auto-detect value type then use proper validator.
   * Type Number uses `max_num`, String use `max_len`.
-* `max_date_iso` alias of `date_iso_max`.
-* `max_date_euro_long` alias of `date_euro_long_max`.
-* `max_date_euro_short` alias of `date_euro_short_max`.
-* `max_date_us_long` alias of `date_us_long_max`.
-* `max_date_us_short` alias of `date_us_short_max`.
+* `max_date_iso` Alias of `date_iso_max`.
+* `max_date_euro_long` Alias of `date_euro_long_max`.
+* `max_date_euro_short` Alias of `date_euro_short_max`.
+* `max_date_us_long` Alias of `date_us_long_max`.
+* `max_date_us_short` Alias of `date_us_short_max`.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
+* `max_length:n` Alias of `max_len`
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
-* `min:n` will auto-detect value type then use proper validator.
+* `min:n` Will auto-detect value type then use proper validator.
   * Type Number uses `min_num`, String use `min_len`.
-* `min_date_iso` alias of `date_iso_min`.
-* `min_date_euro_long` alias of `date_euro_long_min`.
-* `min_date_euro_short` alias of `date_euro_short_min`.
-* `min_date_us_long` alias of `date_us_long_min`.
-* `min_date_us_short` alias of `date_us_short_min`.
+* `min_date_iso` Alias of `date_iso_min`.
+* `min_date_euro_long` Alias of `date_euro_long_min`.
+* `min_date_euro_short` Alias of `date_euro_short_min`.
+* `min_date_us_long` Alias of `date_us_long_min`.
+* `min_date_us_short` Alias of `date_us_short_min`.
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
+* `min_length:n` Alias of `min_len`
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).
-* `not_in` alias of `not_in_list`
+* `not_in` Alias of `not_in_list`
 * `not_in_list:foo,bar,..` Ensures the value is included inside the given list of values. The list must be separated by ',' and also accept words with spaces for example "ice cream".
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
-* `pattern` Ensure it follows a regular expression pattern... please see [Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern)
+* `pattern` Ensure it follows a regular expression pattern... Refer to [Wiki - Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern) on how to use it.
+* `range` Alias of `between`
 * `required` Ensures the specified key value exists and is not empty
-* `same` alias of `match`.
-* `size` will auto-detect value type then use proper validator.
+* `same` Alias of `match`.
+* `size` Will auto-detect value type then use proper validator.
   * Type Number uses `exact_num`, String use `exact_len`.
+* `string_len` Alias of `between_len`
+* `string_length` Alias of `between_len`
 * `time` Ensure time follows the format of (hh:mm) or (hh:mm:ss)
 * `url` Check for valid URL or subdomain

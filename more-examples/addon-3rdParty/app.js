@@ -44,4 +44,15 @@ myApp.controller('Ctrl', ['ValidationService', function (ValidationService) {
     { name: "Safari", maker: "Apple", ticked: false, icon: "<img src='https://cdn1.iconfinder.com/data/icons/fatcow/32x32/safari_browser.png' />" },
     { name: "Chrome", maker: "Google",  ticked: false, icon: "<img src='https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/32/chrome.png' />"  }
   ];
+
+  // declare public functions
+  vm.submit = submit;
+
+  return vm;
+
+  function submit() {
+    if(new ValidationService().checkFormValidity(vm.test)) {
+      alert('valid');
+    }
+  }
 }]);
