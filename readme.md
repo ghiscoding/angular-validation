@@ -226,6 +226,8 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `numeric` Only positive numeric value (float, integer).
 * `numeric_signed` Only numeric value (float, integer) can also be signed (-/+).
 * `pattern` Ensure it follows a regular expression pattern... Refer to [Wiki - Regular Expression Pattern](https://github.com/ghiscoding/angular-validation/wiki/Regular-Expression-Pattern) on how to use it.
+* `phone` Check for a valid phone number (Canada/US)
+* `phone_international` Check for a valid international phone number
 * `range` Alias of `between`
 * `required` Ensures the specified key value exists and is not empty
 * `same` Alias of `match`.
