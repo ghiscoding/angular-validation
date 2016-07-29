@@ -349,10 +349,21 @@
          */
         function createWatch() {
           return scope.$watch(function() {
+            var modelValue = ctrl.$modelValue;
             if(isKeyTypedBadInput()) {
               return { badInput: true };
             }
-            return ctrl.$modelValue;
+            else if(!!_validationArrayObjprop && Array.isArray(modelValue) && modelValue.length === 0 && Object.keys(modelValue).length > 0) {
+              // when the modelValue is an Array but is length 0, this mean it's an Object disguise as an array
+              // since an Array of length 0 won't trigger a watch change, we need to return it back to an object
+              // for example Dropdown Multiselect when using selectionLimit of 1 will return [id: 1, label: 'John'], what we really want is the object { id: 1, label: 'John'}
+              // convert the object array to a real object that will go inside an array
+              var arr = [], obj = {};
+              obj[_validationArrayObjprop] = modelValue[_validationArrayObjprop]; // convert [label: 'John'] to {label: 'John'}
+              arr.push(obj); // push to array: [{label: 'John'}]
+              return arr;
+            }
+            return modelValue;
           }, function(newValue, oldValue) {
             if(!!newValue && !!newValue.badInput) {
               unbindBlurHandler();

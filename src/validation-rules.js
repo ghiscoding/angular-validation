@@ -649,6 +649,14 @@ angular
             type: "regex"
           };
           break;
+        case "phoneInternational" :
+        case "phone_international" :
+          validator = {
+            pattern: /^\+(?:[0-9]\x20?){6,14}[0-9]$/,
+            message: "INVALID_PHONE_INTERNATIONAL",
+            type: "regex"
+          };
+          break;
         case "pattern" :
         case "regex" :
           // Custom User Regex is a special case, the properties (message, pattern) were created and dealt separately prior to the for loop

@@ -57,6 +57,7 @@
   "INVALID_PATTERN":                  "Ha de contenir un text amb el format: {0}. ",
   "INVALID_PATTERN_DATA":             "Ha de contenir un text amb el format {{data}}. ",
   "INVALID_PHONE_US":                 "Ha de ser un número de telèfon vàlid i ha d'incloure el codi d'àrea. ",
+  "INVALID_PHONE_INTERNATIONAL":      "Ha de ser un número de telèfon internacional vàlida. ",
   "INVALID_REQUIRED":                 "Camp requerit. ",
   "INVALID_URL":                      "Ha de contenir una adreça URL vàlida. ",
   "INVALID_TIME":                     "Ha de tenir un format de temps vàlid (hh: mm) o (hh: mm: ss). ",

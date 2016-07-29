@@ -57,6 +57,7 @@
     "INVALID_PATTERN":                  "Must be following this format: {0}. ",
     "INVALID_PATTERN_DATA":             "Must be following this format {{data}}. ",
     "INVALID_PHONE_US":                 "Must be a valid phone number and must include area code. ",
+    "INVALID_PHONE_INTERNATIONAL":      "Must be a valid international phone number. ",
     "INVALID_REQUIRED":                 "Field is required. ",
     "INVALID_URL":                      "Must be a valid URL. ",
     "INVALID_TIME":                     "Must be a valid time format (hh:mm) OR (hh:mm:ss). ",

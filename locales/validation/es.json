@@ -57,6 +57,7 @@
     "INVALID_PATTERN":                  "Debe contener un texto con el formato: {0}. ",
     "INVALID_PATTERN_DATA":             "Debe contener un texto con el formato {{data}}. ",
     "INVALID_PHONE_US":                 "Debe ser un número de teléfono válido y debe incluir el código de área. ",
+    "INVALID_PHONE_INTERNATIONAL":      "Debe ser un número de teléfono internacional válida. ",
     "INVALID_REQUIRED":                 "Campo requerido. ",
     "INVALID_URL":                      "Debe contener una dirección URL válida. ",
     "INVALID_TIME":                     "Debe contener un formato de tiempo válido (hh:mm) ó (hh:mm:ss). ",
