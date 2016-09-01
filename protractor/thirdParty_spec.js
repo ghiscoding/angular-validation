@@ -76,6 +76,7 @@
           elmInput.click();
           elmInput.sendKeys('tag4');
           elmInput.sendKeys(protractor.Key.ENTER);
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
 
       var elmError = $('.validation-input1');
@@ -92,6 +93,7 @@
           elmInput.click();
           elmInput.sendKeys('xyz');
           elmInput.sendKeys(protractor.Key.ENTER);
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
 
       // get 2 errors concatenated

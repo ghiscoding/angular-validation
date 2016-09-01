@@ -62,7 +62,7 @@ myApp.controller('CtrlService', ['$scope', '$q', 'ValidationService', function (
   var vs = new ValidationService({ controllerAs: vms, debounce: 500 });
 
   vs.setGlobalOptions({ scope: $scope })
-    .addValidator('input3', 'alpha|min_len:2|remote:vms.myRemoteValidation3():alt=Alternate error message.|required')
+    .addValidator('input3', 'alpha|min_len:2|remote:vms.myRemoteValidation3:alt=Alternate error message.|required')
     .addValidator('input4', 'alpha|min_len:2|remote:vms.myRemoteValidation4()|required');
 
   vms.myRemoteValidation3 = function() {
@@ -70,7 +70,7 @@ myApp.controller('CtrlService', ['$scope', '$q', 'ValidationService', function (
     setTimeout(function() {
       var isValid = (vms.model.input3 === "abc") ? true : false;
       deferred.resolve({ isValid: isValid, message: 'Returned error from promise.'});
-    }, 500);
+    }, 100);
 
     return deferred.promise;
   }

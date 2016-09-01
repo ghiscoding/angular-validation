@@ -612,6 +612,8 @@ angular
                   validationElmObj.message += errorMessageSeparator + msgToTranslate;
                 }
                 addToValidationAndDisplayError(self, formElmObj, validationElmObj.message, isFieldValid, showError);
+              } else {
+                throw String.format("Could not translate: '{0}'. Please check your Angular-Translate $translateProvider configuration.", data);
               }
             });
           })(formElmObj, isConditionValid, validator);

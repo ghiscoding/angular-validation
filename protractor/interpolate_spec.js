@@ -32,6 +32,7 @@
     it('Should enter valid data and show 0 error on bottom Form in ngView (First Route)', function () {
       var elmInput = $('[name=if1]');
       elmInput.sendKeys('abc');
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       // validation summary should become empty

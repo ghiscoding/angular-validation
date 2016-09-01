@@ -130,6 +130,7 @@
         it('Should click, blur on Remote input and error message should display', function () {
           var elmInput = $('[name=input1]');
           elmInput.click();
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
           //$('[for=input1]').click();
           browser.waitForAngular();
@@ -143,6 +144,7 @@
           var elmInput = $('[name=input1]');
           elmInput.click();
           elmInput.sendKeys('ab');
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
           //$('[for=input1]').click();
           browser.sleep(1100); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
@@ -155,6 +157,7 @@
           var elmInput = $('[name=input1]');
           elmInput.clear().then(function() {
             elmInput.sendKeys('abc');
+            element(by.css('body')).click();
             elmInput.sendKeys(protractor.Key.TAB);
             //$('[for=input1]').click();
             browser.sleep(1100); // sleep because of our data sample having a delay of 1sec internally, we use 1.5sec on this side to be sure
@@ -172,12 +175,14 @@
             }
             var elmInput = $('[name=' + formElementNames[i] + ']');
             elmInput.click();
+            element(by.css('body')).click();
             elmInput.sendKeys(protractor.Key.TAB);
             //$('[for=' + formElementNames[i] + ']').click(); // click on label to blur away
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', 'en')).click(); // click on good option first
               element(by.cssContainingText('option', '...')).click(); // then click on option[0], the one containing '...'
+              element(by.css('body')).click();
               elmInput.sendKeys(protractor.Key.TAB);
 
               var elmError = $('.validation-select1');
@@ -191,6 +196,7 @@
         });
 
         it('Should enter valid text and make error go away', function () {
+          browser.sleep(2000);
           for (var i = 0, ln = formElementNames.length; i < ln; i++) {
             // some fields are not required or disabled so no error will show up, continue to next ones
             if (formElementNames[i] === 'input12' || formElementNames[i] === 'input14') {
@@ -200,11 +206,13 @@
             elmInput.click();
             elmInput.sendKeys(validInputTexts[i]);
             elmInput.sendKeys(protractor.Key.TAB);
+            element(by.css('body')).click();
             //$('[for=' + formElementNames[i] + ']').click(); // click on label to blur away
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', validInputTexts[i])).click(); // click on good option
               elmInput.sendKeys(protractor.Key.TAB);
+              element(by.css('body')).click();
             }
 
             var elmError = $('.validation-' + formElementNames[i]);
@@ -223,6 +231,7 @@
             // make input3 invalid, remove text
             var elmInput3 = $('[name=input3]');
             clearInput(elmInput3);
+            element(by.css('body')).click();
             elmInput3.sendKeys(protractor.Key.TAB);
             //$('[for=input3]').click(); // click on label to blur away
 
@@ -306,6 +315,7 @@
         it('Should focus and blur out of input22 & error should appear', function() {
           var elmInput = $('[name=input22]');
           elmInput.click();
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
           //$('[for=input22]').click(); // click on label to blur away
 
@@ -393,10 +403,12 @@
             var elmInput = $('[name=' + formElementNames[i] + ']');
             elmInput.click();
             elmInput.sendKeys(validInputTexts[i]);
+            element(by.css('body')).click();
             elmInput.sendKeys(protractor.Key.TAB);
 
             if (formElementNames[i] === 'select1') {
               element(by.cssContainingText('option', validInputTexts[i])).click(); // click on good option
+              element(by.css('body')).click();
               elmInput.sendKeys(protractor.Key.TAB);
             }
 
@@ -506,6 +518,7 @@
 
         if (formElement2FormsNames[i] === 'select1') {
           element(by.cssContainingText('option', validInput2FormsTexts[i])).click(); // click on good option
+          element(by.css('body')).click();
           elmInput.sendKeys(protractor.Key.TAB);
         }
 
@@ -587,6 +600,7 @@
         var elmInput = $('[name=' + formElement2FormsNames[i] + ']');
         elmInput.click();
         elmInput.sendKeys("a");
+        element(by.css('body')).click();
         elmInput.sendKeys(protractor.Key.TAB);
 
         // both inputs should have the same error message

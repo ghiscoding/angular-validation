@@ -26,6 +26,7 @@
     it('Should enter valid data and show 0 error on Top Form Valdation Summary', function () {
       var elmInput = $('[name=f1]');
       elmInput.sendKeys('abc');
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       // validation summary should become empty
@@ -36,6 +37,7 @@
     it('Should enter valid data and show 0 error on bottom Form Valdation Summary in ngView (First Route)', function () {
       var elmInput = $('[name=firstField]');
       elmInput.sendKeys('abc');
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       // validation summary should become empty
@@ -63,6 +65,7 @@
     it('Should enter valid data and show 0 error on bottom Form Valdation Summary in ngView (First Route)', function () {
       var elmInput = $('[name=secondField]');
       elmInput.sendKeys('abc');
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       // validation summary should become empty

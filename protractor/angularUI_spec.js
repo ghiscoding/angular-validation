@@ -20,6 +20,7 @@
     it('Should enter valid date expect no errors on input and validation summary', function () {
       var elmInput = $('[name=dateOfChange]');
       elmInput.sendKeys(validDate);
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       // validation summary should become empty
@@ -30,6 +31,7 @@
     it('Should enter outside of range date and show dateOfChange error on input and ValidationSummary', function () {
       var elmInput = $('[name=dateOfChange]');
       elmInput.sendKeys(invalidOverDate);
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       var itemRows = element.all(by.binding('message'));
@@ -43,6 +45,7 @@
     it('Should enter wrong date format and show dateOfChange error on input and ValidationSummary', function () {
       var elmInput = $('[name=dateOfChange]');
       elmInput.sendKeys(invalidTypoDate);
+      element(by.css('body')).click();
       elmInput.sendKeys(protractor.Key.TAB);
 
       var itemRows = element.all(by.binding('message'));

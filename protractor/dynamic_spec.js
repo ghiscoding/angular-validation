@@ -28,10 +28,12 @@
     it('Should enter valid data in Form1 and expect valid Form1 but invalid Form2', function () {
       var elmFirstName = $('[name=firstName]');
       elmFirstName.sendKeys('abc');
+      element(by.css('body')).click();
       elmFirstName.sendKeys(protractor.Key.TAB);
 
       var elmLastName = $('[name=lastName]');
       elmLastName.sendKeys('def');
+      element(by.css('body')).click();
       elmLastName.sendKeys(protractor.Key.TAB);
 
       var validateBtn = $('[name=validateForms]');
@@ -54,10 +56,12 @@
     it('Should enter valid data in Form2 and expect both Forms to be valid', function () {
       var elmEmail = $('[name=email]');
       elmEmail.sendKeys('abc');
+      element(by.css('body')).click();
       elmEmail.sendKeys(protractor.Key.TAB);
 
       var elmPhone = $('[name=phoneNo]');
       elmPhone.sendKeys('def');
+      element(by.css('body')).click();
       elmPhone.sendKeys(protractor.Key.TAB);
 
       var validateBtn = $('[name=validateForms]');

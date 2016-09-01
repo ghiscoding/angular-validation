@@ -7,7 +7,7 @@
     'browserName': 'chrome',
     'chromeOptions': {
       // get rid of --ignore-certificate yellow warning
-      args: ['--no-sandbox', 'test-type=browser'],
+      args: ['--no-sandbox', 'test-type=browser', 'disable-extensions'],
       // set download path and avoid prompting for download even though
       // even though this is already the default Chrome but for completeness
       prefs: {

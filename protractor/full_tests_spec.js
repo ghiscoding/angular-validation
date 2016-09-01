@@ -49,6 +49,7 @@
           for (var i = 0, ln = validations.length; i < ln; i++) {
             var elmInput = $('[name=input' + i + ']');
             elmInput.click();
+            element(by.css('body')).click();
             elmInput.sendKeys(protractor.Key.TAB);
             //$('[for=input' + i + ']').click();
 
@@ -73,6 +74,7 @@
                 (function(elmInput, data, i) {
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
+                    element(by.css('body')).click();
                     elmInput.sendKeys(protractor.Key.TAB);
                     //$('[for=input' + i + ']').click();
                     var elmError = $('.validation-input' + i);
@@ -100,6 +102,7 @@
                 (function(elmInput, data, i) {
                   elmInput.clear().then(function() {
                     elmInput.sendKeys(data);
+                    element(by.css('body')).click();
                     elmInput.sendKeys(protractor.Key.TAB);
                     //$('[for=input' + i + ']').click();
                     var elmError = $('.validation-input' + i);

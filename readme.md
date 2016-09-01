@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.5.4`
+`Version: 1.5.5`
 ### Forms Validation with Angular made easy!
 ##### (Concept comes from the amazing Laravel)
 
