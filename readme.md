@@ -1,5 +1,5 @@
 #Angular Validation (Directive / Service)
-`Version: 1.5.5`
+`Version: 1.5.6`
 ### Forms Validation with Angular made easy!
 ##### (Concept comes from the amazing Laravel)
 
@@ -147,10 +147,12 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `between:min,max` Will auto-detect value type then use proper validator.
   * Type Number uses `between_num`, String use `between_len`.
 * `between_date_iso:d1,d2` Alias of `between_date_iso`.
+* `between_date_euro:d1,d2` Alias of `date_euro_between`.
 * `between_date_euro_long:d1,d2` Alias of `date_euro_long_between`.
-* `between_date_euro_short:d1,d2` Alias of `date_euro_short_between`.
+* `between_date_euro_short:d1,d2` *DEPRECATED* does not support leap year, preferable to use `date_euro_between` or make a PR to fix it..
+* `between_date_us:d1,d2` Alias of `date_us_between`.
 * `between_date_us_long:d1,d2` Alias of `date_us_long_between`.
-* `between_date_us_short:d1,d2` Alias of `date_us_short_between`.
+* `between_date_us_short:d1,d2` *DEPRECATED* does not support leap year, preferable to use `date_us` or make a PR to fix it..
 * `between_len:min,max` Ensures the length of a string is between a min,max length.
 * `between_num:min,max` Ensures the numeric value (int or float) is between a min,max number.
 * `boolean` Ensures the value is `true` or `false` (`0` or `1` is also valid).
@@ -160,22 +162,30 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `date_iso_between:d1,d2` Ensure date follows the ISO format and is between (d1) &amp; (d2)
 * `date_iso_max:d` Date must follow ISO format and is lower or equal than date (d)
 * `date_iso_min:d` Date must follow ISO format and is higher or equal than date (d)
+* `date_euro` Date must follow the European short or long format (dd-mm-yyyy) or (dd/mm/yyyy)
 * `date_euro_long` Date must follow the European long format (dd-mm-yyyy) or (dd/mm/yyyy)
+* `date_euro_between:d1,d2` Date must follow European short or long format and is between (d1) &amp; (d2)
 * `date_euro_long_between:d1,d2` Date must follow European long format and is between (d1) &amp; (d2)
+* `date_euro_max:d` Date must follow European short or long format and is lower or equal than date (d)
 * `date_euro_long_max:d` Date must follow European long format and is lower or equal than date (d)
+* `date_euro_min:d` Date must follow European short or long format and is higher or equal than date (d)
 * `date_euro_long_min:d` Date must follow European long format and is higher or equal than date (d)
-* `date_euro_short` Date must follow the Euro short format (dd-mm-yy) or (dd/mm/yy)
-* `date_euro_short_between:d1,d2` Date must follow Euro short format and is between (d1) &amp; (d2)
-* `date_euro_short_max:d` Date must follow Euro short format and is lower or equal than date (d)
-* `date_euro_short_min:d` Date must follow Euro short format and is higher or equal than date (d)
+* `date_euro_short` *DEPRECATED* does not support leap year, preferable to use `date_euro` or make a PR to fix it..
+* `date_euro_short_between:d1,d2` *DEPRECATED* does not support leap year, preferable to use `date_euro_between` or make a PR to fix it..
+* `date_euro_short_max:d` *DEPRECATED* does not support leap year, preferable to use `date_euro_max` or make a PR to fix it..
+* `date_euro_short_min:d` *DEPRECATED* does not support leap year, preferable to use `date_euro_min` or make a PR to fix it..
+* `date_us` Date must follow the US short or long format (mm-dd-yyyy) or (mm/dd/yyyy)
 * `date_us_long` Date must follow the US long format (mm-dd-yyyy) or (mm/dd/yyyy)
+* `date_us_between:d1,d2` Date must follow the US short or long format and is between (d1) &amp; (d2)
 * `date_us_long_between:d1,d2` Date must follow the US long format and is between (d1) &amp; (d2)
+* `date_us_max:d` Date must follow US short or long format and is lower or equal than date (d)
 * `date_us_long_max:d` Date must follow US long format and is lower or equal than date (d)
+* `date_us_min:d` Date must follow US short or long format and is higher or equal than date (d)
 * `date_us_long_min:d` Date must follow US long format and is higher or equal than date (d)
-* `date_us_short` Date must follow the US short format (mm-dd-yy) or (mm/dd/yy)
-* `date_us_short_between:d1,d2` Date must follow the US short format and is between (d1) &amp; (d2)
-* `date_us_short_max:d` Date must follow US short format and is lower or equal than date (d)
-* `date_us_short_min:d` Date must follow US short format and is higher or equal than date (d)
+* `date_us_short` *DEPRECATED* does not support leap year, preferable to use `date_us` or make a PR to fix it.
+* `date_us_short_between:d1,d2` *DEPRECATED* does not support leap year, preferable to use `date_us_between` or make a PR to fix it.
+* `date_us_short_max:d` *DEPRECATED* does not support leap year, preferable to use `date_us_max` or make a PR to fix it.
+* `date_us_short_min:d` *DEPRECATED* does not support leap year, preferable to use `date_us_min` or make a PR to fix it.
 * `different` Alias of `different_input`
 * `different_input:f` Must be different from another input field(f), where (f) must be the exact ngModel attribute of input field to compare to. The error message will use the input name or the `friendly-name` if it was provided on first input, ex.: `<input friendly-name="First Name".../>` will display :: *Field must be different from specified field "First Name"*.
 * `different_input:f,t` Must be different from another input field(f), same as (different:f) but also include (t) for alternate input name to be displayed in the error message (it still uses a generic error message, if you really wish to replace the full error message then you should use `match:n:alt` see [:alt](https://github.com/ghiscoding/angular-validation/wiki/Alternate-Text-on-Validators))
@@ -204,20 +214,24 @@ All validators are written as `snake_case` but it's up to the user's taste and c
 * `max:n` Will auto-detect value type then use proper validator.
   * Type Number uses `max_num`, String use `max_len`.
 * `max_date_iso` Alias of `date_iso_max`.
+* `max_date_euro` Alias of `date_euro_max`.
 * `max_date_euro_long` Alias of `date_euro_long_max`.
-* `max_date_euro_short` Alias of `date_euro_short_max`.
+* `max_date_euro_short` *DEPRECATED* does not support leap year, preferable to use `max_date_euro` or make a PR to fix it.
+* `max_date_us` Alias of `date_us_max`.
 * `max_date_us_long` Alias of `date_us_long_max`.
-* `max_date_us_short` Alias of `date_us_short_max`.
+* `max_date_us_short` *DEPRECATED* does not support leap year, preferable to use `max_date_us` or make a PR to fix it.
 * `max_len:n` Checks field length, no longer than specified length where (n) is length parameter.
 * `max_length:n` Alias of `max_len`
 * `max_num:n` Checks numeric value to be lower or equal than the number (n).
 * `min:n` Will auto-detect value type then use proper validator.
   * Type Number uses `min_num`, String use `min_len`.
 * `min_date_iso` Alias of `date_iso_min`.
+* `min_date_euro` Alias of `date_euro_min`.
 * `min_date_euro_long` Alias of `date_euro_long_min`.
-* `min_date_euro_short` Alias of `date_euro_short_min`.
+* `min_date_euro_short` *DEPRECATED* does not support leap year, preferable to use `min_date_euro` or make a PR to fix it.
+* `min_date_us` Alias of `date_us_min`.
 * `min_date_us_long` Alias of `date_us_long_min`.
-* `min_date_us_short` Alias of `date_us_short_min`.
+* `min_date_us_short` *DEPRECATED* does not support leap year, preferable to use `min_date-us` or make a PR to fix it.
 * `min_len:n` Checks field length, no shorter than specified length where (n) is length parameter.
 * `min_length:n` Alias of `min_len`
 * `min_num:n` Checks numeric value to be higher or equal than the number (n).

@@ -159,22 +159,22 @@ function loadData() {
       'aliases': ['credit_card']
     },
     {
-      'validator': 'dateEuroLong',
-      'aliases': ['date_euro_long']
+      'validator': 'dateEuro',
+      'aliases': ['date_euro']
     },
     {
-      'validator': 'dateEuroLongBetween',
-      'aliases': ['date_euro_long_between', 'betweenDateEuroLong', 'between_date_euro_long'],
-      'params': '01-01-2001,28-02-2001'
+      'validator': 'dateEuroBetween',
+      'aliases': ['date_euro_between', 'betweenDateEuro', 'between_date_euro'],
+      'params': '01-01-2000,28-02-2001'
     },
     {
-      'validator': 'dateEuroLongMax',
-      'aliases': ['date_euro_long_max', 'maxDateEuroLong', 'max_date_euro_long'],
+      'validator': 'dateEuroMax',
+      'aliases': ['date_euro_max', 'maxDateEuro', 'max_date_euro'],
       'params': '30-05-2012'
     },
     {
-      'validator': 'dateEuroLongMin',
-      'aliases': ['date_euro_long_min', 'minDateEuroLong', 'min_date_euro_long'],
+      'validator': 'dateEuroMin',
+      'aliases': ['date_euro_min', 'minDateEuro', 'min_date_euro'],
       'params': '25-05-2012'
     },
     {
@@ -217,22 +217,22 @@ function loadData() {
       'params': '2012-05-25'
     },
     {
-      'validator': 'dateUsLong',
-      'aliases': ['date_us_long']
+      'validator': 'dateUs',
+      'aliases': ['date_us']
     },
     {
-      'validator': 'dateUsLongBetween',
-      'aliases': ['date_us_long_between', 'betweenDateUsLong', 'between_date_us_long'],
+      'validator': 'dateUsBetween',
+      'aliases': ['date_us_between', 'betweenDateUs', 'between_date_us'],
       'params': '01/01/1990,12/31/2015'
     },
     {
-      'validator': 'dateUsLongMax',
-      'aliases': ['date_us_long_max', 'maxDateUsLong', 'max_date_us_long'],
+      'validator': 'dateUsMax',
+      'aliases': ['date_us_max', 'maxDateUs', 'max_date_us'],
       'params': '01/01/1990'
     },
     {
-      'validator': 'dateUsLongMin',
-      'aliases': ['date_us_long_min', 'minDateUsLong', 'min_date_us_long'],
+      'validator': 'dateUsMin',
+      'aliases': ['date_us_min', 'minDateUs', 'min_date_us'],
       'params': '01/01/1990'
     },
     {
