@@ -1,0 +1,128 @@
+{
+    "INVALID_ACCEPTED":                 "Dient aanvaard te worden. ",
+    "INVALID_ALPHA":                    "Enkel letters zijn toegestaan. ",
+    "INVALID_ALPHA_SPACE":              "Enkel letters en spaties zijn toegestaan. ",
+    "INVALID_ALPHA_NUM":                "Enkel letters en nummers zijn toegestaan. ",
+    "INVALID_ALPHA_NUM_SPACE":          "Enkel letters, nummers en spaties zijn toegestaan. ",
+    "INVALID_ALPHA_DASH":               "Enkel letters, nummers en dashes zijn toegestaan. ",
+    "INVALID_ALPHA_DASH_SPACE":         "Enkel letters, nummers, dashes en spaties zijn toegestaan. ",
+    "INVALID_BETWEEN_CHAR":             "Tekst dient tussen {0} en {1} karakters lang te zijn. ",
+    "INVALID_BETWEEN_NUM":              "Dient een numerische waarde te zijn tussen {0} en {1}. ",
+    "INVALID_BOOLEAN":                  "Mag enkel een boolean waarde zijn. ",
+    "INVALID_CREDIT_CARD":              "Dient een geldige creditcard nummer te zijn. ",
+	"INVALID_DATE_EURO":                "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj). ",
+    "INVALID_DATE_EURO_BETWEEN":        "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj) tussen {0} en {1}. ",
+    "INVALID_DATE_EURO_MAX":            "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_EURO_MIN":            "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj), gelijk aan, of groter dan {0}. ",
+    "INVALID_DATE_EURO_LONG":           "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj). ",
+    "INVALID_DATE_EURO_LONG_BETWEEN":   "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj) tussen {0} en {1}. ",
+    "INVALID_DATE_EURO_LONG_MAX":       "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_EURO_LONG_MIN":       "Dient een geldig EURO datum formaat te zijn (dd-mm-jjjj) OF (dd/mm/jjjj), gelijk aan, of groter dan {0}. ",
+    "INVALID_DATE_EURO_SHORT":          "Dient een geldig EURO datum formaat te zijn (dd-mm-jj) OF (dd/mm/jj). ",
+    "INVALID_DATE_EURO_SHORT_BETWEEN":  "Dient een geldig EURO datum formaat te zijn (dd-mm-jj) OF (dd/mm/jj) tussen {0} en {1}. ",
+    "INVALID_DATE_EURO_SHORT_MAX":      "Dient een geldig EURO datum formaat te zijn (dd-mm-jj) OF (dd/mm/jj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_EURO_SHORT_MIN":      "Dient een geldig EURO datum formaat te zijn (dd-mm-jj) OF (dd/mm/jj), gelijk aan, of groter dan {0}. ",
+    "INVALID_DATE_ISO":                 "Dient een geldig ISO datum formaat te zijn (jjjj-mm-dd). ",
+    "INVALID_DATE_ISO_BETWEEN":         "Dient een geldig ISO datum formaat te zijn (jjjj-mm-dd) tussen {0} en {1}. ",
+    "INVALID_DATE_ISO_MAX":             "Dient een geldig ISO datum formaat te zijn (jjjj-mm-dd), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_ISO_MIN":             "Dient een geldig US datum formaat te zijn (jjjj-mm-dd), gelijk aan, or groter dan {0}. ",
+    "INVALID_DATE_US":                  "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj). ",
+    "INVALID_DATE_US_BETWEEN":          "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj) tussen {0} en {1}. ",
+    "INVALID_DATE_US_MAX":              "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_US_MIN":              "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj), gelijk aan, of groter dan {0}. ",
+    "INVALID_DATE_US_LONG":             "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj). ",
+    "INVALID_DATE_US_LONG_BETWEEN":     "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj) tussen {0} en {1}. ",
+    "INVALID_DATE_US_LONG_MAX":         "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_US_LONG_MIN":         "Dient een geldig US datum formaat te zijn (mm/dd/jjjj) OF (mm-dd-jjjj), gelijk aan, of groter dan {0}. ",
+    "INVALID_DATE_US_SHORT":            "Dient een geldig US datum formaat te zijn (mm/dd/jj) OF (mm-dd-jj). ",
+    "INVALID_DATE_US_SHORT_BETWEEN":    "Dient een geldig US datum formaat te zijn (mm/dd/jj) OF (mm-dd-jj) tussen {0} en {1}. ",
+    "INVALID_DATE_US_SHORT_MAX":        "Dient een geldig US datum formaat te zijn (mm/dd/jj) OF (mm-dd-jj), gelijk aan, of kleiner dan {0}. ",
+    "INVALID_DATE_US_SHORT_MIN":        "Dient een geldig US datum formaat te zijn (mm/dd/jj) OF (mm-dd-jj), gelijk aan, of groter dan {0}. ",
+	"INVALID_DIGITS":                   "Dient uit {0} digits te bestaan. ",
+    "INVALID_DIGITS_BETWEEN":           "Dient tussen {0} en {1} digits lang te zijn. ",
+    "INVALID_EMAIL":                    "Dient een geldig email adres te zijn. ",
+    "INVALID_EXACT_LEN":                "Dient precies {0} karakters lang te zijn. ",
+    "INVALID_EXACT_NUM":                "Dient precies {0} te zijn. ",
+    "INVALID_FLOAT":                    "Mag enkel een positieve float waarde zijn (geen integers). ",
+    "INVALID_FLOAT_SIGNED":             "Mag enkel een positieve of negatieve float waarde zijn (geen integers). ",
+    "INVALID_IBAN":                     "Dient een geldige IBAN waarde te zijn. ",
+    "INVALID_IN_LIST":                  "Dient een waarde uit deze lijst te zijn: ({0}). ",
+    "INVALID_INPUT_DIFFERENT":          "Dient verschillend te zijn van [{1}]. ",
+    "INVALID_INPUT_MATCH":              "Bevestigingswaarde is niet gelijk aan [{1}]. ",
+    "INVALID_INTEGER":                  "Dient een positieve integer waarde te zijn. ",
+    "INVALID_INTEGER_SIGNED":           "Dient een positieve of negatieve integer waarde te zijn. ",
+    "INVALID_IPV4":                     "Dient een geldig IP te zijn (IPV4). ",
+    "INVALID_IPV6":                     "Dient een geldig IP te zijn (IPV6). ",
+    "INVALID_IPV6_HEX":                 "Dient een geldig IP te zijn (IPV6 Hex). ",
+    "INVALID_KEY_CHAR":                 "Ongeldige KB-waarde voor veld van type 'number'. ",
+    "INVALID_MAX_CHAR":                 "Dient groter te zijn dan {0} karakters. ",
+    "INVALID_MAX_NUM":                  "Dient een numerische waard te zijn, gelijk aan, of kleiner dan {0}. ",
+    "INVALID_MIN_CHAR":                 "Dient ten minste {0} karakters lang te zijn. ",
+    "INVALID_MIN_NUM":                  "Dient een numerische waard te zijn, gelijk aan, of groter dan {0}. ",
+    "INVALID_NOT_IN_LIST":              "Waarde mag niet voorkomen in de lijst: ({0}). ",
+    "INVALID_NUMERIC":                  "Dient een positief getal te zijn. ",
+    "INVALID_NUMERIC_SIGNED":           "Dient een positief of negatief getal te zijn. ",
+    "INVALID_PATTERN":                  "Dient aan volgend formaat te voldoen: {0}. ",
+    "INVALID_PATTERN_DATA":             "Dient aan volgend formaat te voldoen {{data}}. ",
+    "INVALID_PHONE_US":                 "Dient een geldig Amerikaans telefoonnummer te zijn, zone nummer inbegrepen. ",
+    "INVALID_PHONE_INTERNATIONAL":      "Dient een geldig Internationaal telefoonnummer te zijn, zone nummer inbegrepen. ",
+	"INVALID_REQUIRED":                 "Dit veld is verplicht. ",
+    "INVALID_URL":                      "Dient een geldige URL te zijn. ",
+    "INVALID_TIME":                     "Dient een geldig tijdsformaat te zijn (hh:mm) OF (hh:mm:ss). ",
+    "INVALID_CHECKBOX_SELECTED":        "De checkbox dient geselecteerd te zijn. ",
+
+	"AREA1":                            "TextArea: Alphanumerisch + Minimum(15) + Verplicht",
+    "ERRORS":                           "Ontbrekende of ongeldige data",
+    "CHANGE_LANGUAGE":                  "Taal wijzigen",
+    "FORM_PREVALIDATED":                "Form is pre-gevalideerd",
+    "INPUT1":                           "Remote validatie - Typ 'abc' voor een geldig antwoord ",
+    "INPUT2":                           "Positief of negatief getal -- input type='number' -- Foutmelding bij niet-numerische karakters ",
+    "INPUT3":                           "Floating nummers range (integer uitgesloten) -- tussen_num:x,y OF min_num:x|max_num:y ",
+    "INPUT4":                           "Meerdere Validaties + Vrije Regex van Datum Code (JJWW)",
+    "INPUT5":                           "Email",
+    "INPUT6":                           "URL",
+    "INPUT7":                           "IP (IPV4)",
+    "INPUT8":                           "Krediet Kaart",
+    "INPUT9":                           "Tussen(2,6) karakters",
+    "INPUT10":                          "ISO datum (jjjj-mm-dd)",
+    "INPUT11":                          "US datum LONG (mm/dd/jjjj)",
+    "INPUT12":                          "Tijd (uu:mm OF uu:mm:ss) -- NIET verplicht",
+    "INPUT13":                          "AlphaDashSpaces + Verplicht + Minimum(5) karakters -- GEBRUIK: validation-error-to=' '",
+    "INPUT14":                          "Alphanumeric + VERPLICHT -- NG-DISABLED",
+    "INPUT15":                          "Paswoord",
+    "INPUT16":                          "Paswoord Bevestiging",
+    "INPUT17":                          "Passwoord is verschillend",
+    "INPUT18":                          "Alphanumerisch + Precies(3) + Verplicht  -- debounce(3sec)",
+    "INPUT19":                          "ISO Datum (jjjj-mm-dd) -- minimum voorwaarde >= 2001-01-01 ",
+    "INPUT20":                          "US Datum US SHORT (mm/dd/jj) -- tussen data 12/01/99 en 12/31/15",
+    "INPUT21":                          "Kies UIT deze lijst (banana,orange,ice cream,sweet & sour)",
+    "FIRST_NAME":                       "Voornaam",
+    "LAST_NAME":                        "Achternaam",
+    "RESET_FORM":                       "Reset Form",
+    "SAVE":                             "Bewaar",
+    "SELECT1":                          "Verplicht (select) -- validatie met (blur) EVENT",
+    "SHOW_VALIDATION_SUMMARY":          "Toon Validatie Overzicht"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
