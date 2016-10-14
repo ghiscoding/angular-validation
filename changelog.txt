@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.9 (2016-10-14) Updated main entry at package.json to work with WebPack, issue #128
 1.5.7 (2016-10-03) Add Dutch and Romanian #134
 1.5.6 (2016-09-24) Dates validator now checks for leap year & full date calendar, fix #130
 1.5.5 (2016-09-01) If translation isn't loading & working correctly, it should throw an error.
