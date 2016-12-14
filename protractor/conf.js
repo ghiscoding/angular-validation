@@ -5,6 +5,7 @@
   capabilities: {
     // browser to run test with
     'browserName': 'chrome',
+    'binary': "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
     'chromeOptions': {
       // get rid of --ignore-certificate yellow warning
       args: ['--no-sandbox', 'test-type=browser', 'disable-extensions'],

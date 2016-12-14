@@ -22,22 +22,10 @@ angular
 
     // watch on route change, then reset some global variables, so that we don't carry over other controller/view validations
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
-      if (_globalOptions.resetGlobalOptionsOnRouteChange) {
-        _globalOptions = {
-          displayOnlyLastErrorMsg: false,     // reset the option of displaying only the last error message
-          errorMessageSeparator: ' ',         // separator between each error messages (when multiple errors exist)
-          hideErrorUnderInputs: false,        // reset the option of hiding error under element
-          preValidateFormElements: false,     // reset the option of pre-validate all form elements, false by default
-          preValidateValidationSummary: true, // reset the option of pre-validate all form elements, false by default
-          isolatedScope: null,                // reset used scope on route change
-          scope: null,                        // reset used scope on route change
-          validateOnEmpty: false,             // reset the flag of Validate Always
-          validRequireHowMany: "all",         // how many Validators it needs to pass for the field to become valid, "all" by default
-          resetGlobalOptionsOnRouteChange: true
-        };
-        _formElements = [];                   // array containing all form elements, valid or invalid
-        _validationSummary = [];              // array containing the list of invalid fields inside a validationSummary
-      }
+      resetGlobalOptions(_globalOptions.resetGlobalOptionsOnRouteChange);
+    });
+    $rootScope.$on("$stateChangeStart", function (event, next, current) {
+      resetGlobalOptions(_globalOptions.resetGlobalOptionsOnRouteChange);
     });
 
     // service constructor
@@ -968,6 +956,28 @@ angular
       // Construct a valid Date Object that follows the ECMA Specs
       // Note that, in JavaScript, months run from 0 to 11, rather than 1 to 12!
       return new Date(year, month - 1, day, hour, min, sec);
+    }
+
+    /** Reset all the available Global Options of Angular-Validation
+     * @param bool do a Reset?
+     */
+    function resetGlobalOptions(doReset) {
+      if (doReset) {
+        _globalOptions = {
+          displayOnlyLastErrorMsg: false,     // reset the option of displaying only the last error message
+          errorMessageSeparator: ' ',         // separator between each error messages (when multiple errors exist)
+          hideErrorUnderInputs: false,        // reset the option of hiding error under element
+          preValidateFormElements: false,     // reset the option of pre-validate all form elements, false by default
+          preValidateValidationSummary: true, // reset the option of pre-validate all form elements, false by default
+          isolatedScope: null,                // reset used scope on route change
+          scope: null,                        // reset used scope on route change
+          validateOnEmpty: false,             // reset the flag of Validate Always
+          validRequireHowMany: 'all',         // how many Validators it needs to pass for the field to become valid, "all" by default
+          resetGlobalOptionsOnRouteChange: true
+        };
+        _formElements = [];                   // array containing all form elements, valid or invalid
+        _validationSummary = [];              // array containing the list of invalid fields inside a validationSummary
+      }
     }
 
     /** From a date substring split it by a given separator and return a split array

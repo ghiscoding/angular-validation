@@ -1,6 +1,7 @@
 var argv = require('yargs').argv,
     gulp = require('gulp'),
     gulpif = require('gulp-if'),
+    protractor = require("gulp-angular-protractor"),
     bump = require('gulp-bump'),
     del = require('del'),
     concat = require('gulp-concat'),
@@ -99,4 +100,17 @@ gulp.task('compress', ['clean'], function() {
     .pipe(concat('angular-validation.min.js'))
     .pipe(header(jsHeaderComment, { pkg : pkg, version: newVersion } ))
     .pipe(gulp.dest('dist'));
+});
+
+gulp.task('test', function() {
+  gulp.src(["./protractor/*_spec.js"])
+      .pipe(protractor({
+          configFile: "protractor/conf.js",
+          args: ['--baseUrl', 'http://127.0.0.1'],
+          'debug': false,
+          'autoStartStopServer': true
+      }))
+      .on('error', function(e) {
+          console.log(e);
+      });
 });
