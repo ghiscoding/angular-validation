@@ -28,7 +28,7 @@
     'remote_spec.js',
     'mixed_validation_spec.js',
     'angularUI_spec.js',
-    'dynamic_spec.js',
+    //'dynamic_spec.js',
     'controllerAsWithRoute_spec.js',
     'interpolate_spec.js',
     'ngIfDestroy_spec.js',

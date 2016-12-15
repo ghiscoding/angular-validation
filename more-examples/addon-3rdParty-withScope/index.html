@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di ng-cloak="">
+  <head>
+    <meta charset="utf-8" />
+    <title>Angular-Validation Example with Interpolation</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css" />
+    <link rel="stylesheet" href="http://isteven.github.io/angular-multi-select/css/isteven-multi-select.css">
+  </head>
+
+  <body ng-controller="Ctrl as vm">
+    <div class="container">
+        <form name="test">
+            <div class="form-group">
+                <label>
+                    Dropdown MultiSelect
+                </label>
+                <div name="select1"
+                     ng-dropdown-multiselect=""
+                     options="select1data"
+                     selected-model="select1model"
+                     ng-model="select1model"
+                     extra-settings="{externalIdProp: ''}"
+                     validation="required" validation-array-objprop="label">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    Textbox
+                </label>
+                <input class="form-control" type="text" name="nametest" ng-model="myTextbox" validation="required">
+            </div>
+        </form>
+        <hr />
+        <div class="form-actions">
+            <button type="submit" name="save_btn" class="btn btn-primary" ng-click="submit()">{{ 'SAVE' | translate }}</button>
+        </div>
+    </div>
+
+    <!-- external librairies CDN -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
+
+    <!-- angular-translate -->
+    <!-- Visit Angular-Translate https://github.com/PascalPrecht/angular-translate -->
+    <script src="../../vendors/angular-translate/angular-translate.min.js"></script>
+    <script src="../../vendors/angular-translate/angular-translate-loader-static-files.min.js"></script>
+
+    <!-- ngTagsInput -->
+    <script src="http://mbenford.github.io/ngTagsInput/js/ng-tags-input.min.js"></script>
+
+    <!-- AngularJS Dropdown MultiSelect -->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/pc035860/angular-highlightjs/master/angular-highlightjs.js"></script>
+    <script src="https://rawgit.com/dotansimha/angularjs-dropdown-multiselect/master/src/angularjs-dropdown-multiselect.js"></script>
+
+    <!-- AngularJS Multi-Select -->
+    <script src="https://rawgit.com/isteven/angular-multi-select/master/isteven-multi-select.js"></script>
+
+    <!-- Angular-Validation -->
+    <script type="text/javascript" src="../../dist/angular-validation.min.js"></script>
+    <!--
+    <script type="text/javascript" src="../../src/validation-directive.js"></script>
+    <script type="text/javascript" src="../../src/validation-service.js"></script>
+    <script type="text/javascript" src="../../src/validation-common.js"></script>
+    <script type="text/javascript" src="../../src/validation-rules.js"></script>
+    -->
+
+    <!-- my application -->
+    <script type="text/javascript" src="app.js"></script>
+  </body>
+</html>

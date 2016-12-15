@@ -83,9 +83,14 @@ angular
     validationCommon.prototype.validate = validate;                                                 // validate current element
 
     // override some default String functions
+    if(window.Element && !Element.prototype.closest) {
+      Element.prototype.closest = elementPrototypeClosest;                                          // Element Closest Polyfill for the browsers that don't support it (fingers point to IE)
+    }
     String.prototype.trim = stringPrototypeTrim;                                                    // extend String object to have a trim function
     String.prototype.format = stringPrototypeFormat;                                                // extend String object to have a format function like C#
     String.format = stringFormat;                                                                   // extend String object to have a format function like C#
+
+
     // return the service object
     return validationCommon;
 
@@ -800,7 +805,7 @@ angular
         }
       }
 
-      // from the element passed, get his parent form
+      // from the element passed, get his parent form (this doesn't work with every type of element, for example it doesn't work with <div> or special angular element)
       var forms = document.getElementsByName(elmName);
       var parentForm = null;
 
@@ -820,6 +825,14 @@ angular
             return parentForm;
           }
         }
+      }
+
+      // if we haven't found a form yet, then we have a special angular element, let's try with .closest (this might not work with older browser)
+      if(!form) {
+          var element = document.querySelector('[name="'+elmName+'"]');
+          if(element) {
+            form = element.closest("form");
+          }
       }
 
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
@@ -1024,6 +1037,24 @@ angular
         default: result = false; break;
       }
       return result;
+    }
+
+    /** Element Closest Polyfill for the browsers that don't support it (fingers point to IE)
+     * https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+     */
+    function elementPrototypeClosest() {
+      Element.prototype.closest =
+        function(s) {
+        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+            i,
+            el = this;
+
+        do {
+          i = matches.length;
+          while (--i >= 0 && matches.item(i) !== el) {};
+        } while ((i < 0) && (el = el.parentElement));
+        return el;
+      };
     }
 
     /** Override javascript trim() function so that it works accross all browser platforms */

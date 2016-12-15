@@ -4,6 +4,7 @@
   describe('When choosing `more-examples` Dynamic Form Input', function () {
     it('Should navigate to Dynamic Form Input home page', function () {
       browser.get('http://localhost/github/angular-validation/more-examples/dynamic-form/index.html');
+      browser.waitForAngular();
 
       // Find the title element
       var titleElement = element(by.css('h3'));
@@ -14,6 +15,8 @@
     });
 
     it('Should click on Validate Submit button and expect 2 invalid Forms', function () {
+      browser.waitForAngular();
+      browser.sleep(5000);
       var validateBtn = $('[name=validateForms]');
       validateBtn.click();
       browser.waitForAngular();

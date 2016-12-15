@@ -61,7 +61,7 @@ app.controller('MainCtrl', function($scope,ValidationService) {
   // redefine which scope to use inside the Angular-Validation
   $scope.$validationOptions = { isolatedScope: $scope };
 
-  $scope.validate=function() {
+  $scope.validate = function() {
     for(var key in $scope.items) {
       var formName=$scope.items[key].formName;
 
