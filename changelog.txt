@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.12 (2016-12-15) Fix a small issue introduced by last commit (Angular Form overwritten with simple object).
 1.5.11 (2016-12-15) Fix checkFormValidity with formName argument, issues #135 #139 #140 #141
 1.5.10 (2016-12-13) Fix UI Router issue by adding a UI Router watch on $stateChangeStart, issue #137
 1.5.9 (2016-10-14) Updated main entry at package.json to work with WebPack, issue #128

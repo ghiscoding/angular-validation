@@ -1,13 +1,13 @@
 {
   "name": "angular-validation-ghiscoding",
-  "version": "1.5.11",
+  "version": "1.5.12",
   "author": "Ghislain B.",
   "description": "Angular-Validation Directive and Service (ghiscoding)",
   "main": "dist/angular-validation.min",
   "dependencies": {},
   "devDependencies": {
     "del": "^1.2.1",
-    "fs": "0.0.1-security",
+    "fs": "0.0.0",
     "gulp": "^3.9.0",
     "gulp-angular-protractor": "^0.2.0",
     "gulp-bump": "^0.3.1",

@@ -790,6 +790,30 @@ angular
       return -1;
     }
 
+    /** From a javascript plain form object, find its equivalent Angular object
+     * @param object formObj
+     * @param object self
+     * @return object angularParentForm or null
+     */
+    function findAngularParentFormInScope(formObj, self) {
+      var formName = (!!formObj) ? formObj.getAttribute("name") : null;
+
+      if (!!formObj && !!formName) {
+        parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
+          ? objectFindById(self.scope, formName, '.')
+          : self.scope[formName];
+
+        if(!!parentForm) {
+          if (typeof parentForm.$name === "undefined") {
+            parentForm.$name = formName; // make sure it has a $name, since we use that variable later on
+          }
+          return parentForm;
+        }
+      }
+
+      return null;
+    }
+
     /** Get the element's parent Angular form (if found)
      * @param string: element input name
      * @param object self
@@ -811,28 +835,22 @@ angular
 
       for (var i = 0; i < forms.length; i++) {
         var form = forms[i].form;
-        var formName = (!!form) ? form.getAttribute("name") : null;
-
-        if (!!form && !!formName) {
-          parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
-            ? objectFindById(self.scope, formName, '.')
-            : self.scope[formName];
-
-          if(!!parentForm) {
-            if (typeof parentForm.$name === "undefined") {
-              parentForm.$name = formName; // make sure it has a $name, since we use that variable later on
-            }
-            return parentForm;
-          }
+        var angularParentForm = findAngularParentFormInScope(form, self);
+        if(!!angularParentForm) {
+          return angularParentForm;
         }
       }
 
-      // if we haven't found a form yet, then we have a special angular element, let's try with .closest (this might not work with older browser)
+      // if we haven't found a form yet, then we have a special angular element, let's try with .closest
       if(!form) {
-          var element = document.querySelector('[name="'+elmName+'"]');
-          if(element) {
-            form = element.closest("form");
+        var element = document.querySelector('[name="'+elmName+'"]');
+        if(!!element) {
+          var form = element.closest("form");
+          var angularParentForm = findAngularParentFormInScope(form, self);
+          if(!!angularParentForm) {
+            return angularParentForm;
           }
+        }
       }
 
       // falling here with a form name but without a form object found in the scope is often due to isolate scope
