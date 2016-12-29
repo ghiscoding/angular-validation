@@ -92,10 +92,10 @@
         scope.$on('angularValidation.revalidate', function(event, args){
           if (args == ctrl.$name)
           {
-              ctrl.revalidateCalled = true;
-              var value = ctrl.$modelValue;
+            ctrl.revalidateCalled = true;
+            var value = ctrl.$modelValue;
 
-              if (!elm.isValidationCancelled) {
+            if (!!elm && elm.hasOwnProperty("isValidationCancelled")) {
               // attempt to validate & run validation callback if user requested it
               var validationPromise = attemptToValidate(value);
               if(!!_validationCallback) {
@@ -266,7 +266,7 @@
           var formElmObj = commonObj.getFormElementByName(ctrl.$name);
           var value = (typeof ctrl.$modelValue !== "undefined") ? ctrl.$modelValue : event.target.value;
 
-          if (!formElmObj.isValidationCancelled) {
+          if (!!formElmObj && formElmObj.hasOwnProperty("isValidationCancelled")) {
             // attempt to validate & run validation callback if user requested it
             var validationPromise = attemptToValidate(value, 0);
             if(!!_validationCallback) {

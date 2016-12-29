@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.13 (2016-12-29) Make sure element exist before looking for `isValidationCancelled`, issue #139
 1.5.12 (2016-12-15) Fix a small issue introduced by last commit (Angular Form overwritten with simple object in some rare occasions).
 1.5.11 (2016-12-15) Fix checkFormValidity with formName argument, issues #135 #139 #140 #141
 1.5.10 (2016-12-13) Fix UI Router issue by adding a UI Router watch on $stateChangeStart, issue #137
