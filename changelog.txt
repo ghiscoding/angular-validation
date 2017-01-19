@@ -1,6 +1,6 @@
 Angular-Validation change logs
 
-1.5.15 (2017-01-19) Rename errorMessageVisible to isErrorMessageVisible.
+1.5.15 (2017-01-19) Rename errorMessageVisible flag to isErrorMessageVisible.
 1.5.14 (2017-01-18) Added errorMessageVisible at updateErrorMsg this help to know when the error message is displayed or not.
 1.5.13 (2016-12-29) Make sure element exist before looking for `isValidationCancelled`, issue #139
 1.5.12 (2016-12-15) Fix a small issue introduced by last commit (Angular Form overwritten with simple object in some rare occasions).
