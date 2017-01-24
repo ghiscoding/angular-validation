@@ -153,7 +153,10 @@ angular
         // also save it inside controllerAs form (if found)
         if (!!form && !!form.$name) {
           var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
-          var ctrlForm = (!!_globalOptions.controllerAs[formName]) ? _globalOptions.controllerAs[formName] : self.elm.controller()[formName];
+          var ctrlForm = (!!_globalOptions.controllerAs && !!_globalOptions.controllerAs[formName]) 
+			? _globalOptions.controllerAs[formName] 
+			: ((typeof self.elm.controller() !== "undefined") ? self.elm.controller()[formName] : null);
+			
           if(!!ctrlForm) {
             ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
           }

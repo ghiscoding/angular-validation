@@ -102,7 +102,7 @@ gulp.task('compress', ['clean'], function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('test', function() {
+gulp.task('e2e', function() {
   gulp.src(["./protractor/*_spec.js"])
       .pipe(protractor({
           configFile: "protractor/conf.js",
