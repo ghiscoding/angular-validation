@@ -1335,7 +1335,7 @@ angular
         if (_remotePromises.length > 1) {
           while (_remotePromises.length > 0) {
             var previousPromise = _remotePromises.pop();
-            if (typeof previousPromise.abort === "function") {
+            if (!!previousPromise && typeof previousPromise.abort === "function") {
               previousPromise.abort(); // run the abort if user declared it
             }
           }

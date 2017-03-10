@@ -7,3 +7,5 @@ templates/
 app.js
 gulpfile.js
 index.html
+yarn-error.log
+yarn.lock

@@ -146,9 +146,10 @@ angular
     /** Check the form validity (can be called by an empty ValidationService and used by both Directive/Service)
      * Loop through Validation Summary and if any errors found then display them and return false on current function
      * @param object Angular Form or Scope Object
+     * @param bool silently, do a form validation silently
      * @return bool isFormValid
      */
-    function checkFormValidity(obj) {
+    function checkFormValidity(obj, silently) {
       var self = this;
       var ctrl, elm, elmName = '', isValid = true;
       if(typeof obj === "undefined" || typeof obj.$validationSummary === "undefined") {
@@ -166,10 +167,10 @@ angular
 
           if(!!formElmObj && !!formElmObj.elm && formElmObj.elm.length > 0) {
             // make the element as it was touched for CSS, only works in AngularJS 1.3+
-            if (typeof formElmObj.ctrl.$setTouched === "function") {
+            if (typeof formElmObj.ctrl.$setTouched === "function" && !silently) {
               formElmObj.ctrl.$setTouched();
             }
-            self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, { isSubmitted: true, isValid: formElmObj.isValid, obj: formElmObj });
+            self.commonObj.updateErrorMsg(obj.$validationSummary[i].message, { isSubmitted: (!!silently ? false : true), isValid: formElmObj.isValid, obj: formElmObj });
           }
         }
       }
