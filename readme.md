@@ -1,4 +1,4 @@
-#Angular Validation (Directive / Service)
+# Angular Validation (Directive / Service)
 `Version: 1.5.17`
 ### Forms Validation with Angular made easy!
 ##### (Concept comes from the amazing Laravel)
@@ -129,10 +129,10 @@ When used with IIS, you will need to map the JSON type
 </staticContent>
 ```
 
-###License
+### License
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-###Available Validator Rules
+### Available Validator Rules
 All validators are written as `snake_case` but it's up to the user's taste and could also be used as `camelCase`. So for example `alpha_dash_spaces` and `alphaDashSpaces` are both equivalent.
 
 ##### NOTE: on an `input type="number"`, the `+` sign is an invalid character (browser restriction) even if you are using a `signed` validator. If you really wish to use the `+`, then change your input to a `type="text"`.
