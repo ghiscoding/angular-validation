@@ -48,7 +48,12 @@
         // watch the `disabled` attribute for changes
         // if it become disabled then skip validation else it becomes enable then we need to revalidate it
         attrs.$observe("disabled", function(disabled) {
-          if (disabled) {
+          var isDisabled = (disabled === "")
+            ? true
+            : (typeof disabled === "boolean") ? disabled
+              : (typeof disabled !== "undefined") ? scope.$eval(disabled) : false;
+
+          if (isDisabled === true) {
             // Turn off validation when element is disabled & remove it from validation summary
             cancelValidation();
             commonObj.removeFromValidationSummary(_elmName);

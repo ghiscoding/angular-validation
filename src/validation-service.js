@@ -547,7 +547,12 @@ angular
         // use a timeout so that the digest of removing the `disabled` attribute on the DOM is completed
         // because commonObj.validate() checks for both the `disabled` and `ng-disabled` attribute so it basically fails without the $timeout because of the digest
         $timeout(function() {
-          if (disabled) {
+          var isDisabled = (disabled === "")
+            ? true
+            : (typeof disabled === "boolean") ? disabled
+              : (typeof disabled !== "undefined") ? scope.$eval(disabled) : false;
+
+          if (isDisabled) {
             // Remove it from validation summary
             attrs.ctrl.$setValidity('validation', true);
             self.commonObj.updateErrorMsg('', { isValid: true, obj: formElmObj });

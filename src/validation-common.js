@@ -153,10 +153,10 @@ angular
         // also save it inside controllerAs form (if found)
         if (!!form && !!form.$name) {
           var formName = form.$name.indexOf('.') >= 0 ? form.$name.split('.')[1] : form.$name;
-          var ctrlForm = (!!_globalOptions.controllerAs && !!_globalOptions.controllerAs[formName]) 
-			? _globalOptions.controllerAs[formName] 
+          var ctrlForm = (!!_globalOptions.controllerAs && !!_globalOptions.controllerAs[formName])
+			? _globalOptions.controllerAs[formName]
 			: ((typeof self.elm.controller() !== "undefined") ? self.elm.controller()[formName] : null);
-			
+
           if(!!ctrlForm) {
             ctrlForm.$validationSummary = arrayFindObjects(_validationSummary, 'formName', form.$name);
           }
@@ -542,8 +542,21 @@ angular
           validator = validatorAutoDetectType(validator, strValue);
         }
 
-        // get the ngDisabled attribute if found
+        // get the disabled & ngDisabled attributes if found
+        var elmAttrDisabled = self.elm.prop("disabled");
         var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
+
+        var isDisabled = (elmAttrDisabled === "")
+            ? true
+            : (typeof elmAttrDisabled === "boolean")
+              ? elmAttrDisabled
+              : (typeof elmAttrDisabled !== "undefined") ? self.scope.$eval(elmAttrDisabled) : false;
+
+        var isNgDisabled = (elmAttrNgDisabled === "")
+            ? true
+            : (typeof elmAttrNgDisabled === "boolean")
+              ? elmAttrNgDisabled
+              : (typeof elmAttrNgDisabled !== "undefined") ? self.scope.$eval(elmAttrNgDisabled) : false;
 
         // now that we have a Validator type, we can now validate our value
         // there is multiple type that can influence how the value will be validated
@@ -569,7 +582,7 @@ angular
         }
 
         // not required and not filled is always valid & 'disabled', 'ng-disabled' elements should always be valid
-        if ((!self.bFieldRequired && !strValue && !_validateOnEmpty) || (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled))) {
+        if ((!self.bFieldRequired && !strValue && !_validateOnEmpty) || (isDisabled || isNgDisabled)) {
           isConditionValid = true;
         }
 
@@ -1404,9 +1417,22 @@ angular
 
       // get the ngDisabled attribute if found
       var elmAttrNgDisabled = (!!self.attrs) ? self.attrs.ngDisabled : self.validatorAttrs.ngDisabled;
+      var elmAttrDisabled = self.elm.prop("disabled");
+
+      var isDisabled = (elmAttrDisabled === "")
+            ? true
+            : (typeof elmAttrDisabled === "boolean")
+              ? elmAttrDisabled
+              : (typeof elmAttrDisabled !== "undefined") ? self.scope.$eval(elmAttrDisabled) : false;
+
+      var isNgDisabled = (elmAttrNgDisabled === "")
+            ? true
+            : (typeof elmAttrNgDisabled === "boolean")
+              ? elmAttrNgDisabled
+              : (typeof elmAttrNgDisabled !== "undefined") ? self.scope.$eval(elmAttrNgDisabled) : false;
 
       // a 'disabled' element should always be valid, there is no need to validate it
-      if (!!self.elm.prop("disabled") || !!self.scope.$eval(elmAttrNgDisabled)) {
+      if (isDisabled || isNgDisabled) {
         isValid = true;
       } else {
         // before running Regex test, we'll make sure that an input of type="number" doesn't hold invalid keyboard chars, if true skip Regex
