@@ -100,7 +100,8 @@
             ctrl.revalidateCalled = true;
             var value = ctrl.$modelValue;
 
-            if (!!elm && elm.hasOwnProperty("isValidationCancelled")) {
+            var formElmObj = commonObj.getFormElementByName(ctrl.$name);
+            if (!!formElmObj && formElmObj.hasOwnProperty("isValidationCancelled")) {
               // attempt to validate & run validation callback if user requested it
               var validationPromise = attemptToValidate(value);
               if(!!_validationCallback) {
