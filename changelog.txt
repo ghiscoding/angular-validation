@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.19 (2017-04-17) Fix #150 angularValidation.revalidate problems
 1.5.18 (2017-03-31) Fix disabled="false" as attribute to run validation.
 1.5.17 (2017-03-10) Add silent mode to checkFormValidity function
 1.5.16 (2017-01-24) Fix issue where empty Form Controller was throwing an error
