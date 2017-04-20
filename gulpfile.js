@@ -96,6 +96,18 @@ gulp.task('compress', ['clean'], function() {
       'validation-rules.js',
       'validation-service.js'
       ]))
+    .pipe(concat('angular-validation.js'))
+    .pipe(header(jsHeaderComment, { pkg : pkg, version: newVersion } ))
+    .pipe(gulp.dest('dist'));
+
+  // compress (src/*.js) into 1 single minified file
+  gulp.src(src + '*.js')
+    .pipe(order([
+      'validation-directive.js',
+      'validation-common.js',
+      'validation-rules.js',
+      'validation-service.js'
+      ]))
     .pipe(uglify())
     .pipe(concat('angular-validation.min.js'))
     .pipe(header(jsHeaderComment, { pkg : pkg, version: newVersion } ))

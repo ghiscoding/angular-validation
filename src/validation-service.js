@@ -98,7 +98,7 @@ angular
 
       // Possible element attributes
       _validationCallback = (self.validationAttrs.hasOwnProperty('validationCallback')) ? self.validationAttrs.validationCallback : null;
-      _validateOnEmpty = (self.validationAttrs.hasOwnProperty('validateOnEmpty')) ? commonObj.parseBool(self.validationAttrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
+      _validateOnEmpty = (self.validationAttrs.hasOwnProperty('validateOnEmpty')) ? self.commonObj.parseBool(self.validationAttrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
 
       // onBlur make validation without waiting
       attrs.elm.bind('blur', _blurHandler = function(event) {
