@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.21 (2017-05-14) Fix #151 validation rule "different" disables rule "required".
 1.5.20 (2017-04-20) Add an unminified version and Fix #153 bug in validation service.
 1.5.19 (2017-04-17) Fix #150 angularValidation.revalidate problems
 1.5.18 (2017-03-31) Fix disabled="false" as attribute to run validation.
