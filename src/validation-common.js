@@ -510,7 +510,6 @@ angular
       var nbValid = 0;
       var validator;
       var validatedObject = {};
-
       // make an object to hold the message so that we can reuse the object by reference
       // in some of the validation check (for example "matching" and "remote")
       var validationElmObj = {
@@ -1281,7 +1280,9 @@ angular
       var matchingCtrl = self.ctrl;       // keep reference of matching confirmation controller
       var formElmMatchingObj = getFormElementByName(self.ctrl.$name);
 
-      isValid = (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
+      isValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) 
+        ? false
+        : (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
 
       // if element to compare against has a friendlyName or if matching 2nd argument was passed, we will use that as a new friendlyName
       // ex.: <input name='input1' friendly-name='Password1'/> :: we would use the friendlyName of 'Password1' not input1
@@ -1295,7 +1296,9 @@ angular
 
       // Watch for the parent ngModel, if it change we need to re-validate the child (confirmation)
       self.scope.$watch(parentNgModel, function(newVal, oldVal) {
-        var isWatchValid = testCondition(matchingValidator.condition, matchingCtrl.$viewValue, newVal);
+        var isWatchValid = ((!validator.pattern || validator.pattern.toString() === "/\\S+/" || (!!rules && validator.pattern === "required")) && strValue === null) 
+        ? false
+        : (testCondition(validator.condition, strValue, parentNgModelVal) && !!strValue);
 
         // only inspect on a parent input value change
         if(newVal !== oldVal) {
