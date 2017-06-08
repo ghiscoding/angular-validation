@@ -2,9 +2,9 @@
  * Angular-Validation Directive and Service (ghiscoding)
  * http://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
- * @version: 1.5.21
+ * @version: 1.5.22
  * @license: MIT
- * @build: Sun May 14 2017 23:35:23 GMT-0400 (Eastern Daylight Time)
+ * @build: Wed Jun 07 2017 22:01:12 GMT-0400 (Eastern Daylight Time)
  */
 /**
  * Angular-Validation Directive (ghiscoding)
