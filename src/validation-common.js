@@ -816,7 +816,7 @@ angular
       var formName = (!!formObj) ? formObj.getAttribute("name") : null;
 
       if (!!formObj && !!formName) {
-        parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
+        var parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
           ? objectFindById(self.scope, formName, '.')
           : self.scope[formName];
 
