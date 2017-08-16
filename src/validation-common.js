@@ -178,7 +178,7 @@ angular
       self = analyzeElementAttributes(self);
 
       // get the rules(or validation), inside directive it's named (validation), inside service(rules)
-      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation;
+      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation || '';
 
       // We first need to see if the validation holds a custom user regex, if it does then deal with it first
       // So why deal with it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
