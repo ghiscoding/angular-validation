@@ -45,7 +45,6 @@ describe('Angular-Validation badInput Tests:', function () {
         it('Should display same invalid character error message even after a Tab', function() {
           // make input3 invalid, remove text
           var elmInput2 = $('[name=input2]');
-          element(by.css('body')).click();
           elmInput2.sendKeys(protractor.Key.TAB);
 
           // error should appear on input2
@@ -82,7 +81,7 @@ describe('Angular-Validation badInput Tests:', function () {
         });
 
         it('Should hide ValidationSummary after clicking on checkbox', function() {
-          var btnShowSummary = $('[name=btn_showValidation]');
+          var btnShowSummary = $('[name=chkbox_validationSummary]');
           btnShowSummary.click();
           browser.waitForAngular();
 
@@ -96,7 +95,6 @@ describe('Angular-Validation badInput Tests:', function () {
           var elmInput2 = $('[name=input2]');
           elmInput2.click();
           clearInput(elmInput2, 5);
-          element(by.css('body')).click();
           elmInput2.sendKeys(protractor.Key.TAB);
 
           // error should appear on input2
@@ -105,7 +103,7 @@ describe('Angular-Validation badInput Tests:', function () {
         });
 
         it('Should show ValidationSummary after clicking on show checkbox', function() {
-          var btnShowSummary = $('[name=btn_showValidation]');
+          var btnShowSummary = $('[name=chkbox_validationSummary]');
           btnShowSummary.click();
           browser.waitForAngular();
 

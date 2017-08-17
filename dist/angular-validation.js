@@ -2,9 +2,9 @@
  * Angular-Validation Directive and Service (ghiscoding)
  * http://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
- * @version: 1.5.22
+ * @version: 1.5.23
  * @license: MIT
- * @build: Wed Jun 07 2017 22:01:12 GMT-0400 (Eastern Daylight Time)
+ * @build: Thu Aug 17 2017 00:34:56 GMT-0400 (Eastern Daylight Time)
  */
 /**
  * Angular-Validation Directive (ghiscoding)
@@ -617,7 +617,7 @@ angular
       self = analyzeElementAttributes(self);
 
       // get the rules(or validation), inside directive it's named (validation), inside service(rules)
-      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation;
+      var rules = self.validatorAttrs.rules || self.validatorAttrs.validation || '';
 
       // We first need to see if the validation holds a custom user regex, if it does then deal with it first
       // So why deal with it separately? Because a Regex might hold pipe '|' and so we don't want to mix it with our regular validation pipe
@@ -1255,7 +1255,7 @@ angular
       var formName = (!!formObj) ? formObj.getAttribute("name") : null;
 
       if (!!formObj && !!formName) {
-        parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
+        var parentForm = (!!_globalOptions && !!_globalOptions.controllerAs && formName.indexOf('.') >= 0)
           ? objectFindById(self.scope, formName, '.')
           : self.scope[formName];
 
