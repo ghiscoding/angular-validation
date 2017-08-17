@@ -1,6 +1,7 @@
 Angular-Validation change logs
 
-1.5.22 (2017-06-07) Merged #157 to add Simplified Chinese locale.
+1.5.23 (2017-08-17) Merged PR #162 and #163
+1.5.22 (2017-06-07) Merged PR #157 to add Simplified Chinese locale.
 1.5.21 (2017-05-14) Fix #151 validation rule "different" disables rule "required".
 1.5.20 (2017-04-20) Add an unminified version and Fix #153 bug in validation service.
 1.5.19 (2017-04-17) Fix #150 angularValidation.revalidate problems
