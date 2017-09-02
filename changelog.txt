@@ -1,5 +1,6 @@
 Angular-Validation change logs
 
+1.5.24 (2017-09-01) Fix #160, validate on empty not working in angular-service
 1.5.23 (2017-08-17) Merged PR #162 and #163
 1.5.22 (2017-06-07) Merged PR #157 to add Simplified Chinese locale.
 1.5.21 (2017-05-14) Fix #151 validation rule "different" disables rule "required".

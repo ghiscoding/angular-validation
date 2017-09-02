@@ -1,6 +1,6 @@
 {
   "name": "angular-validation-ghiscoding",
-  "version": "1.5.23",
+  "version": "1.5.24",
   "author": "Ghislain B.",
   "description": "Angular-Validation Directive and Service (ghiscoding)",
   "main": "dist/angular-validation.min",

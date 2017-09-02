@@ -88,17 +88,13 @@ angular
       attrs.name = attrs.elmName;
 
       // user could pass his own scope, useful in a case of an isolate scope
-      if (!!self.validationAttrs.isolatedScope) {
-        var tempValidationOptions = scope.$validationOptions || null; // keep global validationOptions
-        scope = self.validationAttrs.isolatedScope;                   // rewrite original scope
+      if (!!self.validationAttrs.isolatedScope || attrs.isolatedScope) {
+        var tempValidationOptions = scope.$validationOptions || null;           // keep global validationOptions
+        scope = self.validationAttrs.isolatedScope || attrs.isolatedScope;  // rewrite original scope
         if(!!tempValidationOptions) {
-          scope.$validationOptions = tempValidationOptions;           // reuse the validationOption from original scope
+          scope.$validationOptions = tempValidationOptions;                     // reuse the validationOption from original scope
         }
       }
-
-      // Possible element attributes
-      _validationCallback = (self.validationAttrs.hasOwnProperty('validationCallback')) ? self.validationAttrs.validationCallback : null;
-      _validateOnEmpty = (self.validationAttrs.hasOwnProperty('validateOnEmpty')) ? self.commonObj.parseBool(self.validationAttrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
 
       // onBlur make validation without waiting
       attrs.elm.bind('blur', _blurHandler = function(event) {
@@ -120,6 +116,10 @@ angular
       // merge both attributes but 2nd object (attrs) as higher priority, so that for example debounce property inside `attrs` as higher priority over `validatorAttrs`
       // so the position inside the mergeObject call is very important
       attrs = self.commonObj.mergeObjects(self.validationAttrs, attrs);
+
+      // Possible element attributes
+      _validationCallback = (attrs.hasOwnProperty('validationCallback')) ? attrs.validationCallback : null;
+      _validateOnEmpty = (attrs.hasOwnProperty('validateOnEmpty')) ? self.commonObj.parseBool(attrs.validateOnEmpty) : !!_globalOptions.validateOnEmpty;
 
       // watch the `disabled` attribute for changes
       // if it become disabled then skip validation else it becomes enable then we need to revalidate it
