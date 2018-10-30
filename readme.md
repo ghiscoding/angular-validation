@@ -2,7 +2,7 @@
 `Version: 1.5.25`
 
 ## Project in Life Support
-### still accepting PR for any bug fix
+#### still accepting PR for any bug fix
 
 This project is now in Life Support since most of us already moved to newer version of Angular. However I do want to point out that if you still use the lib and find a Bug, I certainly still welcome PR (Pull Request) to address bug fixes. So I'm not totally gone but I won't personally invest more time in the lib. Also note that the lib will not be rewritten to support Angular 2+
 
