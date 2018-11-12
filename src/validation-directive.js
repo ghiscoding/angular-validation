@@ -179,7 +179,7 @@
           }
 
           // invalidate field before doing any validation
-          if((value !== "" || value !== null || typeof value !== "undefined") || commonObj.isFieldRequired() || _validateOnEmpty) {
+          if((value !== "" && value !== null && typeof value !== "undefined") || commonObj.isFieldRequired() || _validateOnEmpty) {
             ctrl.$setValidity('validation', false);
           }
 
