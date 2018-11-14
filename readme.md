@@ -1,5 +1,5 @@
 # Angular Validation (Directive / Service)
-`Version: 1.5.25`
+`Version: 1.5.26`
 
 ## Project in Life Support
 #### still accepting PR for any bug fix
@@ -7,7 +7,7 @@
 This project is now in Life Support since most of us already moved to newer version of Angular. However I do want to point out that if you still use the lib and find a Bug, I certainly still welcome PR (Pull Request) to address bug fixes. So I'm not totally gone but I won't personally invest more time in the lib. Also note that the lib will not be rewritten to support Angular 2+
 
 On a totally different note, I'm still very active in the Angular 4+ world (even Aurelia world) and you might be interested in looking at some of my other libraries.
-- [Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid) 
+- [Angular-Slickgrid](https://github.com/ghiscoding/Angular-Slickgrid)
 - [Angular Markdown Preview Editor](https://github.com/ghiscoding/angular-markdown-editor)
 
 In the Aurelia world

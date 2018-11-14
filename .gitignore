@@ -222,5 +222,8 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Lock files
+package-lock.json
 yarn-error.log
 yarn.lock
