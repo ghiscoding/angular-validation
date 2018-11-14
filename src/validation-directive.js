@@ -179,7 +179,7 @@
           }
 
           // invalidate field before doing any validation
-          if(!!value || commonObj.isFieldRequired() || _validateOnEmpty) {
+          if((value !== "" && value !== null && typeof value !== "undefined") || commonObj.isFieldRequired() || _validateOnEmpty) {
             ctrl.$setValidity('validation', false);
           }
 
@@ -403,7 +403,9 @@
         /** Re-evaluate the element and revalidate it, also re-attach the onBlur event on the element */
         function revalidateAndAttachOnBlur() {
           // Revalidate the input when enabled (without displaying the error)
-          var value = ctrl.$modelValue || '';
+          var value = ctrl.$modelValue !== null && typeof ctrl.$modelValue !== 'undefined'
+                        ? ctrl.$modelValue
+                        : '';
           if(!Array.isArray(value)) {
             ctrl.$setValidity('validation', commonObj.validate(value, false));
           }
