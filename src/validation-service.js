@@ -106,7 +106,7 @@ angular
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
 
           // attempt to validate & run validation callback if user requested it
-          var validationPromise = attemptToValidate(self, event.target.value, 0);
+	  var validationPromise = attemptToValidate(self, (attrs.ctrl.$modelValue == undefined ? '' : attrs.ctrl.$modelValue), 0);
           if(!!_validationCallback) {
             self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
           }
@@ -574,7 +574,7 @@ angular
             attrs.elm.bind('blur', _blurHandler = function(event) {
               if (!!formElmObj && !formElmObj.isValidationCancelled) {
                 // attempt to validate & run validation callback if user requested it
-                var validationPromise = attemptToValidate(self, event.target.value, 10);
+		var validationPromise = attemptToValidate(self, (attrs.ctrl.$modelValue == undefined ? '' : attrs.ctrl.$modelValue), 10);
                 if(!!_validationCallback) {
                   self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
                 }
