@@ -1,5 +1,5 @@
 # Angular Validation (Directive / Service)
-`Version: 1.5.26`
+`Version: 1.5.27`
 
 ## Project in Life Support
 #### still accepting PR for any bug fix
