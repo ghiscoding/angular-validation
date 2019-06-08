@@ -66,6 +66,7 @@ angular
     // list of available published public functions of this object
     validationCommon.prototype.addToValidationSummary = addToValidationSummary;                     // add an element to the $validationSummary
     validationCommon.prototype.arrayFindObject = arrayFindObject;                                   // search an object inside an array of objects
+    validationCommon.prototype.arrayRemoveObject = arrayRemoveObject;                               // search an object inside an array of objects and remove it from array
     validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
     validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
     validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
@@ -765,6 +766,25 @@ angular
         for (var i = 0; i < sourceArray.length; i++) {
           if (sourceArray[i][searchId] === searchValue) {
             return sourceArray[i];
+          }
+        }
+      }
+      return null;
+    }
+
+    /** Quick function to remove an object inside an array by it's given field name and value, return and remove the object found or null
+     * @param Array sourceArray
+     * @param string searchId: search property id
+     * @param string searchValue: value to search
+     * @return object found from source array or null
+     */
+    function arrayRemoveObject(sourceArray, searchId, searchValue) {
+      if (!!sourceArray) {
+        for (var i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i][searchId] === searchValue) {
+            var itemToRemove = sourceArray[i];
+	    sourceArray.splice(i,1);
+	    return itemToRemove;
           }
         }
       }
