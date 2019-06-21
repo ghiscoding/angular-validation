@@ -334,9 +334,12 @@ angular
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
       self.commonObj.validate(value, false);
-
+	    
+      // check field level setting for validateOnEmpty 
+      var isFieldValidateOnEmpty = (self.commonObj.validatorAttrs && self.commonObj.validatorAttrs.validateOnEmpty);
+	    
       // if field is not required and his value is empty, cancel validation and exit out
-      if(!self.commonObj.isFieldRequired() && !_validateOnEmpty && (value === "" || value === null || typeof value === "undefined")) {
+      if(!self.commonObj.isFieldRequired() && !(_validateOnEmpty || isFieldValidateOnEmpty) && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self, formElmObj);
         deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
         return deferred.promise;
@@ -491,7 +494,7 @@ angular
       var foundWatcher = self.commonObj.arrayFindObject(_watchers, 'elmName', formElmObj.fieldName);
       if(!!foundWatcher) {
         foundWatcher.watcherHandler(); // deregister the watch by calling his handler
-        _watchers.shift();
+        self.commonObj.arrayRemoveObject(_watchers, 'elmName', formElmObj.fieldName);
       }
 
       // make the validation cancelled so it won't get called anymore in the blur eventHandler
