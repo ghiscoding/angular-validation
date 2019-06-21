@@ -2,9 +2,9 @@
  * Angular-Validation Directive and Service (ghiscoding)
  * http://github.com/ghiscoding/angular-validation
  * @author: Ghislain B.
- * @version: 1.5.24
+ * @version: 1.5.28
  * @license: MIT
- * @build: Fri Sep 01 2017 23:43:13 GMT-0400 (Eastern Daylight Time)
+ * @build: Thu Jun 20 2019 21:18:15 GMT-0400 (Eastern Daylight Time)
  */
 /**
  * Angular-Validation Directive (ghiscoding)
@@ -187,7 +187,7 @@
           }
 
           // invalidate field before doing any validation
-          if(!!value || commonObj.isFieldRequired() || _validateOnEmpty) {
+          if((value !== "" && value !== null && typeof value !== "undefined") || commonObj.isFieldRequired() || _validateOnEmpty) {
             ctrl.$setValidity('validation', false);
           }
 
@@ -411,7 +411,9 @@
         /** Re-evaluate the element and revalidate it, also re-attach the onBlur event on the element */
         function revalidateAndAttachOnBlur() {
           // Revalidate the input when enabled (without displaying the error)
-          var value = ctrl.$modelValue || '';
+          var value = ctrl.$modelValue !== null && typeof ctrl.$modelValue !== 'undefined'
+                        ? ctrl.$modelValue
+                        : '';
           if(!Array.isArray(value)) {
             ctrl.$setValidity('validation', commonObj.validate(value, false));
           }
@@ -505,6 +507,7 @@ angular
     // list of available published public functions of this object
     validationCommon.prototype.addToValidationSummary = addToValidationSummary;                     // add an element to the $validationSummary
     validationCommon.prototype.arrayFindObject = arrayFindObject;                                   // search an object inside an array of objects
+    validationCommon.prototype.arrayRemoveObject = arrayRemoveObject;                               // search an object inside an array of objects and remove it from array
     validationCommon.prototype.defineValidation = defineValidation;                                 // define our validation object
     validationCommon.prototype.getFormElementByName = getFormElementByName;                         // get the form element custom object by it's name
     validationCommon.prototype.getFormElements = getFormElements;                                   // get the array of form elements (custom objects)
@@ -1204,6 +1207,25 @@ angular
         for (var i = 0; i < sourceArray.length; i++) {
           if (sourceArray[i][searchId] === searchValue) {
             return sourceArray[i];
+          }
+        }
+      }
+      return null;
+    }
+
+    /** Quick function to remove an object inside an array by it's given field name and value, return and remove the object found or null
+     * @param Array sourceArray
+     * @param string searchId: search property id
+     * @param string searchValue: value to search
+     * @return object found from source array or null
+     */
+    function arrayRemoveObject(sourceArray, searchId, searchValue) {
+      if (!!sourceArray) {
+        for (var i = 0; i < sourceArray.length; i++) {
+          if (sourceArray[i][searchId] === searchValue) {
+            var itemToRemove = sourceArray[i];
+	    sourceArray.splice(i,1);
+	    return itemToRemove;
           }
         }
       }
@@ -2860,7 +2882,7 @@ angular
           self.commonObj.initialize(scope, attrs.elm, attrs, attrs.ctrl);
 
           // attempt to validate & run validation callback if user requested it
-          var validationPromise = attemptToValidate(self, event.target.value, 0);
+	        var validationPromise = attemptToValidate(self, (attrs.ctrl.$modelValue == undefined ? '' : attrs.ctrl.$modelValue), 0);
           if(!!_validationCallback) {
             self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
           }
@@ -3088,9 +3110,12 @@ angular
       // pre-validate without any events just to pre-fill our validationSummary with all field errors
       // passing false as 2nd argument for not showing any errors on screen
       self.commonObj.validate(value, false);
-
+	    
+      // check field level setting for validateOnEmpty 
+      var isFieldValidateOnEmpty = (self.commonObj.validatorAttrs && self.commonObj.validatorAttrs.validateOnEmpty);
+	    
       // if field is not required and his value is empty, cancel validation and exit out
-      if(!self.commonObj.isFieldRequired() && !_validateOnEmpty && (value === "" || value === null || typeof value === "undefined")) {
+      if(!self.commonObj.isFieldRequired() && !(_validateOnEmpty || isFieldValidateOnEmpty) && (value === "" || value === null || typeof value === "undefined")) {
         cancelValidation(self, formElmObj);
         deferred.resolve({ isFieldValid: true, formElmObj: formElmObj, value: value });
         return deferred.promise;
@@ -3245,7 +3270,7 @@ angular
       var foundWatcher = self.commonObj.arrayFindObject(_watchers, 'elmName', formElmObj.fieldName);
       if(!!foundWatcher) {
         foundWatcher.watcherHandler(); // deregister the watch by calling his handler
-        _watchers.shift();
+        self.commonObj.arrayRemoveObject(_watchers, 'elmName', formElmObj.fieldName);
       }
 
       // make the validation cancelled so it won't get called anymore in the blur eventHandler
@@ -3328,7 +3353,7 @@ angular
             attrs.elm.bind('blur', _blurHandler = function(event) {
               if (!!formElmObj && !formElmObj.isValidationCancelled) {
                 // attempt to validate & run validation callback if user requested it
-                var validationPromise = attemptToValidate(self, event.target.value, 10);
+		            var validationPromise = attemptToValidate(self, (attrs.ctrl.$modelValue == undefined ? '' : attrs.ctrl.$modelValue), 10);
                 if(!!_validationCallback) {
                   self.commonObj.runValidationCallbackOnPromise(validationPromise, _validationCallback);
                 }
